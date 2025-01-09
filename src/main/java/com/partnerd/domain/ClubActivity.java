@@ -1,0 +1,23 @@
+package com.partnerd.domain;
+
+import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.enums.ActiveType;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class ClubActivity extends BaseEntity {
+
+    // 활동 ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 활동 소개
+    @Column(nullable = false)
+    private String intro;
+}
