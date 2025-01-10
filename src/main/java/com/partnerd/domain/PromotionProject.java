@@ -1,8 +1,12 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,4 +38,23 @@ public class PromotionProject extends BaseEntity {
     // 투표수
     @Column(nullable = false)
     private Long vote;
+
+    // 사용자 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+    
+    // 홍보 프로젝트 팀원
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectMember> promotionProjectMemberList = new ArrayList<>();
+
+    // 홍보 프로젝트 사진
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectImage> promotionProjectImageList = new ArrayList<>();
+
+    // 홍보 프로젝트 댓글
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
+
+    
 }

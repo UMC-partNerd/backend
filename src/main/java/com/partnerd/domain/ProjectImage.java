@@ -19,4 +19,9 @@ public class ProjectImage extends BaseEntity {
     // 이미지 url
     @Column(nullable = false)
     private String image_url;
+
+    // 프로젝트 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 }
