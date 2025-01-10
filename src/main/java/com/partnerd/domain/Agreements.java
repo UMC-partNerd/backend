@@ -53,38 +53,4 @@ public class Agreements extends BaseEntity {
         @Column(nullable = false)
         private String name;
     }
-
-    @Entity
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    public static class ClubCategory extends BaseEntity {
-
-        // 행사 카테고리 ID
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-
-        // 카테고리명
-        @Column(nullable = false)
-        private String name;
-    }
-
-    @Entity
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    public static class Category extends BaseEntity {
-
-        // 카테고리 ID
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-
-        // 카테고리명
-        @Column(nullable = false)
-        private String name;
-    }
 }
