@@ -10,4 +10,7 @@ public interface PromotionProjectService {
 
     // 프로젝트 홍보 수정
     PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId);
+
+    // 프로젝트 홍보 삭제
+    Void deletePromotionProject(Long promotionProjectId);
 }

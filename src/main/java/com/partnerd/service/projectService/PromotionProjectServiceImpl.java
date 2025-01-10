@@ -70,4 +70,13 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         return promotionProjectRepository.save(existingPromotionProject);
     }
+
+    // 프로젝트 홍보 삭제
+    public Void deletePromotionProject(Long promotionProjectId) {
+        PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
+                .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        promotionProjectRepository.deleteById(existingPromotionProject.getId());
+        return null;
+    }
 }

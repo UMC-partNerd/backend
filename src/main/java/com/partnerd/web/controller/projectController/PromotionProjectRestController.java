@@ -52,4 +52,17 @@ public class PromotionProjectRestController {
     }
     
     // 프로젝트 홍보 삭제
+    @DeleteMapping("/promotion/{promotionProjectId}")
+    @Operation(summary = "프로젝트 홍보글 삭제 API",description = "홍보할 프로젝트를 삭제하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<String> deletePromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
+
+        promotionProjectService.deletePromotionProject(promotionProjectId);
+        return ApiResponse.onSuccess("");
+    }
 }
