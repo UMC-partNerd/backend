@@ -18,4 +18,14 @@ public class PromotionProjectResponseDTO {
         Long promotionProjectId;
         LocalDateTime createdAt;
     }
+
+    // 프로젝트 홍보 수정
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdatePromotionProjectResultDTO {
+        Long promotionProjectId;
+        LocalDateTime updatedAt;
+    }
 }

@@ -25,4 +25,12 @@ public class PromotionProjectConverter {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
+    // 프로젝트 홍보 수정
+    public static PromotionProjectResponseDTO.UpdatePromotionProjectResultDTO toUpdatePromotionProjectResultDTO(PromotionProject promotionProject){
+        return PromotionProjectResponseDTO.UpdatePromotionProjectResultDTO.builder()
+                .promotionProjectId(promotionProject.getId())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }

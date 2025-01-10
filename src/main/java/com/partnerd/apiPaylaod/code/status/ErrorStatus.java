@@ -23,7 +23,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     // 프로젝트 홍보 관련
-    PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "해당 사용자가 없습니다."),
+    PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "해당 사용자가 없습니다."),
+    PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "프로젝트 홍보글이 없습니다."),
 
 
 

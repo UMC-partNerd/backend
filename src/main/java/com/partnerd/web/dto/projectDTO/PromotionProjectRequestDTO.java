@@ -16,4 +16,14 @@ public class PromotionProjectRequestDTO {
         String description; // 설명
         List<Long> promotionProjectMember;   // 함께한 팀원
     }
+
+    // 프로젝트 홍보 수정
+    @Getter
+    @Setter
+    public static class UpdatePromotionProjectDTO {
+        String title;   // 제목
+        String info;    // 한 줄 소개
+        String description; // 설명
+        List<Long> promotionProjectMember;   // 함께한 팀원
+    }
 }
