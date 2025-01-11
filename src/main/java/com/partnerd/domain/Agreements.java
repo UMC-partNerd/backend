@@ -3,10 +3,15 @@ package com.partnerd.domain;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
+@Setter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Agreements extends BaseEntity {
@@ -35,10 +40,10 @@ public class Agreements extends BaseEntity {
     private Boolean marketing_consent;
     
     // 마케팅 알림
-    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean marketing_notify;
 
     // 사용자 ID (FK)
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;

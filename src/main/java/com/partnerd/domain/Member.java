@@ -4,12 +4,17 @@ import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.SocialType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member extends BaseEntity {
