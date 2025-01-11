@@ -35,5 +35,11 @@ public class Agreements extends BaseEntity {
     private Boolean marketing_consent;
     
     // 마케팅 알림
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean marketing_notify;
+
+    // 사용자 ID (FK)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false, unique = true)
+    private Member member;
 }
