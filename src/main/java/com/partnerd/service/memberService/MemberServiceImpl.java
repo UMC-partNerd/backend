@@ -14,7 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
-    private final AgreementsRepository agreementsRepository;
+
+    // 내프로필 수정
+    @Override
+    public Member readMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MYPAGE_PROFILE_NOT_FOUND));
+    }
 
     // 내프로필 수정
     @Override
