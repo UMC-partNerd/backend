@@ -28,4 +28,10 @@ public class CollabInquiry extends BaseEntity {
     // 비밀글 여부
     @Column(nullable = false)
     private Boolean is_secret;
+
+    // 작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
 }

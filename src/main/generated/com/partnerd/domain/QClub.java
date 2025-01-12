@@ -20,6 +20,12 @@ public class QClub extends EntityPathBase<Club> {
 
     public static final QClub club = new QClub("club");
 
+    public final com.partnerd.domain.common.QBaseEntity _super = new com.partnerd.domain.common.QBaseEntity(this);
+
+    public final StringPath contact_method = createString("contact_method");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
     public final ListPath<ClubActivity, QClubActivity> activities = this.<ClubActivity, QClubActivity>createList("activities", ClubActivity.class, QClubActivity.class, PathInits.DIRECT2);
 
     public final StringPath category = createString("category");
@@ -33,6 +39,9 @@ public class QClub extends EntityPathBase<Club> {
     public final StringPath name = createString("name");
 
     public final StringPath profile = createString("profile");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final NumberPath<Long> views = createNumber("views", Long.class);
 

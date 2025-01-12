@@ -37,6 +37,15 @@ public class QClubActivity extends EntityPathBase<ClubActivity> {
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QClubActivity(String variable) {
+        super(ClubActivity.class, forVariable(variable));
+    }
+
+    public QClubActivity(Path<? extends ClubActivity> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QClubActivity(PathMetadata metadata) {
+        super(ClubActivity.class, metadata);
         this(ClubActivity.class, forVariable(variable), INITS);
     }
 

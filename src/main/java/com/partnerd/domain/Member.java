@@ -64,6 +64,10 @@ public class Member extends BaseEntity {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Agreements agreement;
 
+    // 문의글
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<CollabInquiry> collabInquiryList;
+
     // 프로젝트
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Project> projectList = new ArrayList<>();
