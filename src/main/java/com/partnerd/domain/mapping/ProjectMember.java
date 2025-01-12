@@ -1,7 +1,8 @@
 package com.partnerd.domain.mapping;
 
+import com.partnerd.domain.Member;
+import com.partnerd.domain.Project;
 import com.partnerd.domain.common.BaseEntity;
-import com.partnerd.domain.enums.ProjectMemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,13 @@ public class ProjectMember extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 권한(역할)
-    @Enumerated(EnumType.STRING)
-    private ProjectMemberRole projectMemberRole;
+    // 프로젝트 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    // 사용자 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
