@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/Partnerd")
+@RequestMapping("/api/partnerd")
 @RequiredArgsConstructor
 public class ClubRestController {
 

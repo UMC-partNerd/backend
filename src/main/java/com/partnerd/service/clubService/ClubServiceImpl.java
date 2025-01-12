@@ -19,6 +19,7 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public ClubRegisterResponseDTO registerClub(ClubRegisterRequestDTO dto) {
         Club club = ClubConverter.toClubEntity(dto);
+        System.out.println("Category: " + club.getCategory());
         Club savedClub = clubRepository.save(club);
         return ClubConverter.toClubRegisterResponseDTO(savedClub);
     }
@@ -39,8 +40,8 @@ public class ClubServiceImpl implements ClubService {
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 동아리가 존재하지 않습니다."));
 
-        Club updatedClub = ClubConverter.toClubEntity(dto);
-        Club savedClub = clubRepository.save(updatedClub);
+        existingClub.update(dto.getName(),dto.getIntro(),dto.getContact(), dto.getCategory());
+        Club savedClub = clubRepository.save(existingClub);
         return ClubConverter.toClubUpdateResponseDTO(savedClub);
     }
 }

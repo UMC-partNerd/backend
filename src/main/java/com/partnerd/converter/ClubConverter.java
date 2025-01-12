@@ -13,6 +13,7 @@ public class ClubConverter {
                 .name(dto.getName())
                 .intro(dto.getIntro())
                 .contact_Method(dto.getContact())
+                .category(dto.getCategory()) // category 필드 매핑
                 .profile(null) // 이미지 처리 미구현
                 .views(0L)
                 .build();
@@ -23,13 +24,14 @@ public class ClubConverter {
                 .name(dto.getName())
                 .intro(dto.getIntro())
                 .contact_Method(dto.getContact())
+                .category(dto.getCategory())
                 .profile(null) // 이미지 처리 미구현
                 .views(0L)
                 .build();
     }
 
     public static ClubRegisterResponseDTO toClubRegisterResponseDTO(Club club) {
-        return new ClubRegisterResponseDTO(club.getId(), club.getName(), club.getProfile());
+        return new ClubRegisterResponseDTO(club.getId(), club.getName(), club.getCategory());
     }
 
 
