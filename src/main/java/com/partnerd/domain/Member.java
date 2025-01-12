@@ -6,6 +6,8 @@ import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +15,10 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member extends BaseEntity {
@@ -54,8 +59,10 @@ public class Member extends BaseEntity {
 
     // 소속
     private String belong_to_club;
-
-
+  
+    // 약관
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Agreements agreement;
 
     // 프로젝트
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -80,5 +87,4 @@ public class Member extends BaseEntity {
     // 프로젝트 홍보 댓글
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
-
 }
