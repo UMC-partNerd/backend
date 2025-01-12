@@ -8,10 +8,13 @@ import com.partnerd.converter.projectConverter.ProjectMemberConverter;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.domain.ProjectCategory;
+import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.repository.memberRepository.MemberRepository;
+import com.partnerd.repository.projectRepository.ProjectCategoryPreferRepository;
 import com.partnerd.repository.projectRepository.ProjectCategoryRepository;
+import com.partnerd.repository.projectRepository.ProjectMemberRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final ProjectCategoryRepository projectCategoryRepository;
+    private final ProjectMemberRepository projectMemberRepository;
+    private final ProjectCategoryPreferRepository projectCategoryPreferRepository;
 
     // 프로젝트 모집글 생성
     @Override
@@ -59,4 +64,51 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(newProject);
     }
 
+
+    // 프로젝트 모집글 수정
+    @Override
+    @Transactional
+    public Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId) {
+
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        existingProject.setTitle(request.getTitle());
+        existingProject.setIntro(request.getInfo());
+        existingProject.setDescription(request.getDescription());
+        existingProject.setCurrent_progress(request.getCurrent_progress());
+        existingProject.setSkill(request.getSkill());
+        existingProject.setPart(request.getPart());
+        existingProject.setDev_stack(request.getDev_stack());
+        existingProject.setPm_stack(request.getPm_stack());
+        existingProject.setDesign_stack(request.getDesign_stack());
+
+        projectMemberRepository.deleteByProject(existingProject);
+
+        // 팀원 추가
+        List<Member> memberList = request.getProjectMember().stream()
+                .map(memberId -> memberRepository.findById(memberId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        List<ProjectMember> newMembers = ProjectMemberConverter.toProjectMemberList(memberList);
+        newMembers.forEach(projectMember -> {projectMember.setProject(existingProject);});
+
+        existingProject.setProjectMemberList(newMembers);
+
+        projectCategoryPreferRepository.deleteByProject(existingProject);
+
+        // 카테고리 추가
+        List<ProjectCategory> projectCategoryList = request.getProjectCategoryPrefer().stream()
+                .map(projectCategoryId -> projectCategoryRepository.findById(projectCategoryId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        List<ProjectCategoryPrefer> newCategoryPrefers = ProjectCategoryPreferConverter.toProjectCategoryPreferList(projectCategoryList);
+        newCategoryPrefers.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(existingProject);});
+
+        existingProject.setProjectCategoryPreferList(newCategoryPrefers);
+
+        return projectRepository.save(existingProject);
+    }
 }

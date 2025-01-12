@@ -35,4 +35,12 @@ public class ProjectConverter {
                 .build();
     }
 
+    // 프로젝트 모집글 수정
+    public static ProjectResponseDTO.UpdateProjectResultDTO toUpdateProjectResultDTO(Project project){
+        return ProjectResponseDTO.UpdateProjectResultDTO.builder()
+                .projectId(project.getId())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
 }

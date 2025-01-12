@@ -18,4 +18,14 @@ public class ProjectResponseDTO {
         Long projectId;
         LocalDateTime createdAt;
     }
+
+    // 프로젝트 모집글 수정
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateProjectResultDTO {
+        Long projectId;
+        LocalDateTime updatedAt;
+    }
 }
