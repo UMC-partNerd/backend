@@ -24,7 +24,7 @@ public class CollabPostRequestDTO {
         private int eventMode;
         private String description;
         private List<ContactMethodDTO> contactMethod;
-        private List<Integer> categoryIds;
+        private List<Long> categoryIds;
     }
 
 

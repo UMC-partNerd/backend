@@ -37,38 +37,32 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     private final CollabPostCategoryRepository collabPostCategoryRepository;
     private final ContactMethodRepository contactMethodRepository;
 
-    @Transactional
     @Override
+    @Transactional
     public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
         CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO);
         // 카테고리 객체 찾아서 리스트로 만들기
         List<Category> categoryList =
                 requestDTO.getCategoryIds().stream()
-                        .map(categoryId -> categoryService.findCategoryById(categoryId.longValue()))
+                        .map(categoryId -> categoryService.findCategoryById(categoryId))
                         .collect(Collectors.toList());
-
 
         // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성하고 양방향 관계 설정
         List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.
                 toCollabPostCategoryList(categoryList);
-        collabPostCategoryList.forEach(collabPostCategory -> {
-            collabPostCategory.setCollabPost(collabPost);
-        });
-
+        collabPostCategoryList.forEach(collabPostCategory -> { collabPostCategory.setCollabPost(collabPost); });
 
         // ContactMethod 추가
         if (requestDTO.getContactMethod() != null) {
-            List<ContactMethod> contactMethods = requestDTO.getContactMethod().stream()
+             requestDTO.getContactMethod().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
                                 .contact_type(contactMethodDTO.getContactType())
                                 .contact_url(contactMethodDTO.getContactUrl())
                                 .build();
                         contactMethod.setCollabPost(collabPost);
-                        return contactMethod;
-                    })
-                    .collect(Collectors.toList());
+                        return contactMethod;});
         }
         // 팀 멤버 하드 코딩
         collabPost.setClubMember(clubMemberRepository.findById(1L).orElseThrow(() ->
@@ -90,38 +84,33 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
 
         collabPost.updateCollabPost(requestDTO, eventType);
 
-
+        // 카테고리 수정
         if (requestDTO.getCategoryIds() != null) {
             List<Category> categoryList =
                     requestDTO.getCategoryIds().stream()
-                            .map(categoryId -> categoryService.findCategoryById(categoryId.longValue()))
+                            .map(categoryId -> categoryService.findCategoryById(categoryId))
                             .collect(Collectors.toList());
 
-           collabPost.getCollabPostCategoryList().forEach(collabPostCategory -> {
-               System.out.println(collabPostCategory.getCollabPost().getId());
-               collabPostCategoryRepository.delete(collabPostCategory);
-           });
-
-
+            // 기존 카테고리 별 콜라보 글 삭제 및 목록 비우기
+            // (cascade = CascadeType.ALL, orphanRemoval = true) 설정으로 연관된 자식 객체가 부모 객체와의 관계에서 제거될 때 자동으로 삭제 됨
+            // 따라서 삭제 작업을 별도로 수행 안 해도 됨
             collabPost.getCollabPostCategoryList().clear();
+
             categoryList.forEach(category -> {
                 CollabPostCategory collabPostCategory = CollabPostCategory.builder()
                         .category(category)
                         .collabPost(collabPost)
                         .build();
-                collabPost.getCollabPostCategoryList().add(collabPostCategory);
+                collabPost.getCollabPostCategoryList().add(collabPostCategory); // 새로운 카테고리 별 콜라보 글 추가
             });
         }
 
+        // 컨텍트 방식 수정
         if (requestDTO.getContactMethod() != null) {
-
-            // 기존 ContactMethod 삭제
-            collabPost.getContactMethodList().forEach(contactMethod -> {
-                contactMethodRepository.delete(contactMethod); // 기존 연락처 삭제
-            });
-
-
-            collabPost.getContactMethodList().clear(); // 기존 연락처 목록 비우기
+            // 기존 ContactMethod 삭제 및 목록 비우기
+            // (cascade = CascadeType.ALL, orphanRemoval = true) 설정으로 연관된 자식 객체가 부모 객체와의 관계에서 제거될 때 자동으로 삭제 됨
+            // 따라서 삭제 작업을 별도로 수행 안 해도 됨
+            collabPost.getContactMethodList().clear();
 
             requestDTO.getContactMethod().forEach(contactMethodDTO -> {
                 ContactMethod contactMethod = ContactMethod.builder()
@@ -129,13 +118,10 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
                         .contact_url(contactMethodDTO.getContactUrl())
                         .collabPost(collabPost)
                         .build();
-                collabPost.getContactMethodList().add(contactMethod);
+                collabPost.getContactMethodList().add(contactMethod); // 새로운 연락처 목록 추가
             });
 
         }
-
-        collabPostCategoryRepository.flush(); // 영속성 컨텍스트의 변경 사항을 즉시 반영
-        contactMethodRepository.flush(); // 영속성 컨텍스트의 변경 사항을 즉시 반영
 
         return collabPostRepository.save(collabPost);
     }
