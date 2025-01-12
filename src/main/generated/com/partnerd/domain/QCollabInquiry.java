@@ -59,6 +59,15 @@ public class QCollabInquiry extends EntityPathBase<CollabInquiry> {
     public QCollabInquiry(Class<? extends CollabInquiry> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
+        super(CollabInquiry.class, forVariable(variable));
+    }
+
+    public QCollabInquiry(Path<? extends CollabInquiry> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QCollabInquiry(PathMetadata metadata) {
+        super(CollabInquiry.class, metadata);
     }
 
 }

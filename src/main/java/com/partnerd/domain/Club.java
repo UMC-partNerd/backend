@@ -4,35 +4,46 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Club extends BaseEntity {
+public class Club {
 
-    // 동아리 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 동아리명
     @Column(nullable = false)
     private String name;
 
-    // 동아리 한줄 설명
     @Column(nullable = false)
     private String intro;
 
-    // 동아리 설명
-    @Column(nullable = false)
-    private String profile;
+    @Column(nullable = true)
+    private String profile; // 프로필 이미지 (null 가능)
 
-    // 조회수
     @Column(nullable = false)
     private Long views;
 
-    // 컨택트 방식
     @Column(nullable = false)
-    private String contact_method;
+    private String contact_Method;
+
+    @Column(nullable = false)
+    private String category;
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClubActivity> activities = new ArrayList<>();
+
+    // 클럽 정보를 업데이트하는 메서드
+    public void update(String name, String intro, String contact_Method, String category) {
+        this.name = name;
+        this.intro = intro;
+        this.contact_Method = contact_Method;
+        this.category = category;
+    }
 }

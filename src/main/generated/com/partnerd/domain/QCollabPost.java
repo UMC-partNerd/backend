@@ -9,7 +9,6 @@ import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
-
 /**
  * QCollabPost is a Querydsl query type for CollabPost
  */
@@ -34,6 +33,11 @@ public class QCollabPost extends EntityPathBase<CollabPost> {
 
     public final ListPath<ContactMethod, QContactMethod> contactMethodList = this.<ContactMethod, QContactMethod>createList("contactMethodList", ContactMethod.class, QContactMethod.class, PathInits.DIRECT2);
 
+    public final StringPath collab_target = createString("collab_target");
+
+    public final StringPath contact_method = createString("contact_method");
+
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -44,6 +48,9 @@ public class QCollabPost extends EntityPathBase<CollabPost> {
     public final NumberPath<Integer> event_mode = createNumber("event_mode", Integer.class);
 
     public final QEventType eventType;
+
+    public final NumberPath<Long> event_mode = createNumber("event_mode", Long.class);
+
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -78,6 +85,15 @@ public class QCollabPost extends EntityPathBase<CollabPost> {
         super(type, metadata, inits);
         this.clubMember = inits.isInitialized("clubMember") ? new com.partnerd.domain.mapping.QClubMember(forProperty("clubMember"), inits.get("clubMember")) : null;
         this.eventType = inits.isInitialized("eventType") ? new QEventType(forProperty("eventType")) : null;
+        super(CollabPost.class, forVariable(variable));
+    }
+
+    public QCollabPost(Path<? extends CollabPost> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QCollabPost(PathMetadata metadata) {
+        super(CollabPost.class, metadata);
     }
 
 }

@@ -61,6 +61,15 @@ public class QClubMember extends EntityPathBase<ClubMember> {
     public QClubMember(Class<? extends ClubMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new com.partnerd.domain.QMember(forProperty("member")) : null;
+        super(ClubMember.class, forVariable(variable));
+    }
+
+    public QClubMember(Path<? extends ClubMember> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QClubMember(PathMetadata metadata) {
+        super(ClubMember.class, metadata);
     }
 
 }
