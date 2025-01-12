@@ -1,4 +1,4 @@
-package com.partnerd.converter;
+package com.partnerd.converter.projectConverter;
 
 import com.partnerd.domain.Member;
 import com.partnerd.domain.mapping.PromotionProjectMember;

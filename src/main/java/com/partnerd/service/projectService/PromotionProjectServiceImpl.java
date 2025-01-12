@@ -2,12 +2,12 @@ package com.partnerd.service.projectService;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
-import com.partnerd.converter.PromotionProjectMemberConverter;
+import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.PromotionProjectMember;
-import com.partnerd.repository.PromotionProjectMemberRepository;
+import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,4 +1,4 @@
-package com.partnerd.repository;
+package com.partnerd.repository.projectRepository;
 
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.PromotionProjectMember;
