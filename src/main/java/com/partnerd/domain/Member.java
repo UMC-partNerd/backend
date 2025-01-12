@@ -2,12 +2,16 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.SocialType;
+import com.partnerd.domain.mapping.ProjectMember;
+import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -56,7 +60,41 @@ public class Member extends BaseEntity {
     // 소속
     private String belong_to_club;
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     // 약관
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Agreements agreement;
+
+    // 프로젝트
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Project> projectList = new ArrayList<>();
+
+    // 프로젝트 팀원
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ProjectMember> projectMemberList = new ArrayList<>();
+
+    // 프로젝트 댓글
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ProjectComment> projectCommentList = new ArrayList<>();
+
+    // 프로젝트 홍보
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PromotionProject> promotionProjectList = new ArrayList<>();
+
+    // 프로젝트 홍보 팀원
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PromotionProjectMember> promotionProjectMemberList = new ArrayList<>();
+
+    // 프로젝트 홍보 댓글
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
 }
