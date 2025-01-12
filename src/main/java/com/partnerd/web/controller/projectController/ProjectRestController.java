@@ -49,4 +49,19 @@ public class ProjectRestController {
         Project project = projectService.updateProject(request, projectId);
         return ApiResponse.onSuccess(ProjectConverter.toUpdateProjectResultDTO(project));
     }
+    
+    // 프로젝트 모집글 삭제
+    @DeleteMapping("/recruit/{projectId}")
+    @Operation(summary = "프로젝트 모집글 삭제 API",description = "모집글 프로젝트를 삭제하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "projectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<Void> deleteProject(@PathVariable(name = "projectId") Long projectId){
+
+        projectService.deleteProject(projectId);
+        return ApiResponse.onSuccess(null);
+    }
 }

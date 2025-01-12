@@ -111,4 +111,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectRepository.save(existingProject);
     }
+
+    // 프로젝트 모집글 삭제
+    public Void deleteProject(Long projectId){
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND));
+
+        projectRepository.deleteById(existingProject.getId());
+        return null;
+    }
 }

@@ -13,4 +13,7 @@ public interface ProjectService {
     // 프로젝트 모집글 수정
     Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId);
 
+    // 프로젝트 모집글 삭제
+    Void deleteProject(Long projectId);
+
 }
