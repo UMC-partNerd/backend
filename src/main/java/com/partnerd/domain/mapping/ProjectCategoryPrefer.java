@@ -8,6 +8,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -27,4 +28,16 @@ public class ProjectCategoryPrefer extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_category_id")
     private ProjectCategory projectCategory;
+
+
+    // setter (프로젝트 모집글 생성)
+    public void setProject(Project project){
+        if (this.project != null){
+            project.getProjectCategoryPreferList().remove(this);
+        }
+        this.project = project;
+        project.getProjectCategoryPreferList().add(this);
+    }
 }
+
+
