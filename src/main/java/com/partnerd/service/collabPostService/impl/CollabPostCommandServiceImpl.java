@@ -143,6 +143,10 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
         @Override
         public void deleteCollabPost (Long collabPostId){
 
+            CollabPost collabPost = collabPostRepository.findById(collabPostId).orElseThrow(() ->
+                    new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND));
+
+            collabPostRepository.delete(collabPost);
 
         }
 }

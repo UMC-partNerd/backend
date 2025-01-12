@@ -48,6 +48,18 @@ public class CollabPostRestController {
     }
 
     // 콜라보 글 삭제
+    @DeleteMapping("/{collabPostId}")
+    @Operation(summary = "콜라보 글 삭제 API",description = "콜라보 글을 삭제하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Long> deleteCollabPost(@PathVariable(name = "collabPostId") Long collabPostId) {
+
+        collabPostCommandService.deleteCollabPost(collabPostId);
+        return ApiResponse.onSuccess(collabPostId);
+    }
+
+
 
 
 
