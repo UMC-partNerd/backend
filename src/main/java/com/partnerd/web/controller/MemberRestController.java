@@ -27,7 +27,7 @@ public class MemberRestController {
     @GetMapping("/users/me/info/{memberId}")
     @Operation(summary = "내프로필 조회 API",description = "마이페이지의 내프로필 정보를 조회하는 API입니다.")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MYPROFILE200",description = "마이페이지 정보 조회 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
             @Parameter(name = "memberId", description = "내프로필 사용자의 ID, path variable 입니다!")
@@ -42,7 +42,7 @@ public class MemberRestController {
     @PatchMapping("/users/me/info/{memberId}")
     @Operation(summary = "내프로필 수정 API",description = "마이페이지의 내프로필 정보를 수정하는 API입니다.")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MYPROFILE200",description = "마이페이지 정보 수정 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
             @Parameter(name = "memberId", description = "내프로필 사용자의 ID, path variable 입니다!")

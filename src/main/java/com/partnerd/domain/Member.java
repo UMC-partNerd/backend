@@ -59,16 +59,6 @@ public class Member extends BaseEntity {
 
     // 소속
     private String belong_to_club;
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
     // 약관
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
