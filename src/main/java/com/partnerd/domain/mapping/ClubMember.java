@@ -1,12 +1,16 @@
 package com.partnerd.domain.mapping;
 
+import com.partnerd.domain.CollabPost;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,5 +35,17 @@ public class ClubMember extends BaseEntity {
     // 동아리 활동 여부
     @Enumerated(EnumType.STRING)
     private ActiveType status;
+
+    // 회원
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    // 콜라보 글 (LEADER, OFFICER 만 작성할 수 있음)
+    @OneToMany(mappedBy = "clubMember", cascade = CascadeType.ALL)
+    List<CollabPost> collabPostList = new ArrayList<>();
+
+
+
 
 }

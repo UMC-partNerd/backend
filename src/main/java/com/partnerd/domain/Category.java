@@ -1,6 +1,9 @@
 package com.partnerd.domain;
 
+import com.partnerd.domain.Club;
+import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.CollabPostCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,20 +15,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class EventType extends BaseEntity {
+public class Category extends BaseEntity {
 
-    // 행사 유형 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 유형명
     @Column(nullable = false)
     private String name;
 
-    // 콜라보 글
-    @OneToMany(mappedBy = "eventType", fetch = FetchType.LAZY)
-    private List<CollabPost> collabPostList = new ArrayList<>();
-
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 
 }

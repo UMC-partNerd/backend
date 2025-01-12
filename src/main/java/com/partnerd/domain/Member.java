@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,5 +51,10 @@ public class Member extends BaseEntity {
 
     // 소속
     private String belong_to_club;
+
+    // 문의글
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<CollabInquiry> collabInquiryList;
+
 
 }

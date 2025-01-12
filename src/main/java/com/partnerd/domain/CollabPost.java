@@ -1,10 +1,14 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.CollabPostCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +21,11 @@ public class CollabPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 콜라보 글 작성자 (팀 멤버)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_member_id")
+    private ClubMember clubMember;
 
     // 콜라보 제목
     @Column(nullable = false)
@@ -47,16 +56,39 @@ public class CollabPost extends BaseEntity {
 
     // 온/오프라인 모드
     @Column(nullable = false)
-    private Long event_mode;
+    private int event_mode;
 
     // 콜라보 설명
     @Column(nullable = false)
     private String description;
 
-    // 컨택트 방식
-    @Column(nullable = false)
-    private String contact_method;
+    // 콜라보 유형
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_type_id")
+    private EventType eventType;
 
+    // 컨텍드 방법
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
 
+    // 콜라보 카테고리
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL)
+    private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
+
+    public void setClubMember(ClubMember clubMember) {
+        if (this.clubMember != null) {
+            this.clubMember.getCollabPostList().remove(this);
+        }
+        this.clubMember = clubMember;
+        clubMember.getCollabPostList().add(this);
+    }
+
+    public void setEventType(EventType eventType) {
+        if (this.eventType != null) {
+            this.eventType.getCollabPostList().remove(this);
+        }
+        this.eventType = eventType;
+        eventType.getCollabPostList().add(this);
+    }
 
 }
