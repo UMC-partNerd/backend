@@ -1,5 +1,7 @@
-package com.partnerd.domain;
+package com.partnerd.domain.mapping;
 
+import com.partnerd.domain.Project;
+import com.partnerd.domain.ProjectCategory;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,24 +11,20 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ProjectComment extends BaseEntity {
+public class ProjectCategoryPrefer extends BaseEntity {
 
-    // 포로젝트 댓글 ID
+    // 선호 프로젝트 카테고리 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // 댓글 내용
-    @Column(nullable = false)
-    private String content;
 
     // 프로젝트 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
-    // 사용자 ID (FK)
+    // 프로젝트 카테고리 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "project_category_id")
+    private ProjectCategory projectCategory;
 }
