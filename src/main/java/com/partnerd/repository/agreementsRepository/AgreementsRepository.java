@@ -1,4 +1,4 @@
-package com.partnerd.repository;
+package com.partnerd.repository.agreementsRepository;
 
 import com.partnerd.domain.Agreements;
 import org.springframework.data.jpa.repository.JpaRepository;
