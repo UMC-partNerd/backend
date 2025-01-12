@@ -1,0 +1,62 @@
+package com.partnerd.service.projectService;
+
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
+import com.partnerd.converter.projectConverter.ProjectCategoryPreferConverter;
+import com.partnerd.converter.projectConverter.ProjectConverter;
+import com.partnerd.converter.projectConverter.ProjectMemberConverter;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.Project;
+import com.partnerd.domain.ProjectCategory;
+import com.partnerd.domain.mapping.ProjectCategoryPrefer;
+import com.partnerd.domain.mapping.ProjectMember;
+import com.partnerd.repository.memberRepository.MemberRepository;
+import com.partnerd.repository.projectRepository.ProjectCategoryRepository;
+import com.partnerd.repository.projectRepository.ProjectRepository;
+import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class ProjectServiceImpl implements ProjectService {
+
+    private final ProjectRepository projectRepository;
+    private final MemberRepository memberRepository;
+    private final ProjectCategoryRepository projectCategoryRepository;
+
+    // 프로젝트 모집글 생성
+    @Override
+    @Transactional
+    public Project addProject(ProjectRequestDTO.CreateProjectDTO request) {
+        Project newProject = ProjectConverter.toProject(request);
+
+
+        // 팀원 추가
+        List<Member> memberList = request.getProjectMember().stream()
+                .map(memberId -> memberRepository.findById(memberId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        List<ProjectMember> projectMemberList = ProjectMemberConverter.toProjectMemberList(memberList);
+
+        projectMemberList.forEach(projectMember -> {projectMember.setProject(newProject);});
+
+        // 카테고리 추가
+        List<ProjectCategory> projectCategoryList = request.getProjectCategoryPrefer().stream()
+                .map(projectCategoryId -> projectCategoryRepository.findById(projectCategoryId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        List<ProjectCategoryPrefer> projectCategoryPreferList = ProjectCategoryPreferConverter.toProjectCategoryPreferList(projectCategoryList);
+
+        projectCategoryPreferList.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(newProject);});
+
+        return projectRepository.save(newProject);
+    }
+
+}
