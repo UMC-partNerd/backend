@@ -1,4 +1,4 @@
-package com.partnerd.web.dto.collabDTO;
+package com.partnerd.web.dto.collabDTO.response;
 
 import lombok.Builder;
 import lombok.Getter;

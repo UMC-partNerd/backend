@@ -1,13 +1,13 @@
 package com.partnerd.service.collabPostService;
 
 import com.partnerd.domain.CollabPost;
-import com.partnerd.web.dto.collabDTO.CollabPostRequestDTO;
+import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 
 public interface CollabPostCommandService {
 
-    CollabPost addCollabPost(CollabPostRequestDTO.addCollabPostDTO requestDTO);
+    CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO);
 
-    CollabPost modifyCollabPost(CollabPostRequestDTO.modifyCollabPostDTO requestDTO);
+    CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO);
 
     void deleteCollabPost(Long collabPostId);
 

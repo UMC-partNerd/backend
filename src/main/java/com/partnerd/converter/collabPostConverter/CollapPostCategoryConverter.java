@@ -15,6 +15,7 @@ public class CollapPostCategoryConverter {
                         CollabPostCategory collabPostCategory = CollabPostCategory.builder()
                                 .category(category)
                                 .build();
+                        collabPostCategory.setCategory(category);
                         return collabPostCategory;
                     }).collect(Collectors.toList());
         return collabPostCategoryList;

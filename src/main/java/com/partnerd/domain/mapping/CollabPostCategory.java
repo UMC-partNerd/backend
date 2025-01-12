@@ -37,7 +37,6 @@ public class CollabPostCategory {
         if (this.category != null) {
             this.category.getCollabPostCategoryList().remove(this);
         }
-        System.out.println("양방향 설정");
         this.category = category;
         category.getCollabPostCategoryList().add(this);
     }

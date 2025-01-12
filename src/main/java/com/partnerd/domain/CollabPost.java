@@ -3,6 +3,7 @@ package com.partnerd.domain;
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.CollabPostCategory;
+import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -89,6 +90,19 @@ public class CollabPost extends BaseEntity {
         }
         this.eventType = eventType;
         eventType.getCollabPostList().add(this);
+    }
+
+    public void updateCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, EventType eventType) {
+        this.title = requestDTO.getTitle();
+        this.intro = requestDTO.getIntro();
+        this.open_date = requestDTO.getOpenDate();
+        this.close_date = requestDTO.getCloseDate();
+        this.start_date = requestDTO.getStartDate();
+        this.end_date = requestDTO.getEndDate();
+        this.collab_target = requestDTO.getCollabTarget();
+        this.eventType = eventType;
+        this.event_mode = requestDTO.getEventMode();
+        this.description = requestDTO.getDescription();
     }
 
 }
