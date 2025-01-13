@@ -33,8 +33,10 @@ public class Club {
     @Column(nullable = false)
     private String contact_Method;
 
-    @Column(nullable = false)
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClubActivity> activities = new ArrayList<>();
@@ -44,6 +46,6 @@ public class Club {
         this.name = name;
         this.intro = intro;
         this.contact_Method = contact_Method;
-        this.category = category;
+        /*this.category = category;*/
     }
 }
