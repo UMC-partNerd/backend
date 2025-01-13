@@ -5,6 +5,6 @@ import org.springframework.data.domain.Page;
 
 public interface CollabPostQueryService {
 
-    Page<CollabPost> getCollabPostList(Integer page);
+    Page<CollabPost> getCollabPostList(Integer page, String sortBy);
 
 }

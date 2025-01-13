@@ -48,8 +48,8 @@ public class CollabPost extends BaseEntity {
     private Date start_date;
 
     // 콜라보 모집 마감 날짜
-    @Column(nullable = false)
-    private Date end_date;
+    @Column(name = "end_date", nullable = false)
+    private Date endDate;
 
     // 콜라보 희망 대상
     @Column(nullable = false)
@@ -69,11 +69,11 @@ public class CollabPost extends BaseEntity {
     private EventType eventType;
 
     // 컨텍드 방법
-    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ContactMethod> contactMethodList = new ArrayList<>();
 
     // 콜라보 카테고리
-    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 
     public void setClubMember(ClubMember clubMember) {
@@ -98,7 +98,7 @@ public class CollabPost extends BaseEntity {
         this.open_date = requestDTO.getOpenDate();
         this.close_date = requestDTO.getCloseDate();
         this.start_date = requestDTO.getStartDate();
-        this.end_date = requestDTO.getEndDate();
+        this.endDate = requestDTO.getEndDate();
         this.collab_target = requestDTO.getCollabTarget();
         this.eventType = eventType;
         this.event_mode = requestDTO.getEventMode();

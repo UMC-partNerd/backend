@@ -60,16 +60,16 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(collabPostId);
     }
 
-    // 콜라보 글 전체 조회
+    // 콜라보 글 전체 조회 (최신순)
     @GetMapping("/")
-    @Operation(summary = "콜라보 글 전체 조회 API",description = "콜라보 글 전체 조회 API입니다.")
+    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",description = "콜라보 글 전체 조회 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page) {
+    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page,
+                                                                                          @RequestParam(defaultValue = "endDate") String sortBy) {
 
-
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page);
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }

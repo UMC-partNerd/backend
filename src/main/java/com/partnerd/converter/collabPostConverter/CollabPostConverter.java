@@ -27,7 +27,7 @@ public class CollabPostConverter {
         return CollabPostResponseDTO.CollabPostPreviewDTO.builder()
                 .title(collabPost.getTitle())
                 .startDate(collabPost.getStart_date())
-                .endDate(collabPost.getEnd_date())
+                .endDate(collabPost.getEndDate())
                 .categoryDTOList(categoryDTOS)
                 .build();
     }
@@ -35,6 +35,9 @@ public class CollabPostConverter {
     public static CollabPostResponseDTO.CollabPostPreviewListDTO collabPostPreviewListDTO(Page<CollabPost> collabPostPage) {
         List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPreviewDTOList =
                     collabPostPage.stream().map(CollabPostConverter::collabPostPreviewDTO).collect(Collectors.toList());
+
+
+        System.out.println(collabPostPreviewDTOList.get(0).getTitle());
 
         return CollabPostResponseDTO.CollabPostPreviewListDTO.builder()
                 .collabPostPreviewDTOLList(collabPostPreviewDTOList)
@@ -59,7 +62,7 @@ public class CollabPostConverter {
                 .close_date(requestDTO.getCloseDate())
                 .collab_target(requestDTO.getCollabTarget())
                 .start_date(requestDTO.getStartDate())
-                .end_date(requestDTO.getEndDate())
+                .endDate(requestDTO.getEndDate())
                 .event_mode(requestDTO.getEventMode())
                 .collabPostCategoryList(new ArrayList<>())
                 .contactMethodList(new ArrayList<>())
