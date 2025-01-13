@@ -1,6 +1,5 @@
 package com.partnerd.web.dto.collabDTO.request;
 
-import com.partnerd.domain.ContactMethod;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.Getter;
 import lombok.Setter;
