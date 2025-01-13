@@ -1,6 +1,7 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.ClubMember;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,9 @@ public class Club {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+    private List<ClubMember> clubMembers = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)

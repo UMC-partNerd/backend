@@ -1,5 +1,6 @@
 package com.partnerd.domain.mapping;
 
+import com.partnerd.domain.Club;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.common.BaseEntity;
@@ -36,10 +37,16 @@ public class ClubMember extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ActiveType status;
 
+    // 동아리
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_id")
+    private Club club;
+
     // 회원
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
 
     // 콜라보 글 (LEADER, OFFICER 만 작성할 수 있음)
     @OneToMany(mappedBy = "clubMember", cascade = CascadeType.ALL)
