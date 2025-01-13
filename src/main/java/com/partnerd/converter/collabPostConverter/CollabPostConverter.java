@@ -27,7 +27,7 @@ public class CollabPostConverter {
         return CollabPostResponseDTO.CollabPostPreviewDTO.builder()
                 .title(collabPost.getTitle())
                 .startDate(collabPost.getStart_date())
-                .endDate(collabPost.getEndDate())
+                .endDate(collabPost.getEnd_date())
                 .categoryDTOList(categoryDTOS)
                 .build();
     }
@@ -62,7 +62,7 @@ public class CollabPostConverter {
                 .close_date(requestDTO.getCloseDate())
                 .collab_target(requestDTO.getCollabTarget())
                 .start_date(requestDTO.getStartDate())
-                .endDate(requestDTO.getEndDate())
+                .end_date(requestDTO.getEndDate())
                 .event_mode(requestDTO.getEventMode())
                 .collabPostCategoryList(new ArrayList<>())
                 .contactMethodList(new ArrayList<>())

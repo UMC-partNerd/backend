@@ -48,8 +48,8 @@ public class CollabPost extends BaseEntity {
     private Date start_date;
 
     // 콜라보 모집 마감 날짜
-    @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    @Column(nullable = false)
+    private Date end_date;
 
     // 콜라보 희망 대상
     @Column(nullable = false)
@@ -98,7 +98,7 @@ public class CollabPost extends BaseEntity {
         this.open_date = requestDTO.getOpenDate();
         this.close_date = requestDTO.getCloseDate();
         this.start_date = requestDTO.getStartDate();
-        this.endDate = requestDTO.getEndDate();
+        this.end_date = requestDTO.getEndDate();
         this.collab_target = requestDTO.getCollabTarget();
         this.eventType = eventType;
         this.event_mode = requestDTO.getEventMode();

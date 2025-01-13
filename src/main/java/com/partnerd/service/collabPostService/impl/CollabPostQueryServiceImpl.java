@@ -19,16 +19,7 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
     @Override
     public Page<CollabPost> getCollabPostList(Integer page, String sortBy){
 
-        Sort sort;
-        if ("endDate".equalsIgnoreCase(sortBy)) {
-            // 마감일을 기준으로 오름차순 정렬
-            sort = Sort.by(Sort.Order.asc("endDate"));
-        } else {
-            // 기본적으로 생성일을 기준으로 내림차순 정렬
-            sort = Sort.by(Sort.Order.desc("createdAt"));
-        }
-
-        Pageable pageable = PageRequest.of(page, 9, sort);
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
 
         return collabPostRepository.findAllWithCategories(pageable);
     }
