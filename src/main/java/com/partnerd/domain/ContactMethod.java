@@ -23,6 +23,11 @@ public class ContactMethod {
     @Column(nullable = false)
     private String contact_url;
 
+    //동아리
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_id")
+    private Club club;
+
     // 콜라보 글
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collab_post_id")

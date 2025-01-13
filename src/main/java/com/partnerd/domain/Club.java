@@ -28,16 +28,20 @@ public class Club {
     @Column(nullable = true)
     private String profile; // 프로필 이미지 (null 가능)
 
+    //조회수
     @Column(nullable = false)
     private Long views;
 
-    @Column(nullable = false)
-    private String contact_Method;
+    //컨택트방법
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
 
+    //카테고리
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
+    //동아리회원
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<ClubMember> clubMembers = new ArrayList<>();
 
@@ -49,7 +53,7 @@ public class Club {
     public void update(String name, String intro, String contact_Method, String category) {
         this.name = name;
         this.intro = intro;
-        this.contact_Method = contact_Method;
+        /*this.contact_Method = contact_Method;*/
         /*this.category = category;*/
     }
 }
