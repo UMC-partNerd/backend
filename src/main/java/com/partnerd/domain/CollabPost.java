@@ -77,19 +77,22 @@ public class CollabPost extends BaseEntity {
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 
-    public void setClubMember(ClubMember clubMember) {
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CollabInquiry> collabInquiryList = new ArrayList<>();
+
+    public void setClubMember(ClubMember addClubMember) {
         if (this.clubMember != null) {
             this.clubMember.getCollabPostList().remove(this);
         }
-        this.clubMember = clubMember;
+        this.clubMember = addClubMember;
         clubMember.getCollabPostList().add(this);
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(EventType addEventType) {
         if (this.eventType != null) {
             this.eventType.getCollabPostList().remove(this);
         }
-        this.eventType = eventType;
+        this.eventType = addEventType;
         eventType.getCollabPostList().add(this);
     }
 
