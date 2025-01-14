@@ -58,8 +58,8 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
              requestDTO.getContactMethod().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
-                                .contact_type(contactMethodDTO.getContactType())
-                                .contact_url(contactMethodDTO.getContactUrl())
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
                                 .build();
                         contactMethod.setCollabPost(collabPost);
                         return contactMethod;});
@@ -114,8 +114,8 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
 
             requestDTO.getContactMethod().forEach(contactMethodDTO -> {
                 ContactMethod contactMethod = ContactMethod.builder()
-                        .contact_type(contactMethodDTO.getContactType())
-                        .contact_url(contactMethodDTO.getContactUrl())
+                        .contactType(contactMethodDTO.getContactType())
+                        .contactUrl(contactMethodDTO.getContactUrl())
                         .collabPost(collabPost)
                         .build();
                 collabPost.getContactMethodList().add(contactMethod); // 새로운 연락처 목록 추가
