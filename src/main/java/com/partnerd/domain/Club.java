@@ -33,12 +33,12 @@ public class Club {
     private Long views;
 
     //컨택트방법
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ContactMethod> contactMethodList = new ArrayList<>();
 
     //카테고리
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     //동아리회원
@@ -56,4 +56,6 @@ public class Club {
         /*this.contact_Method = contact_Method;*/
         /*this.category = category;*/
     }
+
+
 }
