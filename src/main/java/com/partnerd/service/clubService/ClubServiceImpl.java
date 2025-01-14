@@ -38,8 +38,6 @@ public class ClubServiceImpl implements ClubService {
         //DTO에 있는 컨택트메서드 클럽에 매핑
         if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()){
 
-
-
             List<ContactMethod> contactMethods = dto.getContactMethod().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
@@ -63,7 +61,8 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public void deleteClub(Long clubId) {
-        // Check if the club exists
+
+        //클럽존재여부확인
         if (!clubRepository.existsById(clubId)) {
             throw new IllegalArgumentException("해당 동아리가 존재하지 않습니다.");
         }

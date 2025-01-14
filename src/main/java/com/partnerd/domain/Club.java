@@ -42,7 +42,7 @@ public class Club {
     private Category category;
 
     //동아리회원
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ClubMember> clubMembers = new ArrayList<>();
 
 
