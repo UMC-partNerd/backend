@@ -36,9 +36,6 @@ public class CollabPostConverter {
         List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPreviewDTOList =
                     collabPostPage.stream().map(CollabPostConverter::collabPostPreviewDTO).collect(Collectors.toList());
 
-
-        System.out.println(collabPostPreviewDTOList.get(0).getTitle());
-
         return CollabPostResponseDTO.CollabPostPreviewListDTO.builder()
                 .collabPostPreviewDTOLList(collabPostPreviewDTOList)
                 .listSize(collabPostPage.getSize())
