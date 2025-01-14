@@ -26,8 +26,8 @@ public class CollabPostConverter {
 
         return CollabPostResponseDTO.CollabPostPreviewDTO.builder()
                 .title(collabPost.getTitle())
-                .startDate(collabPost.getStart_date())
-                .endDate(collabPost.getEnd_date())
+                .startDate(collabPost.getStartDate())
+                .endDate(collabPost.getEndDate())
                 .categoryDTOList(categoryDTOS)
                 .build();
     }
@@ -58,12 +58,12 @@ public class CollabPostConverter {
                 .title(requestDTO.getTitle())
                 .intro(requestDTO.getIntro())
                 .description(requestDTO.getDescription())
-                .open_date(requestDTO.getOpenDate())
-                .close_date(requestDTO.getCloseDate())
-                .collab_target(requestDTO.getCollabTarget())
-                .start_date(requestDTO.getStartDate())
-                .end_date(requestDTO.getEndDate())
-                .event_mode(requestDTO.getEventMode())
+                .openDate(requestDTO.getOpenDate())
+                .closeDate(requestDTO.getCloseDate())
+                .collabTarget(requestDTO.getCollabTarget())
+                .startDate(requestDTO.getStartDate())
+                .endDate(requestDTO.getEndDate())
+                .eventMode(requestDTO.getEventMode())
                 .collabPostCategoryList(new ArrayList<>())
                 .contactMethodList(new ArrayList<>())
                 .build();

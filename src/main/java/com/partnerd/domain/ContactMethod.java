@@ -16,12 +16,12 @@ public class ContactMethod {
     private Long id;
 
     // 연락 유형
-    @Column(nullable = false)
-    private String contact_type;
+    @Column(name = "contact_type", nullable = false)
+    private String contactType;
 
     // 연락 링크
-    @Column(nullable = false)
-    private String contact_url;
+    @Column(name = "contact_url", nullable = false)
+    private String contactUrl;
 
     // 콜라보 글
     @ManyToOne(fetch = FetchType.LAZY)

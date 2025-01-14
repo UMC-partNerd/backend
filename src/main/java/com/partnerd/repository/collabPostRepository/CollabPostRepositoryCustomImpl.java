@@ -40,7 +40,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
             if ("createdAt".equalsIgnoreCase(property)) {
                     query.orderBy(qCollabPost.createdAt.desc());
             } else {
-                query.orderBy(qCollabPost.end_date.asc());
+                query.orderBy(qCollabPost.endDate.asc());
             }
         }
 
