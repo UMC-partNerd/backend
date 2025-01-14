@@ -70,11 +70,11 @@ public class CollabPost extends BaseEntity {
     private EventType eventType;
 
     // 컨텍드 방법
-    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ContactMethod> contactMethodList = new ArrayList<>();
 
     // 콜라보 카테고리
-    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 
     public void setClubMember(ClubMember clubMember) {
