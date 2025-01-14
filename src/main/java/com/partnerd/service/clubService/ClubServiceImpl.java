@@ -74,11 +74,37 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public ClubUpdateResponseDTO updateClub(Long clubId, ClubUpdateRequestDTO dto) {
+
+        //기존 클럽 정보가져오기
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 동아리가 존재하지 않습니다."));
 
-        existingClub.update(dto.getName(),dto.getIntro(),dto.getContact(), dto.getCategory());
-        Club savedClub = clubRepository.save(existingClub);
-        return ClubConverter.toClubUpdateResponseDTO(savedClub);
+        //카테고리 정보 가져오기
+        Category existingCategory = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+
+        //Club 기본 정보 업데이트
+        existingClub.update(dto.getName(), dto.getIntro(),existingCategory);
+
+        //Contact Method 업데이트
+
+        if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()) {
+            List<ContactMethod> contactMethodList = dto.getContactMethod().stream()
+                    .map( contactMethodDTO -> ContactMethod.builder()
+                            .contact_type(contactMethodDTO.getContactType())
+                            .contact_url(contactMethodDTO.getContactUrl())
+                            .build())
+                    .collect(Collectors.toList());
+
+            existingClub.updateContactMethods(contactMethodList);
+
+        }
+
+        // 5. 변경된 클럽 저장
+        Club updatedClub = clubRepository.save(existingClub);
+
+
+        return ClubConverter.toClubUpdateResponseDTO(updatedClub);
     }
+
 }

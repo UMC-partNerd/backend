@@ -50,11 +50,23 @@ public class Club {
     private List<ClubActivity> activities = new ArrayList<>();
 
     // 클럽 정보를 업데이트하는 메서드
-    public void update(String name, String intro, String contact_Method, String category) {
+    public void update(String name, String intro, Category category) {
         this.name = name;
         this.intro = intro;
-        /*this.contact_Method = contact_Method;*/
-        /*this.category = category;*/
+        this.category = category ;
+
+    }
+
+    public void updateContactMethods(List<ContactMethod> contactMethodList) {
+
+        //기존 콘택트메서드 제거
+        this.contactMethodList.clear();
+
+        //새로운 콘택트메서드 추가
+        this.contactMethodList.addAll(contactMethodList);
+
+        // 양방향 관계 설정
+        contactMethodList.forEach(contactMethod -> contactMethod.setClub(this));
     }
 
 
