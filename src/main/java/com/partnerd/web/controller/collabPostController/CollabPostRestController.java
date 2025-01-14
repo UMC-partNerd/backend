@@ -10,6 +10,7 @@ import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,6 +58,20 @@ public class CollabPostRestController {
 
         collabPostCommandService.deleteCollabPost(collabPostId);
         return ApiResponse.onSuccess(collabPostId);
+    }
+
+    // 콜라보 글 전체 조회 (최신순)
+    @GetMapping("/")
+    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",description = "콜라보 글 전체 조회 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page,
+                                                                                          @RequestParam(defaultValue = "endDate") String sortBy) {
+
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page, sortBy);
+
+        return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
 
 

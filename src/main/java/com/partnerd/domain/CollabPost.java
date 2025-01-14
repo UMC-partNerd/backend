@@ -37,27 +37,28 @@ public class CollabPost extends BaseEntity {
     private String intro;
 
     // 개최 희망 날짜
-    @Column(nullable = false)
-    private Date open_date;
+    @Column(name = "open_date",nullable = false)
+    private Date openDate;
 
     // 개최 종료 날짜
-    private Date close_date;
+    @Column(name = "close_date",nullable = false)
+    private Date closeDate;
 
     // 콜라보 모집 시작 날짜
-    @Column(nullable = false)
-    private Date start_date;
+    @Column(name = "start_date", nullable = false)
+    private Date startDate;
 
     // 콜라보 모집 마감 날짜
-    @Column(nullable = false)
-    private Date end_date;
+    @Column(name = "end_date", nullable = false)
+    private Date endDate;
 
     // 콜라보 희망 대상
-    @Column(nullable = false)
-    private String collab_target;
+    @Column(name = "collab_target", nullable = false)
+    private String collabTarget;
 
     // 온/오프라인 모드
-    @Column(nullable = false)
-    private int event_mode;
+    @Column(name = "event_mode", nullable = false)
+    private int eventMode;
 
     // 콜라보 설명
     @Column(nullable = false)
@@ -95,13 +96,13 @@ public class CollabPost extends BaseEntity {
     public void updateCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, EventType eventType) {
         this.title = requestDTO.getTitle();
         this.intro = requestDTO.getIntro();
-        this.open_date = requestDTO.getOpenDate();
-        this.close_date = requestDTO.getCloseDate();
-        this.start_date = requestDTO.getStartDate();
-        this.end_date = requestDTO.getEndDate();
-        this.collab_target = requestDTO.getCollabTarget();
+        this.openDate = requestDTO.getOpenDate();
+        this.closeDate = requestDTO.getCloseDate();
+        this.startDate = requestDTO.getStartDate();
+        this.endDate = requestDTO.getEndDate();
+        this.collabTarget = requestDTO.getCollabTarget();
         this.eventType = eventType;
-        this.event_mode = requestDTO.getEventMode();
+        this.eventMode = requestDTO.getEventMode();
         this.description = requestDTO.getDescription();
     }
 
