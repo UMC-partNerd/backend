@@ -46,5 +46,24 @@ public class CollabPostInquiryRestController {
         return ApiResponse.onSuccess(CollabInquiryConverter.toChildCollabInquiryResultDTO(collabInquiry));
     }
 
+    @PatchMapping("/{collabInquiryId}")
+    @Operation(summary = "콜라보 문의글 및 답변 수정 API",description = "콜라보 문의글 및 답변 수정 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> ModifyCollabInquiry (@PathVariable(name = "collabInquiryId") Long collabInquiryId,
+                                                                                                  @RequestParam String contents) {
+
+        CollabInquiry collabInquiry = collabInquiryCommandService.modifyCollabInquiry(collabInquiryId, contents);
+        CollabInquiryResponseDTO.addCollabInquiryResponseDTO responseDTO = null;
+        if (collabInquiry.getParentInquiry() != null) {
+            responseDTO= CollabInquiryConverter.toChildCollabInquiryResultDTO(collabInquiry);
+        } else {
+            responseDTO = CollabInquiryConverter.toCollabInquiryResultDTO(collabInquiry);
+        }
+        return ApiResponse.onSuccess(responseDTO);
+    }
+
+
 
 }

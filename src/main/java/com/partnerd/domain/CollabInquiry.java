@@ -74,6 +74,9 @@ public class CollabInquiry extends BaseEntity {
     public void updateStatus() {
         this.status = CollabInquiryStatus.ANSWERED;
     }
+    public void updateCollabInquiry(String contents) {
+        this.contents = contents;
+    }
 
 
 

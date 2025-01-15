@@ -7,4 +7,7 @@ public interface CollabInquiryCommandService {
 
     CollabInquiry addCollabInquiry(CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO);
     CollabInquiry addChildInquiry(Long parentId, CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO);
+
+    CollabInquiry modifyCollabInquiry(Long collabInquiryId, String contents);
+
 }

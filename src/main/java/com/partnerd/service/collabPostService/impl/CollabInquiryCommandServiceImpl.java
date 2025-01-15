@@ -6,14 +6,15 @@ import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.converter.collabPostConverter.CollabInquiryConverter;
 import com.partnerd.domain.CollabInquiry;
-import com.partnerd.domain.Member;
 import com.partnerd.repository.collabPostRepository.CollabInquiryRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.collabPostService.CollabInquiryCommandService;
 import com.partnerd.web.dto.collabDTO.request.CollabInquiryRequestDTO;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,9 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
     private final CollabInquiryRepository collabInquiryRepository;
     private final CollabPostRepository collabPostRepository;
     private final MemberRepository memberRepository;
-
+    private final EntityManager entityManager;
     @Override
+    @Transactional
     public CollabInquiry addCollabInquiry(CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
 
         CollabInquiry collabInquiry = CollabInquiryConverter.toCollabInquiry(requestDTO);
@@ -40,6 +42,7 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
     }
 
     @Override
+    @Transactional
     public CollabInquiry addChildInquiry(Long parentId, CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
 
         CollabInquiry collabInquiry = CollabInquiryConverter.toCollabInquiry(requestDTO);
@@ -65,7 +68,17 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
         return collabInquiryRepository.save(collabInquiry);
     }
 
+    @Override
+    @Transactional
+    public CollabInquiry modifyCollabInquiry(Long collabInquiryId, String contents) {
 
+        CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithMember(collabInquiryId).orElseThrow(() ->
+                new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        collabInquiry.updateCollabInquiry(contents);
+
+        return collabInquiryRepository.save(collabInquiry);
+    }
 
 
 }
