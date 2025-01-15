@@ -41,10 +41,4 @@ public class Agreements extends BaseEntity {
     
     // 마케팅 알림
     private Boolean marketing_notify;
-
-    // 사용자 ID (FK)
-    @Setter
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false, unique = true)
-    private Member member;
 }
