@@ -73,6 +73,10 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private String design_stack;
 
+    // 컨택트 방법
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
+
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

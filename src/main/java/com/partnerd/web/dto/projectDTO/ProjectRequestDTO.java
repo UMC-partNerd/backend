@@ -1,5 +1,6 @@
 package com.partnerd.web.dto.projectDTO;
 
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class ProjectRequestDTO {
         String design_stack;    // 디자인 기술 스택
         List<Long> projectMember;   // 함께한 팀원
         List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
+        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
     // 프로젝트 모집글 수정
@@ -41,6 +43,7 @@ public class ProjectRequestDTO {
         String design_stack;    // 디자인 기술 스택
         List<Long> projectMember;   // 함께한 팀원
         List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
+        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
 }

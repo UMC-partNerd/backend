@@ -4,6 +4,8 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+
 @Entity
 @Getter
 @Builder
@@ -33,6 +35,11 @@ public class ContactMethod {
     @JoinColumn(name = "collab_post_id")
     private CollabPost collabPost;
 
+    // 프로젝트 모집
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+    
     public void setCollabPost(CollabPost collabPost) {
         if(this.collabPost != null) {
             this.collabPost.getContactMethodList().remove(this);
@@ -48,6 +55,22 @@ public class ContactMethod {
         this.club = club;
         if (club != null) {
             this.club.getContactMethodList().add(this);
+        }
+    }
+
+    // 프로젝트 모집
+    public void setProject(Project project) {
+        if (this.project != null) {
+            if (this.project.getContactMethodList() != null) {
+                this.project.getContactMethodList().remove(this);
+            }
+        }
+        this.project = project;
+        if (this.project != null) {
+            if (this.project.getContactMethodList() == null) {
+                this.project.setContactMethodList(new ArrayList<>());
+            }
+            this.project.getContactMethodList().add(this);
         }
     }
 }

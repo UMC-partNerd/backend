@@ -5,6 +5,7 @@ import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.converter.projectConverter.ProjectCategoryPreferConverter;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.converter.projectConverter.ProjectMemberConverter;
+import com.partnerd.domain.ContactMethod;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.domain.ProjectCategory;
@@ -59,6 +60,23 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectCategoryPrefer> projectCategoryPreferList = ProjectCategoryPreferConverter.toProjectCategoryPreferList(projectCategoryList);
 
         projectCategoryPreferList.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(newProject);});
+
+
+        // 컨택트 방식
+        if (request.getContactMethod() != null) {
+            List<ContactMethod> contactMethods = request.getContactMethod().stream()
+                    .map(contactMethodDTO -> {
+                        ContactMethod contactMethod = ContactMethod.builder()
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
+                                .build();
+                        contactMethod.setProject(newProject); // 프로젝트와 연결
+                        return contactMethod;
+                    })
+                    .collect(Collectors.toList());
+
+            newProject.setContactMethodList(contactMethods);
+        }
 
         return projectRepository.save(newProject);
     }
