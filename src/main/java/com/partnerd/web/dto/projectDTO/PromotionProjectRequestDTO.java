@@ -12,10 +12,10 @@ public class PromotionProjectRequestDTO {
     @Getter
     @Setter
     public static class CreatePromotionProjectDTO {
-        String title;   // 제목
-        String info;    // 한 줄 소개
-        String description; // 설명
-        List<Long> promotionProjectMember;   // 함께한 팀원
+        private String title;   // 제목
+        private String info;    // 한 줄 소개
+        private String description; // 설명
+        private List<Long> promotionProjectMember;   // 함께한 팀원
         private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
@@ -23,10 +23,10 @@ public class PromotionProjectRequestDTO {
     @Getter
     @Setter
     public static class UpdatePromotionProjectDTO {
-        String title;   // 제목
-        String info;    // 한 줄 소개
-        String description; // 설명
-        List<Long> promotionProjectMember;   // 함께한 팀원
+        private String title;   // 제목
+        private String info;    // 한 줄 소개
+        private String description; // 설명
+        private List<Long> promotionProjectMember;   // 함께한 팀원
         private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 }
