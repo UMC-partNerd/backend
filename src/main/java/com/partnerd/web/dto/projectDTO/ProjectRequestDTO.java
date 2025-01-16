@@ -17,6 +17,7 @@ public class ProjectRequestDTO {
         String current_progress;    // 현재 개발 및 발전 상황
         String skill;   // 필요한 역량
         String part;    // 필요한 파트
+        String recruitNum;  // 모집 인원
         String dev_stack;   // 개발 기술 스택
         String pm_stack;    // 기획 기술 스택
         String design_stack;    // 디자인 기술 스택
@@ -34,6 +35,7 @@ public class ProjectRequestDTO {
         String current_progress;    // 현재 개발 및 발전 상황
         String skill;   // 필요한 역량
         String part;    // 필요한 파트
+        String recruitNum;  // 모집 인원
         String dev_stack;   // 개발 기술 스택
         String pm_stack;    // 기획 기술 스택
         String design_stack;    // 디자인 기술 스택

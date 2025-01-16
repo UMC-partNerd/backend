@@ -8,7 +8,6 @@ import com.partnerd.converter.projectConverter.ProjectMemberConverter;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.domain.ProjectCategory;
-import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -79,6 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
         existingProject.setCurrent_progress(request.getCurrent_progress());
         existingProject.setSkill(request.getSkill());
         existingProject.setPart(request.getPart());
+        existingProject.setRecruitNum(request.getRecruitNum());
         existingProject.setDev_stack(request.getDev_stack());
         existingProject.setPm_stack(request.getPm_stack());
         existingProject.setDesign_stack(request.getDesign_stack());

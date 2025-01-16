@@ -58,6 +58,9 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private String part;
 
+    // 모집 인원
+    private String recruitNum;
+
     // 개발 기술 스택
     @Column(nullable = false)
     private String dev_stack;
