@@ -45,8 +45,8 @@ public class ClubServiceImpl implements ClubService {
             List<ContactMethod> contactMethods = dto.getContactMethod().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
-                                .contact_type(contactMethodDTO.getContactType())
-                                .contact_url(contactMethodDTO.getContactUrl())
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
                                 .build();
                         contactMethod.setClub(club);
                         return contactMethod;
@@ -94,8 +94,8 @@ public class ClubServiceImpl implements ClubService {
         if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()) {
             List<ContactMethod> contactMethodList = dto.getContactMethod().stream()
                     .map( contactMethodDTO -> ContactMethod.builder()
-                            .contact_type(contactMethodDTO.getContactType())
-                            .contact_url(contactMethodDTO.getContactUrl())
+                            .contactType(contactMethodDTO.getContactType())
+                            .contactUrl(contactMethodDTO.getContactUrl())
                             .build())
                     .collect(Collectors.toList());
 
