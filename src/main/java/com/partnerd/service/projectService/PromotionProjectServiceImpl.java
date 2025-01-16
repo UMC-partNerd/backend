@@ -84,6 +84,21 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         existingPromotionProject.setPromotionProjectMemberList(newMembers);
 
+        // 컨텍트 방식
+        if (request.getContactMethod() != null) {
+            existingPromotionProject.getContactMethodList().clear();
+
+            request.getContactMethod().forEach(contactMethodDTO -> {
+                ContactMethod contactMethod = ContactMethod.builder()
+                        .contactType(contactMethodDTO.getContactType())
+                        .contactUrl(contactMethodDTO.getContactUrl())
+                        .promotionProject(existingPromotionProject)
+                        .build();
+                existingPromotionProject.getContactMethodList().add(contactMethod);
+            });
+
+        }
+
         return promotionProjectRepository.save(existingPromotionProject);
     }
 
