@@ -127,6 +127,21 @@ public class ProjectServiceImpl implements ProjectService {
 
         existingProject.setProjectCategoryPreferList(newCategoryPrefers);
 
+        // 컨텍트 방식
+        if (request.getContactMethod() != null) {
+            existingProject.getContactMethodList().clear();
+
+            request.getContactMethod().forEach(contactMethodDTO -> {
+                ContactMethod contactMethod = ContactMethod.builder()
+                        .contactType(contactMethodDTO.getContactType())
+                        .contactUrl(contactMethodDTO.getContactUrl())
+                        .project(existingProject)
+                        .build();
+                existingProject.getContactMethodList().add(contactMethod);
+            });
+
+        }
+
         return projectRepository.save(existingProject);
     }
 
