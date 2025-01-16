@@ -44,6 +44,10 @@ public class PromotionProject extends BaseEntity {
 //    @Column(nullable = false)
     private Long vote;
 
+    // 컨택트 방법
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
+
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

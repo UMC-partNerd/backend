@@ -39,6 +39,11 @@ public class ContactMethod {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    // 프로젝트 홍보
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_project_id")
+    private PromotionProject promotionProject;
     
     public void setCollabPost(CollabPost collabPost) {
         if(this.collabPost != null) {
@@ -71,6 +76,22 @@ public class ContactMethod {
                 this.project.setContactMethodList(new ArrayList<>());
             }
             this.project.getContactMethodList().add(this);
+        }
+    }
+
+    // 프로젝트 홍보
+    public void setPromotionProject(PromotionProject promotionProject) {
+        if (this.promotionProject != null) {
+            if (this.promotionProject.getContactMethodList() != null) {
+                this.promotionProject.getContactMethodList().remove(this);
+            }
+        }
+        this.promotionProject = promotionProject;
+        if (this.promotionProject != null) {
+            if (this.promotionProject.getContactMethodList() == null) {
+                this.promotionProject.setContactMethodList(new ArrayList<>());
+            }
+            this.promotionProject.getContactMethodList().add(this);
         }
     }
 }

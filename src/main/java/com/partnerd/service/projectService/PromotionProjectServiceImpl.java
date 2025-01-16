@@ -4,6 +4,7 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
+import com.partnerd.domain.ContactMethod;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.PromotionProjectMember;
@@ -39,6 +40,22 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         List<PromotionProjectMember> promotionProjectMemberList = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
 
         promotionProjectMemberList.forEach(promotionProjectMember -> {promotionProjectMember.setPromotionProject(newPromotionProject);});
+
+        // 컨택트 방식
+        if (request.getContactMethod() != null) {
+            List<ContactMethod> contactMethods = request.getContactMethod().stream()
+                    .map(contactMethodDTO -> {
+                        ContactMethod contactMethod = ContactMethod.builder()
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
+                                .build();
+                        contactMethod.setPromotionProject(newPromotionProject);
+                        return contactMethod;
+                    })
+                    .collect(Collectors.toList());
+
+            newPromotionProject.setContactMethodList(contactMethods);
+        }
 
         return promotionProjectRepository.save(newPromotionProject);
     }
