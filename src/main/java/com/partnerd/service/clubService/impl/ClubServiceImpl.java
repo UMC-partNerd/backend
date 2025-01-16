@@ -1,11 +1,15 @@
-package com.partnerd.service.clubService;
+package com.partnerd.service.clubService.impl;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CategoryHandler;
+import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.converter.ClubConverter;
 import com.partnerd.domain.Category;
 import com.partnerd.domain.Club;
 import com.partnerd.domain.ContactMethod;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubRepository.ClubRepository;
+import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.ClubRegisterRequestDTO;
 import com.partnerd.web.dto.clubDTO.ClubRegisterResponseDTO;
 import com.partnerd.web.dto.clubDTO.ClubUpdateRequestDTO;
@@ -30,7 +34,7 @@ public class ClubServiceImpl implements ClubService {
 
         //DTO에서받은 카테고리 id로 카테고리 받아옴
         Category category = categoryRepository.findById( (long) dto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new ClubHandler(ErrorStatus.CATEGORY_NOT_FOUND));
 
         //클럽객체생성
         Club club =ClubConverter.toClubEntity(dto,category);
@@ -64,7 +68,7 @@ public class ClubServiceImpl implements ClubService {
 
         //클럽존재여부확인
         if (!clubRepository.existsById(clubId)) {
-            throw new IllegalArgumentException("해당 동아리가 존재하지 않습니다.");
+            throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
         }
 
         // Delete the club
@@ -76,11 +80,11 @@ public class ClubServiceImpl implements ClubService {
 
         //기존 클럽 정보가져오기
         Club existingClub = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 동아리가 존재하지 않습니다."));
+                .orElseThrow(() -> new ClubHandler(ErrorStatus.CLUB_NOT_FOUND));
 
         //카테고리 정보 가져오기
         Category existingCategory = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
 
         //Club 기본 정보 업데이트
         existingClub.update(dto.getName(), dto.getIntro(),existingCategory);

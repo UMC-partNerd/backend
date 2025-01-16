@@ -45,16 +45,8 @@ public class ClubRestController {
             @Parameter(name = "clubId", description = "파트너드의 ID, path variable 입니다!")
     })
     public ApiResponse<Void> deleteClub(@PathVariable Long clubId) {
-        try {
-            clubService.deleteClub(clubId);
-            return ApiResponse.of(SuccessStatus._OK, null);
-        } catch (IllegalArgumentException ex) {
-            return ApiResponse.onFailure(
-                    ErrorStatus._BAD_REQUEST.getCode(),
-                    ex.getMessage(),
-                    null
-            );
-        }
+        clubService.deleteClub(clubId);
+        return ApiResponse.of(SuccessStatus._OK, null);
     }
 
     @PutMapping("/{clubId}")
@@ -66,19 +58,10 @@ public class ClubRestController {
     @Parameters({
             @Parameter(name = "clubId", description = "파트너드의 ID, path variable 입니다!")
     })
-
     public ApiResponse<ClubUpdateResponseDTO> updateClub(
             @PathVariable Long clubId,
             @ModelAttribute ClubUpdateRequestDTO requestDTO) {
-        try {
-            ClubUpdateResponseDTO response = clubService.updateClub(clubId, requestDTO);
-            return ApiResponse.of(SuccessStatus._OK, response);
-        } catch (IllegalArgumentException ex) {
-            return ApiResponse.onFailure(
-                    ErrorStatus._BAD_REQUEST.getCode(),
-                    ex.getMessage(),
-                    null
-            );
-        }
+        ClubUpdateResponseDTO response = clubService.updateClub(clubId, requestDTO);
+        return ApiResponse.of(SuccessStatus._OK, response);
     }
 }
