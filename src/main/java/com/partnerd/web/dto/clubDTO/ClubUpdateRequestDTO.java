@@ -1,19 +1,18 @@
 package com.partnerd.web.dto.clubDTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.List;
+
+@Data
 public class ClubUpdateRequestDTO {
     private String name;
     private String intro;
-    private String contact;
-    private String category;
-    // 추가적인 필드가 필요할 경우 여기에 추가
-    //이미지는 아직 제외했습니다 이미지 업로드 관련파트
+    private List<ContactMethodDTO> contactMethod;
+    private Long memberId;
+    private Long categoryId;
+    private MultipartFile bannerImage;  // 이미지 처리 미구현
+    private MultipartFile profileImage;
 }

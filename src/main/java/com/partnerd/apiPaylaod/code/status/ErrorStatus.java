@@ -51,6 +51,12 @@ public enum ErrorStatus implements BaseErrorCode {
     // 요청 데이터가 누락 됐을 경우, 요청 메소드가 잘못 됐을 경우 ..
     COLLAB_POST_NOT_VALID(HttpStatus.BAD_REQUEST, "COLLABPOST4004", "유효하지 않은 콜라보레이션 포스트입니다."),
 
+    // 동아리
+    CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),
+
+    //카테고리
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001","해당 카테고리가 없습니다."),
+
 
     // club member
     CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBER4001", "클럽 멤버가 없습니다."),

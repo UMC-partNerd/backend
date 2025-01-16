@@ -2,6 +2,7 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.SocialType;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
@@ -91,4 +92,8 @@ public class Member extends BaseEntity {
     // 프로젝트 홍보 댓글
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
+
+    //동아리
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ClubMember> clubMembers = new ArrayList<>();
 }
