@@ -5,10 +5,10 @@ import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.converter.projectConverter.ProjectCategoryPreferConverter;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.converter.projectConverter.ProjectMemberConverter;
+import com.partnerd.domain.ContactMethod;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.domain.ProjectCategory;
-import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -61,6 +61,23 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectCategoryPreferList.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(newProject);});
 
+
+        // 컨택트 방식
+        if (request.getContactMethod() != null) {
+            List<ContactMethod> contactMethods = request.getContactMethod().stream()
+                    .map(contactMethodDTO -> {
+                        ContactMethod contactMethod = ContactMethod.builder()
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
+                                .build();
+                        contactMethod.setProject(newProject); // 프로젝트와 연결
+                        return contactMethod;
+                    })
+                    .collect(Collectors.toList());
+
+            newProject.setContactMethodList(contactMethods);
+        }
+
         return projectRepository.save(newProject);
     }
 
@@ -79,6 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
         existingProject.setCurrent_progress(request.getCurrent_progress());
         existingProject.setSkill(request.getSkill());
         existingProject.setPart(request.getPart());
+        existingProject.setRecruitNum(request.getRecruitNum());
         existingProject.setDev_stack(request.getDev_stack());
         existingProject.setPm_stack(request.getPm_stack());
         existingProject.setDesign_stack(request.getDesign_stack());
@@ -108,6 +126,21 @@ public class ProjectServiceImpl implements ProjectService {
         newCategoryPrefers.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(existingProject);});
 
         existingProject.setProjectCategoryPreferList(newCategoryPrefers);
+
+        // 컨텍트 방식
+        if (request.getContactMethod() != null) {
+            existingProject.getContactMethodList().clear();
+
+            request.getContactMethod().forEach(contactMethodDTO -> {
+                ContactMethod contactMethod = ContactMethod.builder()
+                        .contactType(contactMethodDTO.getContactType())
+                        .contactUrl(contactMethodDTO.getContactUrl())
+                        .project(existingProject)
+                        .build();
+                existingProject.getContactMethodList().add(contactMethod);
+            });
+
+        }
 
         return projectRepository.save(existingProject);
     }

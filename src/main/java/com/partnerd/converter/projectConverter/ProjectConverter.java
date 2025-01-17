@@ -20,6 +20,7 @@ public class ProjectConverter {
                 .current_progress(request.getCurrent_progress())
                 .skill(request.getSkill())
                 .part(request.getPart())
+                .recruitNum(request.getRecruitNum())
                 .dev_stack(request.getDev_stack())
                 .pm_stack(request.getPm_stack())
                 .design_stack(request.getDesign_stack())

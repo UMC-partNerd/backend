@@ -1,5 +1,6 @@
 package com.partnerd.web.dto.projectDTO;
 
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,28 +18,32 @@ public class ProjectRequestDTO {
         String current_progress;    // 현재 개발 및 발전 상황
         String skill;   // 필요한 역량
         String part;    // 필요한 파트
+        String recruitNum;  // 모집 인원
         String dev_stack;   // 개발 기술 스택
         String pm_stack;    // 기획 기술 스택
         String design_stack;    // 디자인 기술 스택
         List<Long> projectMember;   // 함께한 팀원
         List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
+        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
     // 프로젝트 모집글 수정
     @Getter
     @Setter
     public static class UpdateProjectDTO {
-        String title;   // 제목
-        String info;    // 한 줄 소개
-        String description; // 설명
-        String current_progress;    // 현재 개발 및 발전 상황
-        String skill;   // 필요한 역량
-        String part;    // 필요한 파트
-        String dev_stack;   // 개발 기술 스택
-        String pm_stack;    // 기획 기술 스택
-        String design_stack;    // 디자인 기술 스택
-        List<Long> projectMember;   // 함께한 팀원
-        List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
+        private String title;   // 제목
+        private String info;    // 한 줄 소개
+        private String description; // 설명
+        private String current_progress;    // 현재 개발 및 발전 상황
+        private String skill;   // 필요한 역량
+        private String part;    // 필요한 파트
+        private String recruitNum;  // 모집 인원
+        private String dev_stack;   // 개발 기술 스택
+        private String pm_stack;    // 기획 기술 스택
+        private String design_stack;    // 디자인 기술 스택
+        private List<Long> projectMember;   // 함께한 팀원
+        private List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
+        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
 }

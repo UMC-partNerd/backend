@@ -15,8 +15,8 @@ public class ProjectResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreateProjectResultDTO {
-        Long projectId;
-        LocalDateTime createdAt;
+        private Long projectId;
+        private LocalDateTime createdAt;
     }
 
     // 프로젝트 모집글 수정
@@ -25,7 +25,7 @@ public class ProjectResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateProjectResultDTO {
-        Long projectId;
-        LocalDateTime updatedAt;
+        private Long projectId;
+        private LocalDateTime updatedAt;
     }
 }

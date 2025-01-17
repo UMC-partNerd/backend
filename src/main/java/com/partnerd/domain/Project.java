@@ -58,6 +58,9 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private String part;
 
+    // 모집 인원
+    private String recruitNum;
+
     // 개발 기술 스택
     @Column(nullable = false)
     private String dev_stack;
@@ -69,6 +72,10 @@ public class Project extends BaseEntity {
     // 디자인 기술 스택
     @Column(nullable = false)
     private String design_stack;
+
+    // 컨택트 방법
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
 
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
