@@ -1,6 +1,7 @@
 package com.partnerd.web.dto.collabDTO.response;
 
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class CollabPostResponseDTO {
     @AllArgsConstructor
     public static class CollabPostPreviewDTO {
 
+        private Long collabPostId;
         private String title;
         private Date startDate;
         private Date endDate;

@@ -25,6 +25,7 @@ public class CollabPostConverter {
                 }).collect(Collectors.toList());
 
         return CollabPostResponseDTO.CollabPostPreviewDTO.builder()
+                .collabPostId(collabPost.getId())
                 .title(collabPost.getTitle())
                 .startDate(collabPost.getStartDate())
                 .endDate(collabPost.getEndDate())
