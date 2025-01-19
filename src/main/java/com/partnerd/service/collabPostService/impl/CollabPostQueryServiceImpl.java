@@ -16,6 +16,7 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
 
     private final CollabPostRepository collabPostRepository;
 
+
     @Override
     public Page<CollabPost> getCollabPostList(Integer page, String sortBy){
 
@@ -23,4 +24,12 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
 
         return collabPostRepository.findAllWithCategories(pageable);
     }
+
+    @Override
+    public CollabPost getCollabPost(Long collabPostId) {
+
+        return collabPostRepository.findCollabPostDetails(collabPostId);
+    }
+
+
 }

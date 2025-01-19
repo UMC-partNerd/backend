@@ -1,8 +1,7 @@
 package com.partnerd.repository.collabPostRepository;
 
-import com.partnerd.domain.CollabPost;
-import com.partnerd.domain.QCategory;
-import com.partnerd.domain.QCollabPost;
+import com.partnerd.domain.*;
+import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,6 +23,11 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QCollabPostCategory qCollabPostCategory = QCollabPostCategory.collabPostCategory;
 
     private final QCategory qCategory = QCategory.category;
+    private final QCollabInquiry qCollabInquiry = QCollabInquiry.collabInquiry;
+    private final QEventType qEventType = QEventType.eventType;
+    private final QMember qMember = QMember.member;
+    private final QClubMember qClubMember = QClubMember.clubMember;
+    private final QContactMethod qContactMethod = QContactMethod.contactMethod;
 
     @Override
     public Page<CollabPost> findAllWithCategories(Pageable pageable) {
@@ -48,5 +52,23 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         List<CollabPost> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+
+    @Override
+    public CollabPost findCollabPostDetails(Long collabPostId) {
+
+        JPAQuery<CollabPost> query = queryFactory
+                .selectFrom(qCollabPost).distinct()
+                .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
+                .leftJoin(qClubMember.member, qMember).fetchJoin()
+                .leftJoin(qCollabPost.collabInquiryList, qCollabInquiry).fetchJoin()
+                .leftJoin(qCollabPost.contactMethodList, qContactMethod).fetchJoin()
+                .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
+                .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
+                .leftJoin(qCollabPost.eventType, qEventType).fetchJoin()
+                .where(qCollabPost.id.eq(collabPostId));
+
+        return query.fetchOne();
     }
 }

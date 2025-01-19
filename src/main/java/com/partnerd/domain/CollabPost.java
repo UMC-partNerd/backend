@@ -7,9 +7,7 @@ import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -71,12 +69,15 @@ public class CollabPost extends BaseEntity {
 
     // 컨텍드 방법
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContactMethod> contactMethodList = new ArrayList<>();
-
+    private Set<ContactMethod> contactMethodList = new LinkedHashSet<>();
+    
     // 콜라보 카테고리
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
+    private Set<CollabPostCategory> collabPostCategoryList = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CollabInquiry> collabInquiryList = new LinkedHashSet<>();
+    
     public void setClubMember(ClubMember clubMember) {
         if (this.clubMember != null) {
             this.clubMember.getCollabPostList().remove(this);

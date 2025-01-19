@@ -4,9 +4,11 @@ import com.partnerd.domain.CollabPost;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,8 +63,8 @@ public class CollabPostConverter {
                 .startDate(requestDTO.getStartDate())
                 .endDate(requestDTO.getEndDate())
                 .eventMode(requestDTO.getEventMode())
-                .collabPostCategoryList(new ArrayList<>())
-                .contactMethodList(new ArrayList<>())
+                .collabPostCategoryList(new LinkedHashSet<>())
+                .contactMethodList(new LinkedHashSet<>())
                 .build();
 
     }
@@ -72,6 +74,47 @@ public class CollabPostConverter {
         return CollabPostResponseDTO.addCollabPostResultDTO.builder()
                 .collabPostId(collabPost.getId())
                 .createdAt(collabPost.getCreatedAt())
+                .build();
+    }
+
+
+    public static CollabPostResponseDTO.CollabPostDetailDTO toCollabPostDetailDTO(CollabPost collabPost) {
+
+
+        List<CategoryDTO> categoryDTOS =  collabPost.getCollabPostCategoryList().stream()
+                .map(collabPostCategory -> {
+                    CategoryDTO categoryDTO = CategoryDTO.builder()
+                            .id(collabPostCategory.getCategory().getId())
+                            .name(collabPostCategory.getCategory().getName())
+                            .build();
+                    return categoryDTO;
+                }).collect(Collectors.toList());
+
+        List<CollabPostResponseDTO.CollabInquiryDTO> collabInquiryDTOS =
+                collabPost.getCollabInquiryList().stream()
+                        .map(CollabPostResponseDTO.CollabInquiryDTO::fromEntity)
+                        .collect(Collectors.toList());
+
+        List<ContactMethodDTO> contactMethodDTOS =
+                collabPost.getContactMethodList().stream()
+                        .map(ContactMethodDTO::new)
+                        .collect(Collectors.toList());
+
+        return CollabPostResponseDTO.CollabPostDetailDTO.builder()
+                .title(collabPost.getTitle())
+                .intro(collabPost.getIntro())
+                .openDate(collabPost.getOpenDate())
+                .closeDate(collabPost.getCloseDate())
+                .startDate(collabPost.getStartDate())
+                .endDate(collabPost.getEndDate())
+                .eventType(collabPost.getEventType().getName())
+                .nickname(collabPost.getClubMember().getMember().getNickname())
+                .eventMode(collabPost.getEventMode())
+                .description(collabPost.getDescription())
+                .CollabInquiryList(collabInquiryDTOS)
+                .contactMethod(contactMethodDTOS)
+                .collabTarget(collabPost.getCollabTarget())
+                .categoryDTOList(categoryDTOS)
                 .build();
     }
 

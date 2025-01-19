@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CollabPostRepositoryCustom {
     Page<CollabPost> findAllWithCategories(Pageable pageable);
+    CollabPost findCollabPostDetails(Long collabPostId);
 }

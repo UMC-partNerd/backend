@@ -1,0 +1,19 @@
+package com.partnerd.repository.collabPostRepository;
+
+import com.partnerd.domain.CollabInquiry;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface CollabInquiryRepository extends JpaRepository<CollabInquiry, Long> {
+
+    @Query("SELECT ci FROM CollabInquiry ci LEFT JOIN FETCH ci.member WHERE ci.id = :id")
+    Optional<CollabInquiry> findByIdWithMember(@Param("id") Long id);
+}
