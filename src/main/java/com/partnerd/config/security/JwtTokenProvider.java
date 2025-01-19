@@ -2,6 +2,8 @@ package com.partnerd.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,12 +14,13 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class JwtTokenProvider {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private final Key secretKey;
     private final long validityInMilliseconds;
@@ -28,6 +31,9 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
+    /**
+     * JWT 토큰 생성
+     */
     public String createToken(Long userId, String nickname) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
         claims.put("nickname", nickname);
@@ -44,26 +50,32 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * JWT 토큰 유효성 검사
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT token");
+            logger.warn("Expired JWT token: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT token");
+            logger.warn("Unsupported JWT token: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            System.out.println("Malformed JWT token");
+            logger.warn("Malformed JWT token: {}", e.getMessage());
         } catch (SignatureException e) {
-            System.out.println("Invalid JWT signature");
+            logger.warn("Invalid JWT signature: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT token compact of handler are invalid");
+            logger.warn("JWT token compact of handler are invalid: {}", e.getMessage());
         }
         return false;
     }
 
+    /**
+     * JWT 토큰에서 인증 정보 추출
+     */
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        Claims claims = getClaims(token);
         Long userId = Long.valueOf(claims.getSubject());
         String nickname = (String) claims.get("nickname");
 
@@ -74,6 +86,21 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
+    /**
+     * JWT 토큰에서 Claims 추출
+     */
+    public Claims getClaims(String token) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        } catch (JwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+            throw new RuntimeException("Invalid JWT token");
+        }
+    }
+
+    /**
+     * HTTP 요청에서 토큰 추출
+     */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

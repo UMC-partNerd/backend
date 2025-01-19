@@ -26,9 +26,9 @@ public class QEventImage extends EntityPathBase<EventImage> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<com.partnerd.domain.enums.ImageType> image_type = createEnum("image_type", com.partnerd.domain.enums.ImageType.class);
+    public final EnumPath<com.partnerd.domain.enums.ImageType> imageType = createEnum("imageType", com.partnerd.domain.enums.ImageType.class);
 
-    public final StringPath image_url = createString("image_url");
+    public final StringPath imageUrl = createString("imageUrl");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

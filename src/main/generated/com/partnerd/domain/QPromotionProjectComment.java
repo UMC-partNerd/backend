@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QPromotionProjectComment extends EntityPathBase<PromotionProjectComment> {
 
     private static final long serialVersionUID = 1332746596L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPromotionProjectComment promotionProjectComment = new QPromotionProjectComment("promotionProjectComment");
 
@@ -28,19 +31,33 @@ public class QPromotionProjectComment extends EntityPathBase<PromotionProjectCom
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QMember member;
+
+    public final QPromotionProject promotionProject;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QPromotionProjectComment(String variable) {
-        super(PromotionProjectComment.class, forVariable(variable));
+        this(PromotionProjectComment.class, forVariable(variable), INITS);
     }
 
     public QPromotionProjectComment(Path<? extends PromotionProjectComment> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QPromotionProjectComment(PathMetadata metadata) {
-        super(PromotionProjectComment.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QPromotionProjectComment(PathMetadata metadata, PathInits inits) {
+        this(PromotionProjectComment.class, metadata, inits);
+    }
+
+    public QPromotionProjectComment(Class<? extends PromotionProjectComment> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
+        this.promotionProject = inits.isInitialized("promotionProject") ? new QPromotionProject(forProperty("promotionProject"), inits.get("promotionProject")) : null;
     }
 
 }

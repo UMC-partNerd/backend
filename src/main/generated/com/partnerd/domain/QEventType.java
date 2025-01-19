@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,6 +21,8 @@ public class QEventType extends EntityPathBase<EventType> {
     public static final QEventType eventType = new QEventType("eventType");
 
     public final com.partnerd.domain.common.QBaseEntity _super = new com.partnerd.domain.common.QBaseEntity(this);
+
+    public final ListPath<CollabPost, QCollabPost> collabPostList = this.<CollabPost, QCollabPost>createList("collabPostList", CollabPost.class, QCollabPost.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;

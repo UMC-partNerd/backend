@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QProjectImage extends EntityPathBase<ProjectImage> {
 
     private static final long serialVersionUID = -1531214905L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QProjectImage projectImage = new QProjectImage("projectImage");
 
@@ -28,19 +31,30 @@ public class QProjectImage extends EntityPathBase<ProjectImage> {
 
     public final StringPath image_url = createString("image_url");
 
+    public final QProject project;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QProjectImage(String variable) {
-        super(ProjectImage.class, forVariable(variable));
+        this(ProjectImage.class, forVariable(variable), INITS);
     }
 
     public QProjectImage(Path<? extends ProjectImage> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QProjectImage(PathMetadata metadata) {
-        super(ProjectImage.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QProjectImage(PathMetadata metadata, PathInits inits) {
+        this(ProjectImage.class, metadata, inits);
+    }
+
+    public QProjectImage(Class<? extends ProjectImage> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.project = inits.isInitialized("project") ? new QProject(forProperty("project"), inits.get("project")) : null;
     }
 
 }

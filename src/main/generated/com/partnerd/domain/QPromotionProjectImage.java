@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QPromotionProjectImage extends EntityPathBase<PromotionProjectImage> {
 
     private static final long serialVersionUID = 216912288L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPromotionProjectImage promotionProjectImage = new QPromotionProjectImage("promotionProjectImage");
 
@@ -28,19 +31,30 @@ public class QPromotionProjectImage extends EntityPathBase<PromotionProjectImage
 
     public final StringPath image_url = createString("image_url");
 
+    public final QPromotionProject promotionProject;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QPromotionProjectImage(String variable) {
-        super(PromotionProjectImage.class, forVariable(variable));
+        this(PromotionProjectImage.class, forVariable(variable), INITS);
     }
 
     public QPromotionProjectImage(Path<? extends PromotionProjectImage> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QPromotionProjectImage(PathMetadata metadata) {
-        super(PromotionProjectImage.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QPromotionProjectImage(PathMetadata metadata, PathInits inits) {
+        this(PromotionProjectImage.class, metadata, inits);
+    }
+
+    public QPromotionProjectImage(Class<? extends PromotionProjectImage> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.promotionProject = inits.isInitialized("promotionProject") ? new QPromotionProject(forProperty("promotionProject"), inits.get("promotionProject")) : null;
     }
 
 }

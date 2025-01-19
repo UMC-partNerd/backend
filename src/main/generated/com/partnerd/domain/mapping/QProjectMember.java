@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,6 +18,8 @@ public class QProjectMember extends EntityPathBase<ProjectMember> {
 
     private static final long serialVersionUID = 348382606L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QProjectMember projectMember = new QProjectMember("projectMember");
 
     public final com.partnerd.domain.common.QBaseEntity _super = new com.partnerd.domain.common.QBaseEntity(this);
@@ -26,21 +29,33 @@ public class QProjectMember extends EntityPathBase<ProjectMember> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<com.partnerd.domain.enums.ProjectMemberRole> projectMemberRole = createEnum("projectMemberRole", com.partnerd.domain.enums.ProjectMemberRole.class);
+    public final com.partnerd.domain.QMember member;
+
+    public final com.partnerd.domain.QProject project;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QProjectMember(String variable) {
-        super(ProjectMember.class, forVariable(variable));
+        this(ProjectMember.class, forVariable(variable), INITS);
     }
 
     public QProjectMember(Path<? extends ProjectMember> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QProjectMember(PathMetadata metadata) {
-        super(ProjectMember.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QProjectMember(PathMetadata metadata, PathInits inits) {
+        this(ProjectMember.class, metadata, inits);
+    }
+
+    public QProjectMember(Class<? extends ProjectMember> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.member = inits.isInitialized("member") ? new com.partnerd.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.project = inits.isInitialized("project") ? new com.partnerd.domain.QProject(forProperty("project"), inits.get("project")) : null;
     }
 
 }
