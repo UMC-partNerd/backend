@@ -26,6 +26,12 @@ public class CollabInquiry extends BaseEntity {
     private CollabInquiryStatus status;
 
     // 비밀글 여부
-    @Column(nullable = false)
-    private Boolean is_secret;
+    @Column(name = "is_secret",nullable = false)
+    private Boolean isSecret;
+
+    // 작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
 }

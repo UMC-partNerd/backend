@@ -2,14 +2,24 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.ProjectStatus;
+import com.partnerd.domain.mapping.ProjectCategoryPrefer;
+import com.partnerd.domain.mapping.ProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicUpdate
+@DynamicInsert
 public class Project extends BaseEntity {
 
     // 포로젝트ID
@@ -44,14 +54,48 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private String skill;
 
+    // 필요한 파트
+    @Column(nullable = false)
+    private String part;
+
+    // 모집 인원
+    private String recruitNum;
+
     // 개발 기술 스택
+    @Column(nullable = false)
     private String dev_stack;
 
     // 기획 기술 스택
+    @Column(nullable = false)
     private String pm_stack;
 
     // 디자인 기술 스택
+    @Column(nullable = false)
     private String design_stack;
 
+    // 컨택트 방법
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
+
+    // 사용자 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    // 프로젝트 팀원
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectMember> projectMemberList = new ArrayList<>();
+
+    // 프로젝트 사진
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectImage> projectImageList = new ArrayList<>();
+
+    // 프로젝트 카테고리
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectCategoryPrefer> projectCategoryPreferList = new ArrayList<>();
+
+    // 프로젝트 댓글
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectComment> projectCommentList = new ArrayList<>();
 
 }

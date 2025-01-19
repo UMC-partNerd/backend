@@ -19,9 +19,10 @@ public class EventImage extends BaseEntity {
 
     // 이미지 유형
     @Enumerated(EnumType.STRING)
-    private ImageType image_type;
+    @Column(name = "image_type", nullable = false)
+    private ImageType imageType;
 
     // 이미지 url
-    @Column(nullable = false)
-    private String image_url;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 }

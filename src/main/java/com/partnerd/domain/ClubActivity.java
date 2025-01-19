@@ -20,4 +20,8 @@ public class ClubActivity extends BaseEntity {
     // 활동 소개
     @Column(nullable = false)
     private String intro;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_id", nullable = false)
+    private Club club;
 }

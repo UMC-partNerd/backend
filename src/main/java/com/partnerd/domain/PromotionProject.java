@@ -1,12 +1,21 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class PromotionProject extends BaseEntity {
@@ -32,6 +41,29 @@ public class PromotionProject extends BaseEntity {
     private String description;
 
     // 투표수
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Long vote;
+
+    // 컨택트 방법
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
+
+    // 사용자 ID (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+    
+    // 홍보 프로젝트 팀원
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectMember> promotionProjectMemberList = new ArrayList<>();
+
+    // 홍보 프로젝트 사진
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectImage> promotionProjectImageList = new ArrayList<>();
+
+    // 홍보 프로젝트 댓글
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
+
+    
 }
