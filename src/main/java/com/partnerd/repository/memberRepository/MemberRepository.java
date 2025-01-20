@@ -13,4 +13,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      * @return Optional<Member>
      */
     Optional<Member> findBySocialId(String socialId);
+
+    /**
+     * 닉네임 중복 여부 확인
+     *
+     * @param nickname 중복 확인할 닉네임
+     * @return 중복 여부
+     */
+    boolean existsByNickname(String nickname);
 }

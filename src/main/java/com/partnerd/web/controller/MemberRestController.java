@@ -52,4 +52,19 @@ public class MemberRestController {
         Member member = memberService.updateMember(request, memberId);
         return ApiResponse.onSuccess(MemberConverter.toUpdateMemberResultDTO(member));
     }
+
+    @GetMapping("/users/nickname/check")
+    @Operation(summary = "닉네임 중복 확인 API", description = "닉네임 중복 여부를 확인하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON400", description = "잘못된 요청입니다.")
+    })
+    @Parameters({
+            @Parameter(name = "nickname", description = "중복 확인할 닉네임, query parameter 입니다!")
+    })
+    public ApiResponse<Boolean> checkNickname(@RequestParam String nickname) {
+        boolean isDuplicate = memberService.isNicknameDuplicate(nickname);
+        return ApiResponse.onSuccess(isDuplicate);
+    }
+
 }
