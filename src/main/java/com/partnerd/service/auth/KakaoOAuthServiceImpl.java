@@ -28,19 +28,19 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     private final MemberRepository memberRepository; // MemberRepository 주입
     private final AgreementsRepository agreementsRepository; // AgreementsRepository 주입
 
-    @Value("${kakao.client-id}")
+    @Value("${security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
-    @Value("${kakao.client-secret}")
+    @Value("${security.oauth2.client.registration.kakao.client-secret}")
     private String clientSecret;
 
-    @Value("${kakao.token-uri}")
+    @Value("${security.oauth2.client.provider.kakao.token-uri}}")
     private String tokenUri;
 
-    @Value("${kakao.user-info-uri}")
+    @Value("${security.oauth2.client.provider.kakao.user-info-uri}")
     private String userInfoUri;
 
-    @Value("${kakao.redirect-uri}")
+    @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
     @Override
