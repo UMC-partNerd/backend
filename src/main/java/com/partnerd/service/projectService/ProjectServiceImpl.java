@@ -164,7 +164,7 @@ public class ProjectServiceImpl implements ProjectService {
     // 프로젝트 모집글 모아보기
     @Override
     @Transactional(readOnly = true)
-    public Page<Project> getProjectList(Integer page, Integer status, List<Long> category) {
+    public Page<Project> getProjectList(Integer page, Integer status, List<Long> category, String keyword) {
         QProject project = QProject.project;
 
         Pageable pageable = PageRequest.of(page, 16);
@@ -173,6 +173,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Date now = new Date();
 
+        // 모집 상태 필터링
         if (status != null) {
             switch (status) {
                 case 0:
@@ -184,8 +185,14 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
 
+        // 카테고리 필터링
         if (category != null && !category.isEmpty()) {
             query.where(project.projectCategoryPreferList.any().projectCategory.id.in(category));
+        }
+
+        // 검색 필터링
+        if (keyword != null && !keyword.isEmpty()) {
+            query.where(project.title.containsIgnoreCase(keyword));
         }
 
         query.orderBy(project.createdAt.desc())

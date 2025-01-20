@@ -76,10 +76,11 @@ public class ProjectRestController {
     })
     public ApiResponse<ProjectResponseDTO.ProjectPreviewListDTO> getProjectList(@RequestParam(name = "page") Integer page,
                                                                                 @RequestParam(name = "status", required = false) Integer status,
-                                                                                @RequestParam(name = "category", required = false) List<Long> category
+                                                                                @RequestParam(name = "category", required = false) List<Long> category,
+                                                                                @RequestParam(name = "keyword", required = false) String keyword
                                             ){
 
-        Page<Project> projectList = projectService.getProjectList(page - 1, status, category);
+        Page<Project> projectList = projectService.getProjectList(page - 1, status, category, keyword);
         return ApiResponse.onSuccess(ProjectConverter.projectPreviewListDTO(projectList));
     }
 }

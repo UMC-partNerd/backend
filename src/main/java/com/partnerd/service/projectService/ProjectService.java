@@ -20,6 +20,6 @@ public interface ProjectService {
     Void deleteProject(Long projectId);
 
     // 프로젝트 모집글 모아보기
-    Page<Project> getProjectList(Integer page,Integer status, List<Long> category);
+    Page<Project> getProjectList(Integer page,Integer status, List<Long> category, String keyword);
 
 }
