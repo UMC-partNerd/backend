@@ -60,13 +60,13 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
 
 
     @Override
-    public Page<CollabPost> findAllByCategories(Pageable pageable, List<String> categories) {
+    public Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories) {
 
         JPAQuery<CollabPost> query = queryFactory
                 .selectFrom(qCollabPost)
                 .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
                 .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
-                .where(qCollabPost.collabPostCategoryList.any().category.name.in(categories))
+                .where(qCollabPost.collabPostCategoryList.any().category.id.in(categories))
                 .distinct();
 
         applySorting(query, pageable);

@@ -28,10 +28,9 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
     }
 
     @Override
-    public Page<CollabPost> getCollabPostListByCategory(List<String> categories, Integer page, String sortBy) {
+    public Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy) {
 
         Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
-
 
         return collabPostRepository.findAllByCategories(pageable, categories);
     }

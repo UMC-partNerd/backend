@@ -84,7 +84,7 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam("categories") List<String> categories,
+    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam("categories") List<Long> categories,
                                                                                           @RequestParam(name = "page") Integer page,
                                                                                           @RequestParam(defaultValue = "endDate") String sortBy) {
 

@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface CollabPostRepositoryCustom {
     Page<CollabPost> findAllWithCategories(Pageable pageable);
-    Page<CollabPost> findAllByCategories(Pageable pageable, List<String> categories);
+    Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories);
 }
