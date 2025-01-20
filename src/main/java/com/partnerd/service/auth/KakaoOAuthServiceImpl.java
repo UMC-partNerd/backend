@@ -34,7 +34,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     @Value("${security.oauth2.client.registration.kakao.client-secret}")
     private String clientSecret;
 
-    @Value("${security.oauth2.client.provider.kakao.token-uri}}")
+    @Value("${security.oauth2.client.provider.kakao.token-uri}")
     private String tokenUri;
 
     @Value("${security.oauth2.client.provider.kakao.user-info-uri}")
