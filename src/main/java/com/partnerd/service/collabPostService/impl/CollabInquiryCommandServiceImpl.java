@@ -23,14 +23,15 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
     private final CollabInquiryRepository collabInquiryRepository;
     private final CollabPostRepository collabPostRepository;
     private final MemberRepository memberRepository;
-    private final EntityManager entityManager;
+
     @Override
     @Transactional
     public CollabInquiry addCollabInquiry(CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
 
         CollabInquiry collabInquiry = CollabInquiryConverter.toCollabInquiry(requestDTO);
 
-        collabInquiry.setCollabPost(collabPostRepository.findById(requestDTO.getCollabPostId()).orElseThrow(() ->
+
+        collabInquiry.setCollabPost(collabPostRepository.findByIdWithMember(requestDTO.getCollabPostId()).orElseThrow(() ->
                 new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND)));
 
         // 멤버 하드 코딩
@@ -49,16 +50,14 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
         if (parentId != null) {
             // 부모댓글 양방향 매핑
-            CollabInquiry parentInquiry = collabInquiryRepository.findById(parentId).orElseThrow(() ->
+            CollabInquiry parentInquiry = collabInquiryRepository.findByIdWithMemberAndPost(parentId).orElseThrow(() ->
                     new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
             collabInquiry.addParentInquiry(parentInquiry);
 
             collabInquiry.setMember(memberRepository.findById(1L).orElseThrow(() ->
                     new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
-            collabInquiry.setCollabPost(collabPostRepository.findById(requestDTO.getCollabPostId()).orElseThrow(() ->
-                    new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND)));
-            // 답변완료 상태로 변경
-            parentInquiry.updateStatus();
+            collabInquiry.setCollabPost(parentInquiry.getCollabPost());
             // collabInquiryRepository.flush();
 
         } else {
@@ -78,6 +77,41 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
         collabInquiry.updateCollabInquiry(contents);
 
         return collabInquiryRepository.save(collabInquiry);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCollabInquiry(Long collabInquiryId) {
+
+        CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithParentIdIsNULL(collabInquiryId).orElseThrow(() ->
+                new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        if (collabInquiry.getChildren().size() != 0) {
+            collabInquiry.changeIsDeleted();
+        } else {
+            collabInquiryRepository.delete(collabInquiry);
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteCollabChildInquiry(Long collabInquiryId) {
+
+        CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithParentIdIsNOTNULL(collabInquiryId).orElseThrow(() ->
+                new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        CollabInquiry parentInquiry = collabInquiry.getParentInquiry();
+
+        if (parentInquiry.getIsDeleted() == 1 && collabInquiry.getParentInquiry().getChildren().size() == 1) {
+            System.out.println("부모 자식 모두 삭제");
+            collabInquiryRepository.delete(collabInquiry.getParentInquiry());
+        } else {
+            System.out.println("자식만 삭제");
+            parentInquiry.getChildren().remove(collabInquiry);
+            collabInquiryRepository.delete(collabInquiry);
+        }
+
     }
 
 

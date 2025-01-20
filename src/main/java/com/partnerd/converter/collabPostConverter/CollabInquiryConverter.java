@@ -1,7 +1,6 @@
 package com.partnerd.converter.collabPostConverter;
 
 import com.partnerd.domain.CollabInquiry;
-import com.partnerd.domain.enums.CollabInquiryStatus;
 import com.partnerd.web.dto.collabDTO.request.CollabInquiryRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabInquiryResponseDTO;
 
@@ -11,7 +10,7 @@ public class CollabInquiryConverter {
 
         return CollabInquiry.builder()
                 .contents(requestDTO.getContents())
-                .status(CollabInquiryStatus.PENDING)
+                .isDeleted(0)
                 .build();
     }
 

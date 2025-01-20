@@ -18,4 +18,13 @@ public class CollabInquiryResponseDTO {
         private Long parentId;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class deleteCollabInquiryResponseDTO {
+        private Long id;
+        private String contents;
+    }
+
 }

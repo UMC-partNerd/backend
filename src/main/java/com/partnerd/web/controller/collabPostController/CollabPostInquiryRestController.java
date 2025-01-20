@@ -64,6 +64,29 @@ public class CollabPostInquiryRestController {
         return ApiResponse.onSuccess(responseDTO);
     }
 
+    @DeleteMapping("/{collabInquiryId}")
+    @Operation(summary = "콜라보 문의글 삭제 API",description = "콜라보 문의글 삭제 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Long> deleteCollabInquiry(@PathVariable(name = "collabInquiryId") Long collabInquiryId) {
+
+        collabInquiryCommandService.deleteCollabInquiry(collabInquiryId);
+
+        return ApiResponse.onSuccess(collabInquiryId);
+    }
+
+    @DeleteMapping("/{collabInquiryId}/reply")
+    @Operation(summary = "콜라보 답변글 삭제 API",description = "콜라보 답변글 삭제 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Long> deleteCollabChildInquiry(@PathVariable(name = "collabInquiryId") Long collabInquiryId) {
+
+        collabInquiryCommandService.deleteCollabChildInquiry(collabInquiryId);
+
+        return ApiResponse.onSuccess(collabInquiryId);
+    }
 
 
 }
