@@ -71,8 +71,8 @@ public class Member extends BaseEntity {
     private Agreements agreement;
 
     // 문의글
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<CollabInquiry> collabInquiryList;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CollabInquiry> collabInquiryList = new ArrayList<>();
 
     // 프로젝트
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
