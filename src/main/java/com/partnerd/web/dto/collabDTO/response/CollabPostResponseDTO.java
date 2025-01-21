@@ -27,6 +27,7 @@ public class CollabPostResponseDTO {
     @AllArgsConstructor
     public static class CollabPostPreviewDTO {
 
+        private Long collabPostId;
         private String title;
         private Date startDate;
         private Date endDate;

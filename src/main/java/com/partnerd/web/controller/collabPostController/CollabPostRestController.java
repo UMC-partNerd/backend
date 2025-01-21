@@ -11,7 +11,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/collabPosts")
@@ -73,6 +76,7 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
 
+    // 콜라보 글 상세 조회
     @GetMapping("/{collabPostId}")
     @Operation(summary = "콜라보 글 상세 조회 API 구현 ",description = "콜라보 글 상세 조회 API입니다.")
     @ApiResponses({
@@ -80,12 +84,26 @@ public class CollabPostRestController {
     })
     public ApiResponse<CollabPostResponseDTO.CollabPostDetailDTO> getCollaboPostList(@PathVariable(name = "collabPostId") Long collabPostId) {
 
-        CollabPost collabPost = collabPostQueryService.getCollabPost(collabPostId);
+              CollabPost collabPost = collabPostQueryService.getCollabPost(collabPostId);
 
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostDetailDTO(collabPost));
 
     }
 
+    // 카테고리 별 콜라보 글 조회
+    @GetMapping("/categories")
+    @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",description = "콜라보 글 카테고리 별 조회 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam("categories") List<Long> categories,
+                                                                                          @RequestParam(name = "page") Integer page,
+                                                                                          @RequestParam(defaultValue = "endDate") String sortBy) {
+
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page, sortBy);
+
+        return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
+    }
 
 
 

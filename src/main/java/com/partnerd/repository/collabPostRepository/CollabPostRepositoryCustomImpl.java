@@ -7,6 +7,8 @@ import com.partnerd.domain.QCollabPost;
 import com.partnerd.domain.QMember;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
+import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,19 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QClubMember qClubMember = QClubMember.clubMember;
     private final QContactMethod qContactMethod = QContactMethod.contactMethod;
 
+
+    private void applySorting(JPAQuery<CollabPost> query, Pageable pageable) {
+        Sort sort = pageable.getSort();
+        for (Sort.Order order : sort) {
+            String property = order.getProperty();
+            if ("createdAt".equalsIgnoreCase(property)) {
+                query.orderBy(qCollabPost.createdAt.desc());
+            } else {
+                query.orderBy(qCollabPost.endDate.asc());
+            }
+        }
+    }
+
     @Override
     public Page<CollabPost> findAllWithCategories(Pageable pageable) {
         JPAQuery<CollabPost> query = queryFactory
@@ -43,15 +58,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPostCategory.category, qCategory) // Category도 즉시 로딩
                 .fetchJoin();
 
-        Sort sort = pageable.getSort(); // pageable에서 정렬 정보 추출
-        for (Sort.Order order : sort) {  // Sort에 포함된 각 Order를 반복
-            String property = order.getProperty();  // 정렬 기준 필드 이름
-            if ("createdAt".equalsIgnoreCase(property)) {
-                    query.orderBy(qCollabPost.createdAt.desc());
-            } else {
-                query.orderBy(qCollabPost.endDate.asc());
-            }
-        }
+       applySorting(query, pageable);
 
         long total = query.fetch().size();
         List<CollabPost> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
@@ -59,6 +66,27 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         return new PageImpl<>(results, pageable, total);
     }
 
+
+    @Override
+    public Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories) {
+
+        JPAQuery<CollabPost> query = queryFactory
+                .selectFrom(qCollabPost)
+                .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
+                .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
+                .where(qCollabPost.collabPostCategoryList.any().category.id.in(categories))
+                .distinct();
+
+        applySorting(query, pageable);
+
+        QueryResults<CollabPost> queryResults = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+
+        return new PageImpl<>(queryResults.getResults(), pageable,  queryResults.getTotal());
+    }
 
 
     @Override
@@ -76,6 +104,8 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .where(qCollabPost.id.eq(collabPostId));
 
         return query.fetchOne();
+      
+    }
 
     @Override
     public Optional<CollabPost> findByIdWithMember(Long collabPostId) {
@@ -91,4 +121,5 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         return collabPost;
 
     }
+
 }
