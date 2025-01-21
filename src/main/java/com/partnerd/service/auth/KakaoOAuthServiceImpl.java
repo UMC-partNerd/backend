@@ -6,6 +6,7 @@ import com.partnerd.domain.Member;
 import com.partnerd.domain.enums.SocialType;
 import com.partnerd.repository.agreementsRepository.AgreementsRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
+import com.partnerd.service.token.TokenService;
 import com.partnerd.web.dto.authDTO.LoginResponseDTO;
 import com.partnerd.web.dto.oauthDTO.KakaoResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -25,8 +25,9 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 
     private final RestTemplate restTemplate;
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberRepository memberRepository; // MemberRepository 주입
-    private final AgreementsRepository agreementsRepository; // AgreementsRepository 주입
+    private final MemberRepository memberRepository;
+    private final AgreementsRepository agreementsRepository;
+    private final TokenService tokenService; // TokenService 추가 (Redis 관련 로직 처리)
 
     @Value("${security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
@@ -45,19 +46,24 @@ public class KakaoOAuthServiceImpl implements OAuthService {
 
     @Override
     public LoginResponseDTO login(String code) {
-        // 카카오 서버에서 액세스 토큰 가져오기
-        String accessToken = getAccessToken(code);
+        // 카카오 서버에서 Access Token 및 Refresh Token 가져오기
+        Map<String, String> tokens = getTokens(code);
+        String accessToken = tokens.get("access_token");
+        String refreshToken = tokens.get("refresh_token");
 
-        // 액세스 토큰으로 사용자 정보 가져오기
+        // Access Token으로 사용자 정보 가져오기
         KakaoResponseDTO kakaoResponse = getUserInfo(accessToken);
 
         // 소셜 ID와 이메일 추출
         String socialId = String.valueOf(kakaoResponse.getId());
-        String email = kakaoResponse.getKakaoAccount().getEmail(); // 이메일 가져오기
+        String email = kakaoResponse.getKakaoAccount().getEmail();
 
         // 소셜 ID로 사용자 조회 또는 생성
         Member member = memberRepository.findBySocialId(socialId)
-                .orElseGet(() -> createNewMember(socialId, email)); // 이메일 추가
+                .orElseGet(() -> createNewMember(socialId, email));
+
+        // Refresh Token을 Redis에 저장
+        tokenService.saveRefreshToken(refreshToken, member.getId());
 
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
@@ -70,7 +76,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
                 .build();
     }
 
-    private String getAccessToken(String code) {
+    private Map<String, String> getTokens(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -84,11 +90,16 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(tokenUri, request, Map.class);
 
-        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null || !response.getBody().containsKey("access_token")) {
-            throw new RuntimeException("Failed to get access token: " + response.getStatusCode());
+        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null
+                || !response.getBody().containsKey("access_token")
+                || !response.getBody().containsKey("refresh_token")) {
+            throw new RuntimeException("Failed to get tokens: " + response.getStatusCode());
         }
 
-        return (String) response.getBody().get("access_token");
+        return Map.of(
+                "access_token", (String) response.getBody().get("access_token"),
+                "refresh_token", (String) response.getBody().get("refresh_token")
+        );
     }
 
     private KakaoResponseDTO getUserInfo(String accessToken) {
@@ -106,15 +117,13 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     }
 
     private Member createNewMember(String socialId, String email) {
-        //약관 기본값 생성
+        // 약관 기본값 생성
         Agreements agreements = agreementsRepository.save(Agreements.builder().build());
         return memberRepository.save(Member.builder()
                 .socialId(socialId)
                 .socialType(SocialType.KAKAO)
-                .email(email) // 소셜 로그인에서 가져온 이메일 저장
+                .email(email)
                 .agreement(agreements)
                 .build());
     }
-
-
 }
