@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,5 +65,18 @@ public class PromotionProjectRestController {
 
         promotionProjectService.deletePromotionProject(promotionProjectId);
         return ApiResponse.onSuccess(null);
+    }
+
+    // 프로젝트 홍보 모아보기 (인기순 / 최신순)
+    @GetMapping("/promotion")
+    @Operation(summary = "프로젝트 홍보글 모아보기 (인기순/최신순) API",description = "홍보할 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다. status 0은 인기순, 1은 최신순입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<PromotionProjectRequestDTO.PromotionProjectPreviewListDTO> getPromotionProjectList(@RequestParam(name = "page") Integer page,
+                                                                                                          @RequestParam(name = "status") Integer sort){
+
+        Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectList(page - 1, sort);
+        return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
     }
 }
