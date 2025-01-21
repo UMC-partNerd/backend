@@ -47,4 +47,10 @@ public class MemberServiceImpl implements MemberService {
 
         return memberRepository.save(existingMember);
     }
+
+    // 닉네임 중복 확인
+    @Override
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }

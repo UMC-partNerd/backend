@@ -9,5 +9,7 @@ public interface CollabPostQueryService {
 
     Page<CollabPost> getCollabPostList(Integer page, String sortBy);
     Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy);
+    CollabPost getCollabPost(Long collabPostId);
+
 
 }

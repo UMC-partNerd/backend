@@ -1,12 +1,15 @@
 package com.partnerd.web.dto.collabDTO.response;
 
+import com.partnerd.domain.CollabInquiry;
+import com.partnerd.domain.ContactMethod;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
-import com.querydsl.core.annotations.QueryProjection;
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class CollabPostResponseDTO {
 
@@ -45,6 +48,50 @@ public class CollabPostResponseDTO {
         Boolean isLast;
 
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CollabPostDetailDTO {
+        private String title;
+        private String intro;
+        private Date openDate;
+        private Date closeDate;
+        private Date startDate;
+        private Date endDate;
+        private String collabTarget;
+        private int eventMode;
+        private String description;
+        private String eventType;
+        private String nickname;
+        private List<CategoryDTO> categoryDTOList;
+        private List<ContactMethodDTO> contactMethod;
+        private List<CollabInquiryDTO> CollabInquiryList;
+
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CollabInquiryDTO {
+        private Long id;
+        private String nickname;
+        private String contents;
+        private int likes;
+
+        public static CollabInquiryDTO fromEntity(CollabInquiry collabInquiry) {
+            return CollabInquiryDTO.builder()
+                    .id(collabInquiry.getId())
+                    .nickname(collabInquiry.getMember().getNickname())
+                    .contents(collabInquiry.getContents())
+                    .likes(collabInquiry.getLikes())
+                    .build();
+        }
+
+    }
+
 
 
 }
