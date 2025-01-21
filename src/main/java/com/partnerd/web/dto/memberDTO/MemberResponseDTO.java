@@ -35,4 +35,16 @@ public class MemberResponseDTO {
         Long memberId;
         LocalDateTime updatedAt;
     }
+
+    // 프로젝트 상세페이지 속 작성자 정보
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberForProjectDetailDTO {
+        private Long id; // 사용자 ID
+        private String name; // 이름
+        private String occupation_of_interest; // 관심 직군
+        private String belong_to_club; // 소속
+    }
 }

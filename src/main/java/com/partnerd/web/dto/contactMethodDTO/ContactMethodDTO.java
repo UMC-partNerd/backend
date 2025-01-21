@@ -11,6 +11,9 @@ public class ContactMethodDTO {
     private String contactType;
     private String contactUrl;
 
+    public ContactMethodDTO() {
+    }
+
     public ContactMethodDTO(ContactMethod contactMethod) {
         this.contactType = contactMethod.getContactType();
         this.contactUrl = contactMethod.getContactUrl();

@@ -2,7 +2,10 @@ package com.partnerd.converter.projectConverter;
 
 
 import com.partnerd.domain.Project;
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;
+import com.partnerd.web.dto.projectDTO.ProjectMemberDTO;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
 import org.springframework.data.domain.Page;
@@ -10,6 +13,7 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +35,8 @@ public class ProjectConverter {
                 .design_stack(request.getDesign_stack())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
-                .projectMemberList(new ArrayList<>())
-                .projectCategoryPreferList(new ArrayList<>())
+                .projectMemberList(new HashSet<>())
+                .projectCategoryPreferList(new HashSet<>())
                 .build();
     }
 
@@ -90,6 +94,42 @@ public class ProjectConverter {
                 .totalElements(projectPage.getTotalElements())
                 .isFirst(projectPage.isFirst())
                 .isLast(projectPage.isLast())
+                .build();
+    }
+
+    // 프로젝트 모집글 상세페이지 조회
+    public static ProjectResponseDTO.ProjectDetailDTO toProjectDetailDTO(Project project) {
+        return ProjectResponseDTO.ProjectDetailDTO.builder()
+                .title(project.getTitle())
+                .intro(project.getIntro())
+                .description(project.getDescription())
+                .current_progress(project.getCurrent_progress())
+                .dev_stack(project.getDev_stack())
+                .pm_stack(project.getPm_stack())
+                .design_stack(project.getDesign_stack())
+                .part(project.getPart())
+                .recruitNum(project.getRecruitNum())
+                .skill(project.getSkill())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .contactMethods(project.getContactMethodList().stream()
+                        .map(ContactMethodDTO::toContactMethodDTO)
+                        .collect(Collectors.toSet()))
+                .projectMembers(project.getProjectMemberList().stream()
+                        .map(ProjectMemberDTO::toProjectMemberDTO)
+                        .collect(Collectors.toSet()))
+                .projectCategories(project.getProjectCategoryPreferList().stream()
+                        .map(category -> ProjectCategoryDTO.builder()
+                                .id(category.getProjectCategory().getId())
+                                .name(category.getProjectCategory().getName())
+                                .build())
+                        .collect(Collectors.toSet()))
+                .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
+                        .id(project.getMember().getId())
+                        .name(project.getMember().getName())
+                        .occupation_of_interest(project.getMember().getOccupation_of_interest())
+                        .belong_to_club(project.getMember().getBelong_to_club())
+                        .build())
                 .build();
     }
 }

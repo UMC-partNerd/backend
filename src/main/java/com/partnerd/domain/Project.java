@@ -8,9 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -47,7 +45,7 @@ public class Project extends BaseEntity {
     private String current_progress;
 
     // 필요한 역량
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String skill;
 
     // 필요한 파트
@@ -79,7 +77,7 @@ public class Project extends BaseEntity {
     
     // 컨택트 방법
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContactMethod> contactMethodList = new ArrayList<>();
+    private Set<ContactMethod> contactMethodList = new HashSet<>();
 
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -88,18 +86,18 @@ public class Project extends BaseEntity {
 
     // 프로젝트 팀원
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectMember> projectMemberList = new ArrayList<>();
+    private Set<ProjectMember> projectMemberList = new HashSet<>();
 
     // 프로젝트 사진
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectImage> projectImageList = new ArrayList<>();
+    private Set<ProjectImage> projectImageList = new HashSet<>();
 
     // 프로젝트 카테고리
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectCategoryPrefer> projectCategoryPreferList = new ArrayList<>();
+    private Set<ProjectCategoryPrefer> projectCategoryPreferList = new HashSet<>();
 
     // 프로젝트 댓글
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProjectComment> projectCommentList = new ArrayList<>();
 
 }
