@@ -4,15 +4,19 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
-import com.partnerd.domain.ContactMethod;
-import com.partnerd.domain.Member;
-import com.partnerd.domain.PromotionProject;
+import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.PromotionProjectMember;
 import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final PromotionProjectRepository promotionProjectRepository;
     private final PromotionProjectMemberRepository promotionProjectMemberRepository;
     private final MemberRepository memberRepository;
+    private final JPAQueryFactory queryFactory;
 
     // 프로젝트 홍보 생성
     @Override
@@ -98,7 +103,6 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
             });
 
         }
-
         return promotionProjectRepository.save(existingPromotionProject);
     }
 
@@ -109,5 +113,80 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         promotionProjectRepository.deleteById(existingPromotionProject.getId());
         return null;
+    }
+
+    // 프로젝트 홍보글 모아보기 (인기순/최신순)
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort){
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+
+        Pageable pageable = PageRequest.of(page, 12);
+
+        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
+
+        if (sort != null && sort == 0) {
+            List<Long> top3Ids = queryFactory
+                    .select(promotionProject.id)
+                    .from(promotionProject)
+                    .orderBy(promotionProject.views.desc())
+                    .limit(3)
+                    .fetch();
+
+            query.where(promotionProject.id.notIn(top3Ids))
+                    .orderBy(promotionProject.views.desc());
+        } else {
+            query.orderBy(promotionProject.createdAt.desc());
+        }
+
+        query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+
+        List<PromotionProject> content = query.fetch();
+
+        long total = queryFactory
+                .selectFrom(promotionProject)
+                .where(sort != null && sort == 0 ? promotionProject.id.notIn(
+                        queryFactory
+                                .select(promotionProject.id)
+                                .from(promotionProject)
+                                .orderBy(promotionProject.views.desc())
+                                .limit(3)
+                                .fetch()
+                ) : null)
+                .fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    // 프로젝트 홍보글 모아보기 (인기 top3)
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionProject> getPromotionProjectTop3(){
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+
+        return queryFactory.selectFrom(promotionProject)
+                .orderBy(promotionProject.views.desc())
+                .limit(3)
+                .fetch();
+    }
+
+    // 프로젝트 홍보 모아보기 (검색)
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword){
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+
+        Pageable pageable = PageRequest.of(page, 12);
+
+        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
+        query.where(promotionProject.title.containsIgnoreCase(keyword))
+                .orderBy(promotionProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<PromotionProject> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
     }
 }

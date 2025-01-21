@@ -1,8 +1,7 @@
 package com.partnerd.web.dto.projectDTO;
 
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 

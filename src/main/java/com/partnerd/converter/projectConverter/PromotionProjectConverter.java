@@ -3,9 +3,12 @@ package com.partnerd.converter.projectConverter;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PromotionProjectConverter {
 
@@ -32,5 +35,37 @@ public class PromotionProjectConverter {
                 .promotionProjectId(promotionProject.getId())
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    // 프로젝트 홍보글 모아보기 (한칸씩)
+    public static PromotionProjectResponseDTO.PromotionProjectPreviewDTO promotionProjectPreviewDTO(PromotionProject promotionProject){
+         return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
+                .promotionProjectId(promotionProject.getId())
+                .title(promotionProject.getTitle())
+                .intro(promotionProject.getIntro())
+                .build();
+    }
+
+    // 프로젝트 홍보글 모아보기 (전체 리스트)
+    public static PromotionProjectResponseDTO.PromotionProjectPreviewListDTO promotionProjectPreviewListDTO(Page<PromotionProject> promotionProjectPage){
+        List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO> promotionProjectPreviewDTOList =
+                promotionProjectPage.stream().map(PromotionProjectConverter::promotionProjectPreviewDTO).collect(Collectors.toList());
+
+        return PromotionProjectResponseDTO.PromotionProjectPreviewListDTO.builder()
+                .promotionProjectPreviewDTOList(promotionProjectPreviewDTOList)
+                .listSize(promotionProjectPage.getSize())
+                .totalPage(promotionProjectPage.getTotalPages())
+                .totalElements(promotionProjectPage.getTotalElements())
+                .isFirst(promotionProjectPage.isFirst())
+                .isLast(promotionProjectPage.isLast())
+                .build();
+    }
+
+    // 프로젝트 홍보글 모아보기 (top3)
+    public static List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO> projectPreviewDTOList (List<PromotionProject> promotionProjectList){
+
+        return promotionProjectList.stream()
+                        .map(PromotionProjectConverter::promotionProjectPreviewDTO)
+                        .collect(Collectors.toList());
     }
 }
