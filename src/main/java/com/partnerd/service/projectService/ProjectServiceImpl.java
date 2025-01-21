@@ -210,6 +210,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly=true)
     public Project getProject(Long projectId){
-        return projectRepository.findProjectDetails(projectId);
+        Project project = projectRepository.findProjectDetails(projectId);
+        if (project == null) {
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
+        }
+        return project;
     }
 }
