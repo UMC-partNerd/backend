@@ -60,4 +60,12 @@ public class PromotionProjectConverter {
                 .isLast(promotionProjectPage.isLast())
                 .build();
     }
+
+    // 프로젝트 홍보글 모아보기 (top3)
+    public static List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO> projectPreviewDTOList (List<PromotionProject> promotionProjectList){
+
+        return promotionProjectList.stream()
+                        .map(PromotionProjectConverter::promotionProjectPreviewDTO)
+                        .collect(Collectors.toList());
+    }
 }

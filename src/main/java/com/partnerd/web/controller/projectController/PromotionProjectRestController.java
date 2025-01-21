@@ -81,4 +81,16 @@ public class PromotionProjectRestController {
         Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectList(page - 1, sort);
         return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
     }
+
+    // 프로젝트 홍보 모아보기 (인기 top3)
+    @GetMapping("/promotion/top3")
+    @Operation(summary = "프로젝트 홍보글 모아보기 (인기 top3 보기) API",description = "홍보할 프로젝트를 모아보는 페이지의 인기 top3 홍보글 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO>> getPromotionProjectList(){
+
+        List<PromotionProject> promotionProjectList = promotionProjectService.getPromotionProjectTop3();
+        return ApiResponse.onSuccess(PromotionProjectConverter.projectPreviewDTOList(promotionProjectList));
+    }
 }

@@ -118,7 +118,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return null;
     }
 
-    // 프로젝트 홍보글 모아보기
+    // 프로젝트 홍보글 모아보기 (인기순/최신순)
     @Override
     @Transactional(readOnly = true)
     public Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort){
@@ -159,5 +159,17 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
                 .fetchCount();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    // 프로젝트 홍보글 모아보기 (인기 top3)
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionProject> getPromotionProjectTop3(){
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+
+        return queryFactory.selectFrom(promotionProject)
+                .orderBy(promotionProject.views.desc())
+                .limit(3)
+                .fetch();
     }
 }
