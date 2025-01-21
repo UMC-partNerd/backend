@@ -2,10 +2,7 @@ package com.partnerd.converter;
 
 import com.partnerd.domain.Category;
 import com.partnerd.domain.Club;
-import com.partnerd.web.dto.clubDTO.ClubRegisterRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubRegisterResponseDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateResponseDTO;
+import com.partnerd.web.dto.clubDTO.*;
 
 import java.util.ArrayList;
 
@@ -45,5 +42,13 @@ public class ClubConverter {
     public static ClubUpdateResponseDTO toClubUpdateResponseDTO(Club club) {
         return new ClubUpdateResponseDTO(club.getId(), club.getName(), club.getCategory().getId(),
                 club.getCategory().getName());
+    }
+
+    public static ClubDTO toClubDTO(Club club){
+        return new ClubDTO(
+                club.getProfile(),
+                club.getName(),
+                club.getIntro()
+        );
     }
 }

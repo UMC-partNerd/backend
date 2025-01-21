@@ -4,10 +4,7 @@ import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.service.clubService.ClubService;
-import com.partnerd.web.dto.clubDTO.ClubRegisterRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubRegisterResponseDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateResponseDTO;
+import com.partnerd.web.dto.clubDTO.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -15,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/partnerd")
@@ -63,5 +62,30 @@ public class ClubRestController {
             @ModelAttribute ClubUpdateRequestDTO requestDTO) {
         ClubUpdateResponseDTO response = clubService.updateClub(clubId, requestDTO);
         return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
+    @GetMapping
+    @Operation(summary = "동아리 전체 조회 API", description = "파트너드 찾기 화면에 들어왔을 때 파트너드 목록을 반환하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 수정되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "요청 데이터가 올바르지 않습니다.")
+    })
+
+    public ApiResponse<List<ClubDTO>> getClubs(
+
+            @RequestParam(name = "page")
+            @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1", required = true)
+            Integer page,
+
+            @RequestParam(defaultValue = "popular")
+            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순)", example = "popular", required = false)
+            String sort,
+
+            @RequestParam(name = "categoryID")
+            @Parameter(description = "카테고리 ID (필터링에 사용)", example = "5", required = true)
+            Long categoryID
+    ){
+        List<ClubDTO> clubs = clubService.getClubs(page -1 ,sort,categoryID);
+        return ApiResponse.of(SuccessStatus._OK,clubs);
     }
 }
