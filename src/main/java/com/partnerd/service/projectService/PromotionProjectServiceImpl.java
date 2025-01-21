@@ -4,10 +4,7 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
-import com.partnerd.domain.ContactMethod;
-import com.partnerd.domain.Member;
-import com.partnerd.domain.PromotionProject;
-import com.partnerd.domain.QPromotionProject;
+import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.PromotionProjectMember;
 import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -171,5 +168,25 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
                 .orderBy(promotionProject.views.desc())
                 .limit(3)
                 .fetch();
+    }
+
+    // 프로젝트 홍보 모아보기 (검색)
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword){
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+
+        Pageable pageable = PageRequest.of(page, 12);
+
+        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
+        query.where(promotionProject.title.containsIgnoreCase(keyword))
+                .orderBy(promotionProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<PromotionProject> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
     }
 }
