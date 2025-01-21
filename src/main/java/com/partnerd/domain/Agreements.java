@@ -42,9 +42,13 @@ public class Agreements extends BaseEntity {
     // 마케팅 알림
     private Boolean marketing_notify;
 
-    // 사용자 ID (FK)
-    @Setter
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false, unique = true)
-    private Member member;
+    @PrePersist
+    public void setDefaultValues() {
+        if (this.is_adult == null) this.is_adult = false;
+        if (this.terms_of_services == null) this.terms_of_services = false;
+        if (this.personal_info_usage == null) this.personal_info_usage = false;
+        if (this.optional_info_usage == null) this.optional_info_usage = false;
+        if (this.marketing_consent == null) this.marketing_consent = false;
+        if (this.marketing_notify == null) this.marketing_notify = false;
+    }
 }

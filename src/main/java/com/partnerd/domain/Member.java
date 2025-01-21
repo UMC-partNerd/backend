@@ -2,6 +2,7 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.SocialType;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.domain.mapping.PromotionProjectMember;
 import jakarta.persistence.*;
@@ -28,6 +29,10 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 소셜 ID (소셜 로그인 사용자 고유 ID)
+    @Column(nullable = true, unique = true) // 소셜 사용자를 고유하게 식별
+    private String socialId;
+
     // 이름(설명)
     @Column(nullable = false)
     private String name;
@@ -44,7 +49,7 @@ public class Member extends BaseEntity {
     private String email;
 
     // 비밀번호
-    @Column(nullable = false)
+    @Column(nullable = true) // 소셜 로그인 사용자는 비밀번호가 없음
     private String password;
 
     // 프로필 사진
@@ -61,7 +66,8 @@ public class Member extends BaseEntity {
     private String belong_to_club;
   
     // 약관
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "agreement_id", nullable = false, unique = true)
     private Agreements agreement;
 
     // 문의글
@@ -91,4 +97,16 @@ public class Member extends BaseEntity {
     // 프로젝트 홍보 댓글
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
+
+    //동아리
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ClubMember> clubMembers = new ArrayList<>();
+
+    @PrePersist
+    public void setDefaultValues() {
+        if (this.name == null) this.name = "임시 이름";
+        if (this.nickname == null) this.nickname = "임시 닉네임";
+        if (this.birth == null) this.birth = new Date(0);
+        if (this.email == null) this.email = "unknown@example.com";
+    }
 }

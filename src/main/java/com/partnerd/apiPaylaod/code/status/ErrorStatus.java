@@ -52,6 +52,12 @@ public enum ErrorStatus implements BaseErrorCode {
     COLLAB_INQUIRY_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "콜라보레이션 문의글이 없습니다."),
     COLLAB_INQUIRY_PARENT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "답변할 콜라보레이션 문의글이 없습니다."),
 
+    // 동아리
+    CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),
+
+    //카테고리
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001","해당 카테고리가 없습니다."),
+
     // 행사 유형 관련
     EVENT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "EVENTTYPE4001", "이벤트 타입이 없습니다."),
 

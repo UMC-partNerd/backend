@@ -15,8 +15,8 @@ public class PromotionProjectResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CreatePromotionProjectResultDTO {
-        Long promotionProjectId;
-        LocalDateTime createdAt;
+        private Long promotionProjectId;
+        private LocalDateTime createdAt;
     }
 
     // 프로젝트 홍보 수정
@@ -25,7 +25,7 @@ public class PromotionProjectResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdatePromotionProjectResultDTO {
-        Long promotionProjectId;
-        LocalDateTime updatedAt;
+        private Long promotionProjectId;
+        private LocalDateTime updatedAt;
     }
 }
