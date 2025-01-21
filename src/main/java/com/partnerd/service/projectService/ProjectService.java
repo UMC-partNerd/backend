@@ -3,6 +3,9 @@ package com.partnerd.service.projectService;
 
 import com.partnerd.domain.Project;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface ProjectService {
 
@@ -15,5 +18,8 @@ public interface ProjectService {
 
     // 프로젝트 모집글 삭제
     Void deleteProject(Long projectId);
+
+    // 프로젝트 모집글 모아보기
+    Page<Project> getProjectList(Integer page,Integer status, List<Long> category, String keyword);
 
 }
