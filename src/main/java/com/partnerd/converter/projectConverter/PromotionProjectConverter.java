@@ -38,8 +38,8 @@ public class PromotionProjectConverter {
     }
 
     // 프로젝트 홍보글 모아보기 (한칸씩)
-    public static PromotionProjectRequestDTO.PromotionProjectPreviewDTO promotionProjectPreviewDTO(PromotionProject promotionProject){
-         return PromotionProjectRequestDTO.PromotionProjectPreviewDTO.builder()
+    public static PromotionProjectResponseDTO.PromotionProjectPreviewDTO promotionProjectPreviewDTO(PromotionProject promotionProject){
+         return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
                 .promotionProjectId(promotionProject.getId())
                 .title(promotionProject.getTitle())
                 .intro(promotionProject.getIntro())
@@ -47,11 +47,11 @@ public class PromotionProjectConverter {
     }
 
     // 프로젝트 홍보글 모아보기 (전체 리스트)
-    public static PromotionProjectRequestDTO.PromotionProjectPreviewListDTO promotionProjectPreviewListDTO(Page<PromotionProject> promotionProjectPage){
-        List<PromotionProjectRequestDTO.PromotionProjectPreviewDTO> promotionProjectPreviewDTOList =
+    public static PromotionProjectResponseDTO.PromotionProjectPreviewListDTO promotionProjectPreviewListDTO(Page<PromotionProject> promotionProjectPage){
+        List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO> promotionProjectPreviewDTOList =
                 promotionProjectPage.stream().map(PromotionProjectConverter::promotionProjectPreviewDTO).collect(Collectors.toList());
 
-        return PromotionProjectRequestDTO.PromotionProjectPreviewListDTO.builder()
+        return PromotionProjectResponseDTO.PromotionProjectPreviewListDTO.builder()
                 .promotionProjectPreviewDTOList(promotionProjectPreviewDTOList)
                 .listSize(promotionProjectPage.getSize())
                 .totalPage(promotionProjectPage.getTotalPages())

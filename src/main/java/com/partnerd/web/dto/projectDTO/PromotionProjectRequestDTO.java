@@ -28,29 +28,4 @@ public class PromotionProjectRequestDTO {
         private List<Long> promotionProjectMember;   // 함께한 팀원
         private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
-
-    // 프로젝트 홍보글 모아보기 (한 칸씩)
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PromotionProjectPreviewDTO {
-        private Long promotionProjectId;
-        private String title;
-        private String intro;
-    }
-
-    // 프로젝트 홍보글 모아보기 (전체 리스트)
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PromotionProjectPreviewListDTO{
-        private List<PromotionProjectPreviewDTO> promotionProjectPreviewDTOList;
-        private Integer listSize;
-        private Integer totalPage;
-        private Long totalElements;
-        private Boolean isFirst;
-        private Boolean isLast;
-    }
 }
