@@ -74,7 +74,8 @@ public class CollabPost extends BaseEntity {
     // 콜라보 카테고리
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostCategory> collabPostCategoryList = new LinkedHashSet<>();
-
+  
+    // 콜라보 문의글
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabInquiry> collabInquiryList = new LinkedHashSet<>();
     
@@ -82,15 +83,15 @@ public class CollabPost extends BaseEntity {
         if (this.clubMember != null) {
             this.clubMember.getCollabPostList().remove(this);
         }
-        this.clubMember = clubMember;
+        this.clubMember = addClubMember;
         clubMember.getCollabPostList().add(this);
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(EventType addEventType) {
         if (this.eventType != null) {
             this.eventType.getCollabPostList().remove(this);
         }
-        this.eventType = eventType;
+        this.eventType = addEventType;
         eventType.getCollabPostList().add(this);
     }
 

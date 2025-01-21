@@ -5,10 +5,7 @@ import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.converter.projectConverter.ProjectCategoryPreferConverter;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.converter.projectConverter.ProjectMemberConverter;
-import com.partnerd.domain.Member;
-import com.partnerd.domain.Project;
-import com.partnerd.domain.ProjectCategory;
-import com.partnerd.domain.PromotionProject;
+import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -17,10 +14,17 @@ import com.partnerd.repository.projectRepository.ProjectCategoryRepository;
 import com.partnerd.repository.projectRepository.ProjectMemberRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectCategoryRepository projectCategoryRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectCategoryPreferRepository projectCategoryPreferRepository;
+    private final JPAQueryFactory queryFactory;
 
     // 프로젝트 모집글 생성
     @Override
@@ -61,6 +66,23 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectCategoryPreferList.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(newProject);});
 
+
+        // 컨택트 방식
+        if (request.getContactMethod() != null) {
+            List<ContactMethod> contactMethods = request.getContactMethod().stream()
+                    .map(contactMethodDTO -> {
+                        ContactMethod contactMethod = ContactMethod.builder()
+                                .contactType(contactMethodDTO.getContactType())
+                                .contactUrl(contactMethodDTO.getContactUrl())
+                                .build();
+                        contactMethod.setProject(newProject); // 프로젝트와 연결
+                        return contactMethod;
+                    })
+                    .collect(Collectors.toList());
+
+            newProject.setContactMethodList(contactMethods);
+        }
+
         return projectRepository.save(newProject);
     }
 
@@ -79,9 +101,12 @@ public class ProjectServiceImpl implements ProjectService {
         existingProject.setCurrent_progress(request.getCurrent_progress());
         existingProject.setSkill(request.getSkill());
         existingProject.setPart(request.getPart());
+        existingProject.setRecruitNum(request.getRecruitNum());
         existingProject.setDev_stack(request.getDev_stack());
         existingProject.setPm_stack(request.getPm_stack());
         existingProject.setDesign_stack(request.getDesign_stack());
+        existingProject.setStartDate(request.getStartDate());
+        existingProject.setEndDate(request.getEndDate());
 
         projectMemberRepository.deleteByProject(existingProject);
 
@@ -109,6 +134,21 @@ public class ProjectServiceImpl implements ProjectService {
 
         existingProject.setProjectCategoryPreferList(newCategoryPrefers);
 
+        // 컨텍트 방식
+        if (request.getContactMethod() != null) {
+            existingProject.getContactMethodList().clear();
+
+            request.getContactMethod().forEach(contactMethodDTO -> {
+                ContactMethod contactMethod = ContactMethod.builder()
+                        .contactType(contactMethodDTO.getContactType())
+                        .contactUrl(contactMethodDTO.getContactUrl())
+                        .project(existingProject)
+                        .build();
+                existingProject.getContactMethodList().add(contactMethod);
+            });
+
+        }
+
         return projectRepository.save(existingProject);
     }
 
@@ -119,5 +159,49 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.deleteById(existingProject.getId());
         return null;
+    }
+
+    // 프로젝트 모집글 모아보기
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Project> getProjectList(Integer page, Integer status, List<Long> category, String keyword) {
+        QProject project = QProject.project;
+
+        Pageable pageable = PageRequest.of(page, 16);
+
+        JPQLQuery<Project> query = queryFactory.selectFrom(project);
+
+        Date now = new Date();
+
+        // 모집 상태 필터링
+        if (status != null) {
+            switch (status) {
+                case 0:
+                    query.where(project.endDate.goe(now));
+                    break;
+                case 1:
+                    query.where(project.endDate.lt(now));
+                    break;
+            }
+        }
+
+        // 카테고리 필터링
+        if (category != null && !category.isEmpty()) {
+            query.where(project.projectCategoryPreferList.any().projectCategory.id.in(category));
+        }
+
+        // 검색 필터링
+        if (keyword != null && !keyword.isEmpty()) {
+            query.where(project.title.containsIgnoreCase(keyword));
+        }
+
+        query.orderBy(project.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<Project> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
     }
 }

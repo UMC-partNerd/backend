@@ -12,5 +12,6 @@ import lombok.Setter;
 public class ClubUpdateResponseDTO {
     private Long clubId;
     private String name;
-    private String category;
+    private Long categoryId;
+    private String categoryName;
 }

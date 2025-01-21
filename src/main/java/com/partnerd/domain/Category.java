@@ -27,4 +27,10 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 
+    // 단일 카테고리 연결된 클럽들
+    @OneToMany(mappedBy = "category")
+    private List<Club> clubs = new ArrayList<>();
+
+
+
 }

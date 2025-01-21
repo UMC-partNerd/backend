@@ -2,11 +2,16 @@ package com.partnerd.converter.projectConverter;
 
 
 import com.partnerd.domain.Project;
+import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectConverter {
 
@@ -20,9 +25,12 @@ public class ProjectConverter {
                 .current_progress(request.getCurrent_progress())
                 .skill(request.getSkill())
                 .part(request.getPart())
+                .recruitNum(request.getRecruitNum())
                 .dev_stack(request.getDev_stack())
                 .pm_stack(request.getPm_stack())
                 .design_stack(request.getDesign_stack())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
                 .projectMemberList(new ArrayList<>())
                 .projectCategoryPreferList(new ArrayList<>())
                 .build();
@@ -43,4 +51,45 @@ public class ProjectConverter {
                 .build();
     }
 
+    // 프로젝트 모집글 모아보기 (한칸씩)
+    public static ProjectResponseDTO.ProjectPreviewDTO projectPreviewDTO(Project project) {
+
+        Date now = new Date();
+
+        List<ProjectCategoryDTO> projectCategoryDTOS =  project.getProjectCategoryPreferList().stream()
+                .map(projectCategory -> {
+                    ProjectCategoryDTO projectCategoryDTO = ProjectCategoryDTO.builder()
+                            .id(projectCategory.getProjectCategory().getId())
+                            .name(projectCategory.getProjectCategory().getName())
+                            .build();
+                    return projectCategoryDTO;
+                }).collect(Collectors.toList());
+
+        String status = (project.getEndDate() != null && project.getEndDate().before(now))
+                ? "모집완료"
+                : "모집중";
+
+        return ProjectResponseDTO.ProjectPreviewDTO.builder()
+                .projectId(project.getId())
+                .projectStatus(status)
+                .title(project.getTitle())
+                .intro(project.getIntro())
+                .categoryDTOList(projectCategoryDTOS)
+                .build();
+    }
+
+    // 프로젝트 모집글 모아보기 (전체 리스트)
+    public static ProjectResponseDTO.ProjectPreviewListDTO projectPreviewListDTO(Page<Project> projectPage) {
+        List<ProjectResponseDTO.ProjectPreviewDTO> projectPreviewDTOList =
+                projectPage.stream().map(ProjectConverter::projectPreviewDTO).collect(Collectors.toList());
+
+        return ProjectResponseDTO.ProjectPreviewListDTO.builder()
+                .projectPreviewDTOList(projectPreviewDTOList)
+                .listSize(projectPage.getSize())
+                .totalPage(projectPage.getTotalPages())
+                .totalElements(projectPage.getTotalElements())
+                .isFirst(projectPage.isFirst())
+                .isLast(projectPage.isLast())
+                .build();
+    }
 }

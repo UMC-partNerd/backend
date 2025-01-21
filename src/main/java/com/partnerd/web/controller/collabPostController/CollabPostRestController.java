@@ -35,7 +35,6 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
     }
 
-
     // 콜라보 글 수정
     @PatchMapping("/{collabPostId}")
     @Operation(summary = "콜라보 글 수정 API",description = "콜라보 글을 수정하는 API입니다.")
@@ -74,7 +73,6 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
 
-
     @GetMapping("/{collabPostId}")
     @Operation(summary = "콜라보 글 상세 조회 API 구현 ",description = "콜라보 글 상세 조회 API입니다.")
     @ApiResponses({
@@ -87,10 +85,6 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostDetailDTO(collabPost));
 
     }
-
-
-
-
 
 
 

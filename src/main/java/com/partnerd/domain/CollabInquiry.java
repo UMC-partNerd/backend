@@ -1,7 +1,6 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
-import com.partnerd.domain.enums.CollabInquiryStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,10 +23,6 @@ public class CollabInquiry extends BaseEntity {
     @Column(nullable = false)
     private String contents;
 
-    // 문의 상태
-    @Enumerated(EnumType.STRING)
-    private CollabInquiryStatus status;
-
     // 작성자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -43,10 +38,13 @@ public class CollabInquiry extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_inquiry_id")
     private CollabInquiry parentInquiry;
+    
+    // 댓글 좋아요 수
+    private int likes = 0;
 
-    private int likes = 0; //댓글 좋아요 수
+    // 삭제 여부
+    private Integer isDeleted = 0;
 
-    private int level;
 
     @OneToMany(mappedBy = "parentInquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CollabInquiry> children = new ArrayList<>();
@@ -73,17 +71,13 @@ public class CollabInquiry extends BaseEntity {
         parentInquiry.getChildren().add(this);
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void updateStatus() {
-        this.status = CollabInquiryStatus.ANSWERED;
-    }
     public void updateCollabInquiry(String contents) {
         this.contents = contents;
     }
 
+    public void changeIsDeleted() {
+        this.isDeleted = 1;
+    }
 
 
 

@@ -12,8 +12,11 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,5 +66,21 @@ public class ProjectRestController {
 
         projectService.deleteProject(projectId);
         return ApiResponse.onSuccess(null);
+    }
+
+    // 프로젝트 모집글 모아보기
+    @GetMapping("/recruit")
+    @Operation(summary = "프로젝트 모집글 모아보기 API",description = "모집글 프로젝트를 모아보는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<ProjectResponseDTO.ProjectPreviewListDTO> getProjectList(@RequestParam(name = "page") Integer page,
+                                                                                @RequestParam(name = "status", required = false) Integer status,
+                                                                                @RequestParam(name = "category", required = false) List<Long> category,
+                                                                                @RequestParam(name = "keyword", required = false) String keyword
+                                            ){
+
+        Page<Project> projectList = projectService.getProjectList(page - 1, status, category, keyword);
+        return ApiResponse.onSuccess(ProjectConverter.projectPreviewListDTO(projectList));
     }
 }

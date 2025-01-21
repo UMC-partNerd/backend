@@ -60,9 +60,9 @@ public class PromotionProjectRestController {
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<String> deletePromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
+    public ApiResponse<Void> deletePromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
 
         promotionProjectService.deletePromotionProject(promotionProjectId);
-        return ApiResponse.onSuccess("");
+        return ApiResponse.onSuccess(null);
     }
 }

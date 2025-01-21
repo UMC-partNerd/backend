@@ -1,6 +1,10 @@
 package com.partnerd.repository.collabPostRepository;
 
 import com.partnerd.domain.*;
+import com.partnerd.domain.CollabPost;
+import com.partnerd.domain.QCategory;
+import com.partnerd.domain.QCollabPost;
+import com.partnerd.domain.QMember;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -55,6 +60,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     }
 
 
+
     @Override
     public CollabPost findCollabPostDetails(Long collabPostId) {
 
@@ -70,5 +76,19 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .where(qCollabPost.id.eq(collabPostId));
 
         return query.fetchOne();
+
+    @Override
+    public Optional<CollabPost> findByIdWithMember(Long collabPostId) {
+
+        JPAQuery<CollabPost> query = queryFactory
+                .selectFrom(qCollabPost)
+                .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
+                .leftJoin(qClubMember.member, qMember).fetchJoin()
+                .where(qCollabPost.id.eq(collabPostId));
+
+        Optional<CollabPost> collabPost = Optional.ofNullable(query.fetchOne());
+
+        return collabPost;
+
     }
 }

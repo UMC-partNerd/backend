@@ -1,7 +1,6 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
-import com.partnerd.domain.enums.ProjectStatus;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import jakarta.persistence.*;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -38,10 +38,6 @@ public class Project extends BaseEntity {
     // 프로필 사진
     private String profile_img_url;
 
-    // 모집 상태
-    @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
-
     // 프로젝트 설명
     @Column(nullable = false)
     private String description;
@@ -58,6 +54,9 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private String part;
 
+    // 모집 인원
+    private String recruitNum;
+
     // 개발 기술 스택
     @Column(nullable = false)
     private String dev_stack;
@@ -69,6 +68,18 @@ public class Project extends BaseEntity {
     // 디자인 기술 스택
     @Column(nullable = false)
     private String design_stack;
+
+    // 시작 날짜
+    @Column(nullable = false)
+    private Date startDate;
+
+    // 종료 날짜
+    @Column(nullable = false)
+    private Date endDate;
+    
+    // 컨택트 방법
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContactMethod> contactMethodList = new ArrayList<>();
 
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
