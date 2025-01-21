@@ -104,10 +104,8 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
         CollabInquiry parentInquiry = collabInquiry.getParentInquiry();
 
         if (parentInquiry.getIsDeleted() == 1 && collabInquiry.getParentInquiry().getChildren().size() == 1) {
-            System.out.println("부모 자식 모두 삭제");
             collabInquiryRepository.delete(collabInquiry.getParentInquiry());
         } else {
-            System.out.println("자식만 삭제");
             parentInquiry.getChildren().remove(collabInquiry);
             collabInquiryRepository.delete(collabInquiry);
         }
