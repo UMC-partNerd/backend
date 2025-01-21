@@ -38,7 +38,7 @@ public class CollabInquiry extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_inquiry_id")
     private CollabInquiry parentInquiry;
-
+    
     // 댓글 좋아요 수
     private int likes = 0;
 
@@ -71,7 +71,6 @@ public class CollabInquiry extends BaseEntity {
         parentInquiry.getChildren().add(this);
     }
 
-
     public void updateCollabInquiry(String contents) {
         this.contents = contents;
     }
@@ -79,7 +78,6 @@ public class CollabInquiry extends BaseEntity {
     public void changeIsDeleted() {
         this.isDeleted = 1;
     }
-
 
 
 

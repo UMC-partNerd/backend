@@ -8,5 +8,7 @@ import java.util.Optional;
 
 public interface CollabPostRepositoryCustom {
     Page<CollabPost> findAllWithCategories(Pageable pageable);
+    CollabPost findCollabPostDetails(Long collabPostId);
     Optional<CollabPost> findByIdWithMember(Long collabPostId);
+
 }

@@ -18,6 +18,7 @@ public class CollabInquiryResponseDTO {
         private Long parentId;
     }
 
+
     @Builder
     @Getter
     @NoArgsConstructor

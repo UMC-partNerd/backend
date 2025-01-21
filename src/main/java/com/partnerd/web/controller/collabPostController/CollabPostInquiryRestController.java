@@ -64,6 +64,7 @@ public class CollabPostInquiryRestController {
         return ApiResponse.onSuccess(responseDTO);
     }
 
+
     @DeleteMapping("/{collabInquiryId}")
     @Operation(summary = "콜라보 문의글 삭제 API",description = "콜라보 문의글 삭제 API입니다.")
     @ApiResponses({

@@ -73,5 +73,20 @@ public class CollabPostRestController {
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
 
+    @GetMapping("/{collabPostId}")
+    @Operation(summary = "콜라보 글 상세 조회 API 구현 ",description = "콜라보 글 상세 조회 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CollabPostResponseDTO.CollabPostDetailDTO> getCollaboPostList(@PathVariable(name = "collabPostId") Long collabPostId) {
+
+        CollabPost collabPost = collabPostQueryService.getCollabPost(collabPostId);
+
+        return ApiResponse.onSuccess(CollabPostConverter.toCollabPostDetailDTO(collabPost));
+
+    }
+
+
+
 
 }
