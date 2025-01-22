@@ -8,7 +8,9 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -41,8 +43,8 @@ public class PromotionProject extends BaseEntity {
     private String description;
 
     // 투표수
-//    @Column(nullable = false)
-    private Long vote;
+    @Column(nullable = false)
+    private Long vote = 0L;
 
     //조회수
     @Column(nullable = false)
@@ -50,7 +52,7 @@ public class PromotionProject extends BaseEntity {
 
     // 컨택트 방법
     @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContactMethod> contactMethodList = new ArrayList<>();
+    private Set<ContactMethod> contactMethodList = new HashSet<>();
 
     // 사용자 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,11 +61,11 @@ public class PromotionProject extends BaseEntity {
     
     // 홍보 프로젝트 팀원
     @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
-    private List<PromotionProjectMember> promotionProjectMemberList = new ArrayList<>();
+    private Set<PromotionProjectMember> promotionProjectMemberList = new HashSet<>();
 
     // 홍보 프로젝트 사진
     @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
-    private List<PromotionProjectImage> promotionProjectImageList = new ArrayList<>();
+    private Set<PromotionProjectImage> promotionProjectImageList = new HashSet<>();
 
     // 홍보 프로젝트 댓글
     @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
