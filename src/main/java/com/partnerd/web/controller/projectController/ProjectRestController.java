@@ -77,10 +77,24 @@ public class ProjectRestController {
     public ApiResponse<ProjectResponseDTO.ProjectPreviewListDTO> getProjectList(@RequestParam(name = "page") Integer page,
                                                                                 @RequestParam(name = "status", required = false) Integer status,
                                                                                 @RequestParam(name = "category", required = false) List<Long> category,
-                                                                                @RequestParam(name = "keyword", required = false) String keyword
-                                            ){
+                                                                                @RequestParam(name = "keyword", required = false) String keyword){
 
         Page<Project> projectList = projectService.getProjectList(page - 1, status, category, keyword);
         return ApiResponse.onSuccess(ProjectConverter.projectPreviewListDTO(projectList));
+    }
+    
+    // 프로젝트 모집글 상세페이지 조회
+    @GetMapping("/recruit/{projectId}")
+    @Operation(summary = "프로젝트 모집글 상세페이지 조회 API",description = "모집글 프로젝트를 상세 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "projectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<ProjectResponseDTO.ProjectDetailDTO> getProject(@PathVariable(name = "projectId") Long projectId){
+
+        Project project = projectService.getProject(projectId);
+        return ApiResponse.onSuccess(ProjectConverter.toProjectDetailDTO(project));
     }
 }

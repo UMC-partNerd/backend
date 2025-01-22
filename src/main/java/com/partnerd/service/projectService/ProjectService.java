@@ -21,5 +21,8 @@ public interface ProjectService {
 
     // 프로젝트 모집글 모아보기
     Page<Project> getProjectList(Integer page,Integer status, List<Long> category, String keyword);
+    
+    // 프로젝트 모집글 상세페이지 조회
+    Project getProject(Long projectId);
 
 }

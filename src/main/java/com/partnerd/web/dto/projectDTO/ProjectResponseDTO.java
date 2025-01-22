@@ -1,12 +1,16 @@
 package com.partnerd.web.dto.projectDTO;
 
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class ProjectResponseDTO {
 
@@ -56,4 +60,29 @@ public class ProjectResponseDTO {
         Boolean isFirst;
         Boolean isLast;
     }
+    
+    // 프로젝트 모집글 상세페이지 보기
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProjectDetailDTO{
+        private String title;   // 제목
+        private String intro;   // 한줄 소개
+        private String description;     // 프로젝트 설명
+        private String current_progress; // 개발 상황 및 발전 방향
+        private String dev_stack;   // 개발 기술 스택
+        private String pm_stack;    // 기획 기술 스택
+        private String design_stack;    // 디자인 기술 스택
+        private String part;    // 필요한 파트
+        private String recruitNum;  // 필요한 인원
+        private String skill;   // 필요한 역량
+        private Date startDate; // 모집 시작일
+        private Date endDate;   // 모집 마감일
+        private MemberResponseDTO.MemberForProjectDetailDTO leaderInfo; // 리더(작성자) 정보
+        private Set<ProjectCategoryDTO> projectCategories; // 개발 카테고리
+        private Set<ProjectMemberDTO> projectMembers;  // 함께한 팀원
+        private Set<ContactMethodDTO> contactMethods;  // 컨택
+    }
+
 }

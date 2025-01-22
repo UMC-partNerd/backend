@@ -25,6 +25,6 @@ public class ProjectCategory extends BaseEntity {
     private String name;
 
     //
-    @OneToMany(mappedBy = "projectCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projectCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProjectCategoryPrefer> projectCategoryPreferList = new ArrayList<>();
 }

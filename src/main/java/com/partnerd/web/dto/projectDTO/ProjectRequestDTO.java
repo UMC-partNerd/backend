@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class ProjectRequestDTO {
 
@@ -27,7 +28,7 @@ public class ProjectRequestDTO {
         private Date endDate; // 종료 날짜
         private List<Long> projectMember;   // 함께한 팀원
         private List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
-        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
+        private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
     // 프로젝트 모집글 수정
@@ -48,7 +49,7 @@ public class ProjectRequestDTO {
         private Date endDate; // 종료 날짜
         private List<Long> projectMember;   // 함께한 팀원
         private List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
-        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
+        private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
 }
