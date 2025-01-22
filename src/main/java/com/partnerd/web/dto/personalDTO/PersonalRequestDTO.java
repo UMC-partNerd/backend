@@ -8,10 +8,10 @@ import java.util.List;
 
 public class PersonalRequestDTO {
 
-    // 퍼스널페이지 생성
+    // 퍼스널페이지 생성/수정
     @Getter
     @Setter
-    public static class CreatePersonalDTO {
+    public static class PersonalDTO {
         String intro;    // 한 줄 소개
         String personalHistory; // 경력
         String education;    // 학력

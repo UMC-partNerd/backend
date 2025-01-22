@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -44,7 +45,7 @@ public class Personal extends BaseEntity {
     private Member member;
 
     // 퍼스널 링크
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "personal_id")
     private List<PersonalLink> personalLinkList = new ArrayList<>();
 

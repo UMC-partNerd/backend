@@ -32,7 +32,7 @@ public class PersonalRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     public ApiResponse<PersonalResponseDTO.CreatePersonalResultDTO> addPersonal(@RequestHeader("Authorization") String authorizationHeader,
-                                                                            @RequestBody @Valid PersonalRequestDTO.CreatePersonalDTO request) {
+                                                                            @RequestBody @Valid PersonalRequestDTO.PersonalDTO request) {
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
 
@@ -51,9 +51,6 @@ public class PersonalRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
-    @Parameters({
-            @Parameter(name = "memberId", description = "사용자의 ID, path variable 입니다!")
-    })
     public ApiResponse<PersonalResponseDTO.ReadPersonalResultDTO> readPersonal(@RequestHeader("Authorization") String authorizationHeader) {
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
@@ -65,5 +62,25 @@ public class PersonalRestController {
         Personal personal = personalService.readPersonal(memberId);
 
         return ApiResponse.onSuccess(PersonalConverter.toReadPersonalResultDTO(personal));
+    }
+
+    // 퍼스널페이지 수정
+    @PatchMapping("/")
+    @Operation(summary = "퍼스널페이지 수정 API", description = "특정 사용자의 퍼스널페이지를 수정 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+    })
+    public ApiResponse<PersonalResponseDTO.UpdatePersonalResultDTO> updatePersonal(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                @RequestBody @Valid PersonalRequestDTO.PersonalDTO request) {
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        Personal personal = personalService.updatePersonal(request, memberId);
+
+        return ApiResponse.onSuccess(PersonalConverter.toUpdatePersonalResultDTO(personal));
     }
 }

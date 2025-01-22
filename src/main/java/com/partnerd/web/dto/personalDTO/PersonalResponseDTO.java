@@ -44,4 +44,20 @@ public class PersonalResponseDTO {
         String skill; // 스킬
         List<PersonalLinkResponseDTO.PersonalLinkResultDTO> personalLinkList; // 링크 목록
     }
+
+    // 퍼스널페이지 수정
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdatePersonalResultDTO {
+        Long personalId; // 퍼스널 ID
+        String intro; // 한줄소개
+        String personalHistory; // 경력
+        String education; // 학력
+        String activityProject; // 활동 프로젝트
+        String skill; // 스킬
+        List<PersonalLinkResponseDTO.PersonalLinkResultDTO> personalLinkList; // 링크 목록
+        LocalDateTime updateAt;
+    }
 }

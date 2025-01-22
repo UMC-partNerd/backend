@@ -7,6 +7,7 @@ import com.partnerd.web.dto.personalLinkDTO.PersonalLinkResponseDTO;
 import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
 import com.partnerd.web.dto.personalDTO.PersonalResponseDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class PersonalConverter {
 
     // 퍼스널페이지 생성
-    public static Personal toPersonal(PersonalRequestDTO.CreatePersonalDTO request, Member member){
+    public static Personal toPersonal(PersonalRequestDTO.PersonalDTO request, Member member){
         List<PersonalLink> personalLinks = new ArrayList<>();
         if (request.getPersonalLinkList() != null) {
             request.getPersonalLinkList().forEach(linkDTO -> {
@@ -49,6 +50,7 @@ public class PersonalConverter {
                                 .linkUrl(link.getLinkUrl())
                                 .build())
                         .collect(Collectors.toList()))
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -70,6 +72,24 @@ public class PersonalConverter {
                                 .linkUrl(link.getLinkUrl())
                                 .build())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    // 퍼스널페이지 수정
+    public static PersonalResponseDTO.UpdatePersonalResultDTO toUpdatePersonalResultDTO(Personal personal) {
+        return PersonalResponseDTO.UpdatePersonalResultDTO.builder()
+                .personalId(personal.getId())
+                .intro(personal.getIntro())
+                .personalHistory(personal.getPersonalHistory())
+                .education(personal.getEducation())
+                .activityProject(personal.getActivityProject())
+                .skill(personal.getSkill())
+                .personalLinkList(personal.getPersonalLinkList().stream()
+                        .map(link -> PersonalLinkResponseDTO.PersonalLinkResultDTO.builder()
+                                .linkUrl(link.getLinkUrl())
+                                .build())
+                        .collect(Collectors.toList()))
+                .updateAt(LocalDateTime.now())
                 .build();
     }
 }

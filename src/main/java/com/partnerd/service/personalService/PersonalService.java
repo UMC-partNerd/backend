@@ -5,8 +5,11 @@ import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
 
 public interface PersonalService {
     // 퍼스널페이지 생성
-    Personal addPersonal(PersonalRequestDTO.CreatePersonalDTO request, Long memberId);
+    Personal addPersonal(PersonalRequestDTO.PersonalDTO request, Long memberId);
 
     // 퍼스널페이지 조회
     Personal readPersonal(Long memberId);
+
+    // 퍼스널페이지 수정
+    Personal updatePersonal(PersonalRequestDTO.PersonalDTO request, Long memberId);
 }

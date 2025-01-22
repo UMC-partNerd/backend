@@ -5,7 +5,7 @@ import lombok.Setter;
 
 public class PersonalLinkRequestDTO {
 
-    // 퍼스널페이지 생성
+    // 퍼스널페이지 생성/수정
     @Getter
     @Setter
     public static class PersonalLinkDTO {
