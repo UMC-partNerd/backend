@@ -1,6 +1,6 @@
 package com.partnerd.web.dto.personalDTO;
 
-import com.partnerd.web.dto.PersonalLinkDTO.PersonalLinkRequestDTO;
+import com.partnerd.web.dto.personalLinkDTO.PersonalLinkRequestDTO;
 import lombok.Getter;
 import lombok.Setter;
 

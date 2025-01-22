@@ -1,4 +1,4 @@
-package com.partnerd.web.dto.PersonalLinkDTO;
+package com.partnerd.web.dto.personalLinkDTO;
 
 import lombok.Getter;
 import lombok.Setter;

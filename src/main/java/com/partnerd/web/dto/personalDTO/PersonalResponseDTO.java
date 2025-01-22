@@ -1,6 +1,6 @@
 package com.partnerd.web.dto.personalDTO;
 
-import com.partnerd.web.dto.PersonalLinkDTO.PersonalLinkResponseDTO;
+import com.partnerd.web.dto.personalLinkDTO.PersonalLinkResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
