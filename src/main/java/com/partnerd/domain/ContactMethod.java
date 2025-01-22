@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Entity
 @Getter
@@ -73,7 +74,7 @@ public class ContactMethod {
         this.project = project;
         if (this.project != null) {
             if (this.project.getContactMethodList() == null) {
-                this.project.setContactMethodList(new ArrayList<>());
+                this.project.setContactMethodList(new HashSet<>());
             }
             this.project.getContactMethodList().add(this);
         }
@@ -89,7 +90,7 @@ public class ContactMethod {
         this.promotionProject = promotionProject;
         if (this.promotionProject != null) {
             if (this.promotionProject.getContactMethodList() == null) {
-                this.promotionProject.setContactMethodList(new ArrayList<>());
+                this.promotionProject.setContactMethodList(new HashSet<>());
             }
             this.promotionProject.getContactMethodList().add(this);
         }

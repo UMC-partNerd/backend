@@ -2,11 +2,20 @@ package com.partnerd.converter.projectConverter;
 
 
 import com.partnerd.domain.Project;
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
+import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;
+import com.partnerd.web.dto.projectDTO.ProjectMemberDTO;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectConverter {
 
@@ -24,8 +33,10 @@ public class ProjectConverter {
                 .dev_stack(request.getDev_stack())
                 .pm_stack(request.getPm_stack())
                 .design_stack(request.getDesign_stack())
-                .projectMemberList(new ArrayList<>())
-                .projectCategoryPreferList(new ArrayList<>())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .projectMemberList(new HashSet<>())
+                .projectCategoryPreferList(new HashSet<>())
                 .build();
     }
 
@@ -44,4 +55,81 @@ public class ProjectConverter {
                 .build();
     }
 
+    // 프로젝트 모집글 모아보기 (한칸씩)
+    public static ProjectResponseDTO.ProjectPreviewDTO projectPreviewDTO(Project project) {
+
+        Date now = new Date();
+
+        List<ProjectCategoryDTO> projectCategoryDTOS =  project.getProjectCategoryPreferList().stream()
+                .map(projectCategory -> {
+                    ProjectCategoryDTO projectCategoryDTO = ProjectCategoryDTO.builder()
+                            .id(projectCategory.getProjectCategory().getId())
+                            .name(projectCategory.getProjectCategory().getName())
+                            .build();
+                    return projectCategoryDTO;
+                }).collect(Collectors.toList());
+
+        String status = (project.getEndDate() != null && project.getEndDate().before(now))
+                ? "모집완료"
+                : "모집중";
+
+        return ProjectResponseDTO.ProjectPreviewDTO.builder()
+                .projectId(project.getId())
+                .projectStatus(status)
+                .title(project.getTitle())
+                .intro(project.getIntro())
+                .categoryDTOList(projectCategoryDTOS)
+                .build();
+    }
+
+    // 프로젝트 모집글 모아보기 (전체 리스트)
+    public static ProjectResponseDTO.ProjectPreviewListDTO projectPreviewListDTO(Page<Project> projectPage) {
+        List<ProjectResponseDTO.ProjectPreviewDTO> projectPreviewDTOList =
+                projectPage.stream().map(ProjectConverter::projectPreviewDTO).collect(Collectors.toList());
+
+        return ProjectResponseDTO.ProjectPreviewListDTO.builder()
+                .projectPreviewDTOList(projectPreviewDTOList)
+                .listSize(projectPage.getSize())
+                .totalPage(projectPage.getTotalPages())
+                .totalElements(projectPage.getTotalElements())
+                .isFirst(projectPage.isFirst())
+                .isLast(projectPage.isLast())
+                .build();
+    }
+
+    // 프로젝트 모집글 상세페이지 조회
+    public static ProjectResponseDTO.ProjectDetailDTO toProjectDetailDTO(Project project) {
+        return ProjectResponseDTO.ProjectDetailDTO.builder()
+                .title(project.getTitle())
+                .intro(project.getIntro())
+                .description(project.getDescription())
+                .current_progress(project.getCurrent_progress())
+                .dev_stack(project.getDev_stack())
+                .pm_stack(project.getPm_stack())
+                .design_stack(project.getDesign_stack())
+                .part(project.getPart())
+                .recruitNum(project.getRecruitNum())
+                .skill(project.getSkill())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .contactMethods(project.getContactMethodList().stream()
+                        .map(ContactMethodDTO::toContactMethodDTO)
+                        .collect(Collectors.toSet()))
+                .projectMembers(project.getProjectMemberList().stream()
+                        .map(ProjectMemberDTO::toProjectMemberDTO)
+                        .collect(Collectors.toSet()))
+                .projectCategories(project.getProjectCategoryPreferList().stream()
+                        .map(category -> ProjectCategoryDTO.builder()
+                                .id(category.getProjectCategory().getId())
+                                .name(category.getProjectCategory().getName())
+                                .build())
+                        .collect(Collectors.toSet()))
+                .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
+                        .id(project.getMember().getId())
+                        .name(project.getMember().getName())
+                        .occupation_of_interest(project.getMember().getOccupation_of_interest())
+                        .belong_to_club(project.getMember().getBelong_to_club())
+                        .build())
+                .build();
+    }
 }

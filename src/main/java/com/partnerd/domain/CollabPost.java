@@ -7,9 +7,7 @@ import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -71,25 +69,29 @@ public class CollabPost extends BaseEntity {
 
     // 컨텍드 방법
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContactMethod> contactMethodList = new ArrayList<>();
-
+    private Set<ContactMethod> contactMethodList = new LinkedHashSet<>();
+    
     // 콜라보 카테고리
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
+    private Set<CollabPostCategory> collabPostCategoryList = new LinkedHashSet<>();
+  
+    // 콜라보 문의글
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CollabInquiry> collabInquiryList = new LinkedHashSet<>();
 
-    public void setClubMember(ClubMember clubMember) {
+    public void setClubMember(ClubMember addClubMember) {
         if (this.clubMember != null) {
             this.clubMember.getCollabPostList().remove(this);
         }
-        this.clubMember = clubMember;
+        this.clubMember = addClubMember;
         clubMember.getCollabPostList().add(this);
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(EventType addEventType) {
         if (this.eventType != null) {
             this.eventType.getCollabPostList().remove(this);
         }
-        this.eventType = eventType;
+        this.eventType = addEventType;
         eventType.getCollabPostList().add(this);
     }
 

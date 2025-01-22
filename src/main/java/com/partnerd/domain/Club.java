@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Club {
+public class Club extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Club {
 
     //조회수
     @Column(nullable = false)
-    private Long views;
+    private Long views =0L;
 
     //컨택트방법
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL,orphanRemoval = true)

@@ -10,11 +10,12 @@ import com.partnerd.domain.ContactMethod;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubRepository.ClubRepository;
 import com.partnerd.service.clubService.ClubService;
-import com.partnerd.web.dto.clubDTO.ClubRegisterRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubRegisterResponseDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateRequestDTO;
-import com.partnerd.web.dto.clubDTO.ClubUpdateResponseDTO;
+import com.partnerd.web.dto.clubDTO.*;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -108,6 +109,43 @@ public class ClubServiceImpl implements ClubService {
 
 
         return ClubConverter.toClubUpdateResponseDTO(updatedClub);
+    }
+
+    @Override
+    public List<ClubDTO> getClubs(Integer page, String sort, Long categoryID){
+
+        Pageable pageable = PageRequest.of(page, 12);
+        Page<Club> clubPage;
+
+        if(categoryID != null ){
+            //카테고리별 정렬처리
+            if("latest".equalsIgnoreCase(sort)){
+                clubPage = clubRepository.findByCategoryIdOrderByCreatedAtDesc(categoryID, pageable);
+
+            }
+            else{
+                clubPage = clubRepository.findByCategoryIdOrderByViewsDesc(categoryID, pageable);
+            }
+
+        } else {
+            //전체 정렬 처리
+            if("latest".equalsIgnoreCase(sort)){
+                clubPage = clubRepository.findAllByOrderByCreatedAtDesc(pageable);
+            }
+
+            else{
+                clubPage = clubRepository.findAllByOrderByViewsDesc(pageable);
+            }
+        }
+
+        //ClubConverter를 통해 Club을 ClubDTO로 변환시켜서 반환
+        return clubPage.stream()
+                .map(ClubConverter::toClubDTO)
+                .collect(Collectors.toList());
+
+
+
+
     }
 
 }
