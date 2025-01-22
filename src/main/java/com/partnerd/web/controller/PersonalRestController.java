@@ -28,7 +28,7 @@ public class PersonalRestController {
     private final PersonalService personalService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 프로젝트 모집글 생성
+    // 퍼스널페이지 생성
     @PostMapping("/")
     @Operation(summary = "퍼스널페이지 생성 API", description = "특정 사용자의 퍼스널페이지를 생성 API입니다.")
     @ApiResponses({
