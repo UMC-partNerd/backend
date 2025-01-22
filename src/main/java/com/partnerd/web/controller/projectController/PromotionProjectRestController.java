@@ -105,4 +105,19 @@ public class PromotionProjectRestController {
         Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectSearchList(page - 1, keyword);
         return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
     }
+
+    // 프로젝트 홍보글 상세페이지 조회
+    @GetMapping("/promotion/{promotionProjectId}")
+    @Operation(summary = "프로젝트 홍보글 상세페이지 API",description = "모집할 프로젝트를 상세 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<PromotionProjectResponseDTO.PromotionProjectDetailDTO> getPromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
+
+        PromotionProject promotionProject = promotionProjectService.getPromotionProject(promotionProjectId);
+        return ApiResponse.onSuccess(PromotionProjectConverter.toPromotionProjectDetailDTO(promotionProject));
+    }
 }

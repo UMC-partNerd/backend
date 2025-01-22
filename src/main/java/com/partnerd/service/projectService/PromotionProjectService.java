@@ -25,4 +25,7 @@ public interface PromotionProjectService {
 
     // 프로젝트 홍보 모아보기 (검색)
     Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword);
+
+    // 프로젝트 홍보글 상세페이지 조회
+    PromotionProject getPromotionProject(Long promotionProjectId);
 }

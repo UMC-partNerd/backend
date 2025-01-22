@@ -1,5 +1,7 @@
 package com.partnerd.web.dto.projectDTO;
 
+import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class PromotionProjectResponseDTO {
 
@@ -53,5 +56,20 @@ public class PromotionProjectResponseDTO {
         private Long totalElements;
         private Boolean isFirst;
         private Boolean isLast;
+    }
+
+    // 프로젝트 홍보글 상세페이지 보기
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PromotionProjectDetailDTO{
+        private String title;   // 제목
+        private String intro;   // 한줄 소개
+        private String description; // 설명
+        private Long vote;  // 투표수
+        private MemberResponseDTO.MemberForProjectDetailDTO leaderInfo; // 리더(작성자) 정보
+        private Set<PromotionProjectMemberDTO> promotionProjectMembers;   // 팀원
+        private Set<ContactMethodDTO> contactMethods;   // 컨택
     }
 }

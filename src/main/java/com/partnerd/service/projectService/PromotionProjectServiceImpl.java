@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,18 +38,18 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     public PromotionProject addPromotionProject(PromotionProjectRequestDTO.CreatePromotionProjectDTO request) {
         PromotionProject newPromotionProject = PromotionProjectConverter.toPromotionProject(request);
 
-        List<Member> memberList = request.getPromotionProjectMember().stream()
+        Set<Member> memberList = request.getPromotionProjectMember().stream()
                 .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND)))
-                .collect(Collectors.toList());
+                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
+                .collect(Collectors.toSet());
 
-        List<PromotionProjectMember> promotionProjectMemberList = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
+        Set<PromotionProjectMember> promotionProjectMemberList = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
 
         promotionProjectMemberList.forEach(promotionProjectMember -> {promotionProjectMember.setPromotionProject(newPromotionProject);});
 
         // 컨택트 방식
         if (request.getContactMethod() != null) {
-            List<ContactMethod> contactMethods = request.getContactMethod().stream()
+            Set<ContactMethod> contactMethods = request.getContactMethod().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
                                 .contactType(contactMethodDTO.getContactType())
@@ -57,7 +58,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
                         contactMethod.setPromotionProject(newPromotionProject);
                         return contactMethod;
                     })
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
 
             newPromotionProject.setContactMethodList(contactMethods);
         }
@@ -79,12 +80,12 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         promotionProjectMemberRepository.deleteByPromotionProject(existingPromotionProject);
 
-        List<Member> memberList = request.getPromotionProjectMember().stream()
+        Set<Member> memberList = request.getPromotionProjectMember().stream()
                 .map(memberId -> memberRepository.findById(memberId)
                         .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        List<PromotionProjectMember> newMembers = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
+        Set<PromotionProjectMember> newMembers = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
         newMembers.forEach(promotionProjectMember -> {promotionProjectMember.setPromotionProject(existingPromotionProject);});
 
         existingPromotionProject.setPromotionProjectMemberList(newMembers);
@@ -188,5 +189,17 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         long total = query.fetchCount();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+
+    // 프로젝트 모집글 상세페이지 조회
+    @Override
+    public PromotionProject getPromotionProject(Long promotionProjectId){
+        PromotionProject promotionProject = promotionProjectRepository.findPromotionProjectDetails(promotionProjectId);
+
+        if (promotionProject == null){
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
+        }
+        return promotionProject;
     }
 }

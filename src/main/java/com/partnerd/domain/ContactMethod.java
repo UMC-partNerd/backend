@@ -90,7 +90,7 @@ public class ContactMethod {
         this.promotionProject = promotionProject;
         if (this.promotionProject != null) {
             if (this.promotionProject.getContactMethodList() == null) {
-                this.promotionProject.setContactMethodList(new ArrayList<>());
+                this.promotionProject.setContactMethodList(new HashSet<>());
             }
             this.promotionProject.getContactMethodList().add(this);
         }
