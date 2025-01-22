@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PersonalServiceImpl  implements PersonalService {
@@ -23,11 +26,41 @@ public class PersonalServiceImpl  implements PersonalService {
     @Transactional
     public Personal addPersonal(PersonalRequestDTO.CreatePersonalDTO request, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() ->  new MemberHandler(ErrorStatus.MYPAGE_PROFILE_NOT_FOUND));
+                .orElseThrow(() ->  new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         Personal personal = PersonalConverter.toPersonal(request, member);
         personal.setMember(member);
 
         return personalRepository.save(personal);
+    }
+
+    // 퍼스널페이지 조회
+    @Override
+    public Personal readPersonal(Long memberId) {
+        // 전달받은 멤버 ID로 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)); // 멤버가 없으면 오류 반환
+
+        // 멤버 ID를 외래키로 갖는 퍼스널 데이터 조회
+        Optional<Personal> personalOptional = personalRepository.findByMemberId(memberId);
+
+        // 퍼스널 데이터가 존재하지 않는 경우 null 값으로 초기화된 퍼스널 객체 반환
+        if (personalOptional.isEmpty()) {
+            return Personal.builder()
+                    .intro(null)
+                    .personalHistory(null)
+                    .education(null)
+                    .activityProject(null)
+                    .skill(null)
+                    .member(member)
+                    .personalLinkList(Collections.emptyList())
+                    .build();
+        }
+
+        // 퍼스널 데이터가 존재하면 반환
+        Personal personal = personalOptional.get();
+        personal.setMember(member);
+
+        return personal;
     }
 }

@@ -13,7 +13,7 @@ public class PersonalLinkResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreatePersonalLinkResultDTO {
+    public static class PersonalLinkResultDTO {
         String linkUrl; // 링크 URL
     }
 }

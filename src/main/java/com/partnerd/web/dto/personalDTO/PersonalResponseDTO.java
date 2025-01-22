@@ -22,7 +22,26 @@ public class PersonalResponseDTO {
         String education; // 학력
         String activityProject; // 활동 프로젝트
         String skill; // 스킬
-        List<PersonalLinkResponseDTO.CreatePersonalLinkResultDTO> personalLinkList; // 링크 목록
+        List<PersonalLinkResponseDTO.PersonalLinkResultDTO> personalLinkList; // 링크 목록
         LocalDateTime createdAt;
+    }
+
+    // 퍼스널페이지 조회
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReadPersonalResultDTO {
+        Long personalId; // 퍼스널 ID
+        String nickname; // 닉네임
+        String profile_url; // 프로필사진
+        String occupation_of_interest; // 관심직군
+        String belong_to_club; // 소속
+        String intro; // 한줄소개
+        String personalHistory; // 경력
+        String education; // 학력
+        String activityProject; // 활동 프로젝트
+        String skill; // 스킬
+        List<PersonalLinkResponseDTO.PersonalLinkResultDTO> personalLinkList; // 링크 목록
     }
 }

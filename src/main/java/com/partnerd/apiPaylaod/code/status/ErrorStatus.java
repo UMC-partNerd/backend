@@ -32,7 +32,11 @@ public enum ErrorStatus implements BaseErrorCode {
     // 마이페이지 내프로필 관련
     MYPAGE_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자가 없습니다."),
     AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4002", "해당 약관이 없습니다."),
-  
+
+    // 마이페이지 퍼스널페이지 관련
+    PERSONAL_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자의 퍼스널페이지가 없습니다."),
+
+
     // 프로젝트 홍보 관련
     PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "존재하지 않는 홍보 프로젝트id입니다."),
     PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4002", "프로젝트 홍보글이 없습니다."),

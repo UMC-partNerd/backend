@@ -45,7 +45,28 @@ public class PersonalConverter {
                 .activityProject(personal.getActivityProject())
                 .skill(personal.getSkill())
                 .personalLinkList(personal.getPersonalLinkList().stream()
-                        .map(link -> PersonalLinkResponseDTO.CreatePersonalLinkResultDTO.builder()
+                        .map(link -> PersonalLinkResponseDTO.PersonalLinkResultDTO.builder()
+                                .linkUrl(link.getLinkUrl())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    // 퍼스널페이지 조회
+    public static PersonalResponseDTO.ReadPersonalResultDTO toReadPersonalResultDTO(Personal personal) {
+        return PersonalResponseDTO.ReadPersonalResultDTO.builder()
+                .personalId(personal.getId())
+                .nickname(personal.getMember().getNickname())
+                .profile_url(personal.getMember().getProfile_url())
+                .occupation_of_interest(personal.getMember().getOccupation_of_interest())
+                .belong_to_club(personal.getMember().getBelong_to_club())
+                .intro(personal.getIntro())
+                .personalHistory(personal.getPersonalHistory())
+                .education(personal.getEducation())
+                .activityProject(personal.getActivityProject())
+                .skill(personal.getSkill())
+                .personalLinkList(personal.getPersonalLinkList().stream()
+                        .map(link -> PersonalLinkResponseDTO.PersonalLinkResultDTO.builder()
                                 .linkUrl(link.getLinkUrl())
                                 .build())
                         .collect(Collectors.toList()))

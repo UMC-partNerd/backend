@@ -55,7 +55,7 @@ public class Personal extends BaseEntity {
     // 멤버 설정 메서드
     public void setMember(Member member) {
         if (member == null) {
-            throw new MemberHandler(ErrorStatus.MYPAGE_PROFILE_NOT_FOUND);
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
         }
         this.member = member;
     }
