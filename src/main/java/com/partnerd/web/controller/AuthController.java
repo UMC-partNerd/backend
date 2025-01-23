@@ -27,7 +27,7 @@ public class AuthController {
     @Operation(summary = "카카오 로그인", description = "카카오 인가 코드를 사용하여 로그인")
     public ApiResponse<LoginResponseDTO> loginWithKakao(
             @Parameter(description = "카카오에서 발급된 인가 코드", required = true)
-            @RequestParam String code) {
+            @RequestParam(name = "code") String code) {
         LoginResponseDTO response = kakaoOAuthService.login(code);
         return ApiResponse.onSuccess(response);
     }
