@@ -17,6 +17,6 @@ public class PersonalLink extends BaseEntity {
     private Long id;
 
     // 링크 URL
-    @Column(nullable = false)
-    private String link_url;
+    @Column(name = "link_url", nullable = false)
+    private String linkUrl;
 }
