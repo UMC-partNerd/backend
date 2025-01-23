@@ -16,6 +16,7 @@ public class ClubConverter {
                 .profile(null) // 이미지 처리 미구현
                 .views(0L)
                 .contactMethodList(new ArrayList<>())
+                .clubMembers(new ArrayList<>())
                 .build();
 
     }
