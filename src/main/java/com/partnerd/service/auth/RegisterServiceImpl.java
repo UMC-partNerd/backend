@@ -1,5 +1,7 @@
 package com.partnerd.service.auth;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.RegisterHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.AgreementsConverter;
 import com.partnerd.converter.AuthMemberConverter;
@@ -31,7 +33,7 @@ public class RegisterServiceImpl implements RegisterService {
             // 예외 처리: 요청 데이터와 약관 검증
             if (request == null || request.getAgreements() == null) {
                 log.error("Request or Agreements data is null");
-                throw new IllegalArgumentException("Request or Agreements data is null");
+                throw new RegisterHandler(ErrorStatus.REGISTER400);
             }
 
             // JWT 토큰에서 사용자 ID 추출
@@ -50,7 +52,7 @@ public class RegisterServiceImpl implements RegisterService {
             Agreements agreements = member.getAgreement();
             if (agreements == null) {
                 log.error("Agreements not found for Member ID: {}", userId);
-                throw new RuntimeException("Agreements not found for the user.");
+                throw new RegisterHandler(ErrorStatus.REGISTER400);
             }
             log.debug("Fetched Agreements before update: {}", agreements);
 

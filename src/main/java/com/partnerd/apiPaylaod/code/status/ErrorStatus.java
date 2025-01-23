@@ -23,8 +23,12 @@ public enum ErrorStatus implements BaseErrorCode {
   
   
   
-  
-  
+    //로그인(인증)
+    AUTH400(HttpStatus.BAD_REQUEST, "AUTH400", "유효하지 않은 인가 코드입니다."),
+
+    //회원가입
+    REGISTER400(HttpStatus.BAD_REQUEST, "REGISTER400", "추가 정보 등록 중 오류가 발생했습니다."),
+
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),
