@@ -79,6 +79,8 @@ public class CollabInquiry extends BaseEntity {
         this.isDeleted = 1;
     }
 
+    public void addLikes() { this.likes += 1; }
 
+    public void removeLikes() { this.likes -= 1; }
 
 }

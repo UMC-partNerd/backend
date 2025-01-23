@@ -112,5 +112,28 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     }
 
+    @Override
+    @Transactional
+    public Integer addLike (Long collabInquiryId) {
+
+        CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
+                new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        collabInquiry.addLikes();
+
+
+        return collabInquiry.getLikes();
+    }
+
+    @Override
+    public Integer removeLike(Long collabInquiryId) {
+        CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
+                new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        collabInquiry.removeLikes();
+
+        return collabInquiry.getLikes();
+    }
+
 
 }
