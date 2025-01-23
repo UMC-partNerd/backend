@@ -65,10 +65,24 @@ public class CollabPostResponseDTO {
         private String description;
         private String eventType;
         private String nickname;
+        private ImageDTO imageDTO;
         private List<CategoryDTO> categoryDTOList;
         private List<ContactMethodDTO> contactMethod;
         private List<CollabInquiryDTO> CollabInquiryList;
+        private String bannerKeyName;
+        private String mainKeyName;
+        private List<String> eventImgKeyNameList;
 
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ImageDTO {
+        private String bannerImageUrl;  // 배너 이미지 URL
+        private String mainImageUrl;    // 메인 이미지 URL
+        private List<String> eventImageUrls; // 이벤트 이미지들의 URL 리스트
     }
 
     @Builder
@@ -91,6 +105,8 @@ public class CollabPostResponseDTO {
         }
 
     }
+
+
 
 
 

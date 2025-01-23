@@ -1,3 +1,4 @@
+/*
 package com.partnerd.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -42,4 +43,4 @@ public class AmazonS3Manager{
     public String generateProjectKeyName(Uuid uuid) {
         return amazonConfig.getProjectPath() + '/' + uuid.getUuid();
     }
-}
+}*/

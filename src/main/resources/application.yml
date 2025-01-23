@@ -30,6 +30,10 @@ cloud:
     credentials:
       accessKey: ${AWS_ACCESS_KEY_ID:default}
       secretKey: ${AWS_SECRET_ACCESS_KEY:default}
+    cloudfront:
+      url: ${AWS_CLOUD_FRONT_DOMAIN}
+
+
 security:
   oauth2:
     client:
@@ -52,9 +56,12 @@ jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
 
+
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+
 
 redis:
   host: localhost      # Redis Docker 컨테이너가 실행 중인 호스트 (로컬 Docker)

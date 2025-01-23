@@ -6,6 +6,9 @@ import com.partnerd.domain.CollabPost;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -26,7 +29,7 @@ public class CollabPostCategory {
     private Category category;
 
     public void setCollabPost(CollabPost collabPost) {
-        if(this.collabPost != null) {
+        if (this.collabPost != null) {
             this.collabPost.getCollabPostCategoryList().remove(this);
         }
         this.collabPost = collabPost;
@@ -38,6 +41,12 @@ public class CollabPostCategory {
             this.category.getCollabPostCategoryList().remove(this);
         }
         this.category = category;
+
+        if (category.getCollabPostCategoryList() == null) {
+            category.setCollabPostCategoryList(new ArrayList<>());
+        }
         category.getCollabPostCategoryList().add(this);
+
     }
+
 }

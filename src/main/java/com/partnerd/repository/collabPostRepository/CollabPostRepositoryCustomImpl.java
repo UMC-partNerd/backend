@@ -1,13 +1,8 @@
 package com.partnerd.repository.collabPostRepository;
 
 import com.partnerd.domain.*;
-import com.partnerd.domain.CollabPost;
-import com.partnerd.domain.QCategory;
-import com.partnerd.domain.QCollabPost;
-import com.partnerd.domain.QMember;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
-import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,6 +30,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QMember qMember = QMember.member;
     private final QClubMember qClubMember = QClubMember.clubMember;
     private final QContactMethod qContactMethod = QContactMethod.contactMethod;
+    private final QCollabPostImg qCollabPostImg = QCollabPostImg.collabPostImg;
 
 
     private void applySorting(JPAQuery<CollabPost> query, Pageable pageable) {
@@ -101,6 +97,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
                 .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
                 .leftJoin(qCollabPost.eventType, qEventType).fetchJoin()
+                .leftJoin(qCollabPost.collabPostImgList, qCollabPostImg).fetchJoin()
                 .where(qCollabPost.id.eq(collabPostId));
 
         return query.fetchOne();

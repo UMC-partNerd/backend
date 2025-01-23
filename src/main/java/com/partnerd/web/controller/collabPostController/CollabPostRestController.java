@@ -1,10 +1,13 @@
 package com.partnerd.web.controller.collabPostController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.converter.collabPostConverter.CollabPostConverter;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
+import com.partnerd.service.s3Service.S3Service;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +26,6 @@ public class CollabPostRestController {
 
     private final CollabPostCommandService collabPostCommandService;
     private final CollabPostQueryService collabPostQueryService;
-
     // 콜라보 글 생성
     @PostMapping("/")
     @Operation(summary = "콜라보 글 생성 API",description = "콜라보 글을 생성하는 API입니다.")
@@ -32,6 +34,9 @@ public class CollabPostRestController {
     })
     public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> addCollabPost(@RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
+       if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
+           throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
+       }
         // 사용자가 동아리에 리더진인지 확인 후에 작성 가능 -> 추후에 해당 기능 추가
         CollabPost collabPost = collabPostCommandService.addCollabPost(requestDTO);
 
@@ -45,6 +50,10 @@ public class CollabPostRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost( @PathVariable Long collabPostId, @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+
+        if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
+        }
 
         CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO);
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
@@ -104,7 +113,6 @@ public class CollabPostRestController {
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
-
 
 
 }
