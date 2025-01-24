@@ -3,12 +3,19 @@ package com.partnerd.service.clubService.impl;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CategoryHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
+import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
 import com.partnerd.converter.ClubConverter;
 import com.partnerd.domain.Category;
 import com.partnerd.domain.Club;
 import com.partnerd.domain.ContactMethod;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.enums.ActiveType;
+import com.partnerd.domain.enums.ClubMemberRole;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
+import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.clubRepository.ClubRepository;
+import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
 import jakarta.validation.constraints.Null;
@@ -18,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +35,11 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
+    private final ClubMemberRepository clubMemberRepository;
 
     @Override
     public ClubRegisterResponseDTO registerClub(ClubRegisterRequestDTO dto) {
-
 
 
         //DTO에서받은 카테고리 id로 카테고리 받아옴
@@ -59,17 +68,41 @@ public class ClubServiceImpl implements ClubService {
 
 
         }
+        // 멤버 ID로 멤버 조회
+        Member member = memberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // ClubMember 객체 생성 및 설정
+        ClubMember clubMember = ClubMember.builder()
+                .role(ClubMemberRole.LEADER)
+                .status(ActiveType.ACTIVE)
+                .joined_date(new Date())
+                .club(club)
+                .member(member)
+                .build();
+
+        // Club의 ClubMembers 리스트에 추가
+        club.getClubMembers().add(clubMember);
+
+
 
         Club savedClub = clubRepository.save(club);
         return ClubConverter.toClubRegisterResponseDTO(savedClub);
     }
 
     @Override
-    public void deleteClub(Long clubId) {
+    public void deleteClub(Long clubId, Long memberId) {
 
         //클럽존재여부확인
         if (!clubRepository.existsById(clubId)) {
             throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
+        }
+
+        // 클럽 멤버 조회 및 리더 권한 확인
+        ClubMember clubMember = clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        if (clubMember.getRole() != ClubMemberRole.LEADER) {
+            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_AUTHORIZED);
         }
 
         // Delete the club
@@ -77,11 +110,18 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public ClubUpdateResponseDTO updateClub(Long clubId, ClubUpdateRequestDTO dto) {
+    public ClubUpdateResponseDTO updateClub(Long clubId, ClubUpdateRequestDTO dto, Long memberId) {
 
         //기존 클럽 정보가져오기
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.CLUB_NOT_FOUND));
+
+        // 클럽 멤버 조회 및 리더 권한 확인
+        ClubMember clubMember = clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        if (clubMember.getRole() != ClubMemberRole.LEADER) {
+            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_AUTHORIZED);
+        }
 
         //카테고리 정보 가져오기
         Category existingCategory = categoryRepository.findById(dto.getCategoryId())

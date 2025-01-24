@@ -29,11 +29,6 @@ public class ClubUpdateRequestDTO {
     @Schema(description = "연락 방법 목록")
     private List<ContactMethodDTO> contactMethod;
 
-    @NotNull(message = "회원ID는 비어있을 수 없습니다!")
-    @Min(value = 1, message = "회원ID는 1 이상이어야 합니다!")
-    @Schema(description = "회원 ID", example = "1")
-    private Long memberId;
-
     @NotNull(message = "카테고리ID는 Null 일 수 없습니다!")
     @Min(value = 1, message = "카테고리ID는 1 이상이어야 합니다!")
     @Schema(description = "카테고리 ID", example = "2")
