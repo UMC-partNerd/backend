@@ -1,5 +1,7 @@
 package com.partnerd.service.auth;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.AuthHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.domain.Agreements;
 import com.partnerd.domain.Member;
@@ -93,7 +95,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null
                 || !response.getBody().containsKey("access_token")
                 || !response.getBody().containsKey("refresh_token")) {
-            throw new RuntimeException("Failed to get tokens: " + response.getStatusCode());
+            throw new AuthHandler(ErrorStatus.AUTH400);
         }
 
         return Map.of(
@@ -110,7 +112,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         ResponseEntity<KakaoResponseDTO> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, request, KakaoResponseDTO.class);
 
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new RuntimeException("Failed to get user info: " + response.getStatusCode());
+            throw new AuthHandler(ErrorStatus.AUTH400);
         }
 
         return response.getBody();

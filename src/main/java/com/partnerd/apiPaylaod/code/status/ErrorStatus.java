@@ -23,8 +23,12 @@ public enum ErrorStatus implements BaseErrorCode {
   
   
   
-  
-  
+    //로그인(인증)
+    AUTH400(HttpStatus.BAD_REQUEST, "AUTH400", "유효하지 않은 인가 코드입니다."),
+
+    //회원가입
+    REGISTER400(HttpStatus.BAD_REQUEST, "REGISTER400", "추가 정보 등록 중 오류가 발생했습니다."),
+
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),
@@ -32,13 +36,17 @@ public enum ErrorStatus implements BaseErrorCode {
     // 마이페이지 내프로필 관련
     MYPAGE_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자가 없습니다."),
     AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4002", "해당 약관이 없습니다."),
-  
+
+    // 마이페이지 퍼스널페이지 관련
+    PERSONAL_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자의 퍼스널페이지가 없습니다."),
+
+
     // 프로젝트 홍보 관련
-    PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "해당 사용자가 없습니다."),
+    PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "존재하지 않는 홍보 프로젝트id입니다."),
     PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4002", "프로젝트 홍보글이 없습니다."),
 
     // 프로젝트 모집 관련
-    RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "해당 사용자가 없습니다."),
+    RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "존재하지 않는 모집 프로젝트id입니다."),
     RECRUIT_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4002", "프로젝트 모집글이 없습니다."),
 
     // 콜라보레이션 글 관련

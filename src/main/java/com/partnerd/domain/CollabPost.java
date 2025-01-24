@@ -83,6 +83,7 @@ public class CollabPost extends BaseEntity {
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostImg> collabPostImgList = new LinkedHashSet<>();
     
+
     public void setClubMember(ClubMember addClubMember) {
         if (this.clubMember != null) {
             this.clubMember.getCollabPostList().remove(this);

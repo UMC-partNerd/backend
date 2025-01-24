@@ -1,10 +1,10 @@
 package com.partnerd.web.dto.projectDTO;
 
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 public class PromotionProjectRequestDTO {
 
@@ -16,7 +16,7 @@ public class PromotionProjectRequestDTO {
         private String info;    // 한 줄 소개
         private String description; // 설명
         private List<Long> promotionProjectMember;   // 함께한 팀원
-        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
+        private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 
     // 프로젝트 홍보 수정
@@ -27,6 +27,6 @@ public class PromotionProjectRequestDTO {
         private String info;    // 한 줄 소개
         private String description; // 설명
         private List<Long> promotionProjectMember;   // 함께한 팀원
-        private List<ContactMethodDTO> contactMethod;   // 컨택트 방법
+        private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
 }
