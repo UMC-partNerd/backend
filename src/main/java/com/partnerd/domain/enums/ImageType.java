@@ -1,5 +1,5 @@
 package com.partnerd.domain.enums;
 
 public enum ImageType {
-    BANNER, MAIN
+    BANNER, MAIN, EVENT
 }

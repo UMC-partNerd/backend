@@ -1,6 +1,7 @@
 package com.partnerd.converter.collabPostConverter;
 
 import com.partnerd.domain.CollabPost;
+import com.partnerd.domain.CollabPostImg;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
@@ -66,6 +67,7 @@ public class CollabPostConverter {
                 .eventMode(requestDTO.getEventMode())
                 .collabPostCategoryList(new LinkedHashSet<>())
                 .contactMethodList(new LinkedHashSet<>())
+                .collabPostImgList(new LinkedHashSet<>())
                 .build();
 
     }
@@ -101,6 +103,25 @@ public class CollabPostConverter {
                         .map(ContactMethodDTO::new)
                         .collect(Collectors.toList());
 
+
+        String bannerKeyName = null;
+        String mainKeyName = null;
+        List<String> eventKeyNameList = new ArrayList<>();
+
+        for (CollabPostImg collabPostImg : collabPost.getCollabPostImgList()) {
+
+            switch (collabPostImg.getImageType()) {
+                case BANNER:
+                    bannerKeyName = collabPostImg.getKeyName();
+                    break;
+                case MAIN:
+                    mainKeyName = collabPostImg.getKeyName();
+                    break;
+                case EVENT:
+                    eventKeyNameList.add(collabPostImg.getKeyName());
+                    break;
+            }
+        }
         return CollabPostResponseDTO.CollabPostDetailDTO.builder()
                 .title(collabPost.getTitle())
                 .intro(collabPost.getIntro())
@@ -116,6 +137,9 @@ public class CollabPostConverter {
                 .contactMethod(contactMethodDTOS)
                 .collabTarget(collabPost.getCollabTarget())
                 .categoryDTOList(categoryDTOS)
+                .bannerKeyName(bannerKeyName)
+                .mainKeyName(mainKeyName)
+                .eventImgKeyNameList(eventKeyNameList)
                 .build();
     }
 

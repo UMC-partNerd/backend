@@ -1,3 +1,4 @@
+/*
 package com.partnerd.config;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -39,6 +40,7 @@ public class AmazonConfig {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
     }
 
+
     @Bean
     public AmazonS3 amazonS3() {
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -49,8 +51,9 @@ public class AmazonConfig {
                 .build();
     }
 
+
     @Bean
     public AWSCredentialsProvider awsCredentialsProvider() {
         return new AWSStaticCredentialsProvider(awsCredentials);
     }
-}
+}*/

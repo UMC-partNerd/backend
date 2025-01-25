@@ -11,8 +11,9 @@ public class ContactMethodDTO {
     private String contactType;
     private String contactUrl;
 
-    public ContactMethodDTO() {
-    }
+    // 기본 생성자 필요
+    public ContactMethodDTO() {}
+
 
     public ContactMethodDTO(ContactMethod contactMethod) {
         this.contactType = contactMethod.getContactType();

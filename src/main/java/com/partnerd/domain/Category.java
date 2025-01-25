@@ -6,6 +6,7 @@ import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.CollabPostCategory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Category extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Setter
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CollabPostCategory> collabPostCategoryList = new ArrayList<>();
 

@@ -3,6 +3,7 @@ package com.partnerd.web.dto.collabDTO.request;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.w3c.dom.NameList;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,10 @@ public class CollabPostRequestDTO {
         private Long eventTypeId;
         private int eventMode;
         private String description;
-        private List<ContactMethodDTO> contactMethod;
+        private String bannerKeyName;
+        private String mainKeyName;
+        private List<String> eventImgKeyNameList;
+        private List<ContactMethodDTO> contactMethodDTOList;
         private List<Long> categoryIds;
     }
 
