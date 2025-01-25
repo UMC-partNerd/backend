@@ -15,14 +15,11 @@ import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostImgRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostRepository;
 import com.partnerd.repository.collabPostRepository.EventTypeRepository;
-import com.partnerd.service.categoryService.CategoryService;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
-import com.partnerd.service.s3Service.S3Service;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.ErrorHandler;
 
 import java.util.ArrayList;
 import java.util.List;
