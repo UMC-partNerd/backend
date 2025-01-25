@@ -58,8 +58,9 @@ public class ClubConverter {
     public static ClubResponseDTO.ReadClubPreviewListDTO clubPreviewListDTO(List<Club> clubs) {
         List<ClubResponseDTO.ClubPreviewDTO> clubPreviewDTOList = clubs.stream()
                 .map(club -> ClubResponseDTO.ClubPreviewDTO.builder()
+                        .clubId(club.getId())
                         .profile(club.getProfile())
-                        .category(club.getCategory().getName()) // 카테고리 이름
+                        .category(club.getCategory().getName())
                         .name(club.getName())
                         .intro(club.getIntro())
                         .build())
