@@ -1,4 +1,4 @@
-package com.partnerd.service.collabRequestService.impl;
+package com.partnerd.service.collabAskService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CollabAskHandler;
@@ -10,9 +10,11 @@ import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.collabAskRepository.CollabAskRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostRepository;
-import com.partnerd.service.collabRequestService.CollabAskCommandService;
+import com.partnerd.service.collabAskService.CollabAskCommandService;
+import com.partnerd.service.notifyService.event.CollabAskEvent;
 import com.partnerd.web.dto.collabDTO.request.CollabAskRequestDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
     private final CollabPostRepository collabPostRepository;
     private final CollabAskRepository collabAskRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ApplicationEventPublisher eventPublisher; // 이벤트 발행 객체
 
 
     @Override
@@ -52,8 +55,17 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
 
         collabAsk.setSender(sender);
         collabAsk.setReceiver(receiver);
+        CollabAsk newCollabAsk = collabAskRepository.save(collabAsk);
 
-        return collabAskRepository.save(collabAsk);
+        CollabAskEvent event = CollabAskEvent.builder()
+                .receiverId(requestDTO.getSenderId())
+                .clubName(sender.getClub().getName())
+                .CollabPostTitle(collabPost.getTitle())
+                .build();
+
+        eventPublisher.publishEvent(event);
+
+        return newCollabAsk;
     }
 
     @Override

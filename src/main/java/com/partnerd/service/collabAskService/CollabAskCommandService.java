@@ -1,4 +1,4 @@
-package com.partnerd.service.collabRequestService;
+package com.partnerd.service.collabAskService;
 
 import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.web.dto.collabDTO.request.CollabAskRequestDTO;
