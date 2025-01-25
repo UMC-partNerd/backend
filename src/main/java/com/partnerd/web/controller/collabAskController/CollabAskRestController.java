@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/collabRequest")
+@RequestMapping("/api/collabAsk")
 @RequiredArgsConstructor
 public class CollabAskRestController {
 
@@ -44,7 +44,7 @@ public class CollabAskRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     public ApiResponse<Long> deleteCollabAsk(@RequestParam(name = "memberId") Long memberId,
-                                                                                     @PathVariable(name = "collabAskId") Long collabAskId) {
+                                             @PathVariable(name = "collabAskId") Long collabAskId) {
 
         collabAskCommandService.deleteCollabAsk(collabAskId, memberId);
 
