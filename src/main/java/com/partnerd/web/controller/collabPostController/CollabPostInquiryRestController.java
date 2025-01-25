@@ -89,5 +89,26 @@ public class CollabPostInquiryRestController {
         return ApiResponse.onSuccess(collabInquiryId);
     }
 
+    @PatchMapping("/{collabInquiryId}/likes")
+    @Operation(summary = "콜라보 문의글 및 답변글 좋아요/좋아요 취소 API",description = "콜라보 문의글 및 답변글 좋아요 개수 증가/감소 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Integer> addInquiryLikes(@PathVariable(name = "collabInquiryId") Long collabInquiryId,
+                                                @RequestParam(name = "liked") Integer liked) {
+
+        Integer likes = 0;
+        if (liked == 0) {
+            likes = collabInquiryCommandService.removeLike(collabInquiryId);
+        } else {
+            likes = collabInquiryCommandService.addLike(collabInquiryId);
+        }
+
+        return ApiResponse.onSuccess(likes);
+
+    }
+
+
+
 
 }
