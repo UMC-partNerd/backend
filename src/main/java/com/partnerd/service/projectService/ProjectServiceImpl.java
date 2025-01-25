@@ -216,4 +216,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return project;
     }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<Project> getMyProjects(Long memberId) {
+        return projectRepository.findProjectsByMemberId(memberId);
+    }
 }

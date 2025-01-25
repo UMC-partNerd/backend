@@ -85,4 +85,26 @@ public class ProjectResponseDTO {
         private Set<ContactMethodDTO> contactMethods;  // 컨택
     }
 
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기 (한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageProjectPreviewDTO {
+        private Long projectId;
+        private String title;
+        private String description;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기 (전체 리스트)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageProjectPreviewListDTO {
+        private Long memberId;
+        private List<MypageProjectPreviewDTO> mypagePprojectPreviewDTOList;
+    }
 }
