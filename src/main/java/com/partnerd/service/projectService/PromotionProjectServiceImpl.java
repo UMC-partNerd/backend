@@ -202,4 +202,11 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         }
         return promotionProject;
     }
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<PromotionProject> getMyPromotionProjects(Long memberId) {
+        return promotionProjectRepository.findPromotionProjectsByMemberId(memberId);
+    }
 }

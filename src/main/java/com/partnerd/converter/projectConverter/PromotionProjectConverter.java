@@ -96,4 +96,23 @@ public class PromotionProjectConverter {
                         .build())
                 .build();
     }
+
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
+    public static PromotionProjectResponseDTO.MypagePromotionProjectPreviewListDTO toMyPromotionProjectsDTO(Long memberId, List<PromotionProject> promotionProjects) {
+        List<PromotionProjectResponseDTO.MypagePromotionProjectPreviewDTO> promotionProjectPreviewDTOList = promotionProjects.stream()
+                .map(promotionProject -> PromotionProjectResponseDTO.MypagePromotionProjectPreviewDTO.builder()
+                        .promotionProjectId(promotionProject.getId()) // 프로젝트 ID
+                        .title(promotionProject.getTitle()) // 프로젝트 제목
+                        .description(promotionProject.getDescription()) // 프로젝트 설명
+                        .createdAt(promotionProject.getCreatedAt()) // 생성 날짜
+                        .updatedAt(promotionProject.getUpdatedAt()) // 수정 날짜
+                        .build())
+                .toList();
+
+        return PromotionProjectResponseDTO.MypagePromotionProjectPreviewListDTO.builder()
+                .memberId(memberId) // 사용자 ID
+                .mypagePromotionPprojectPreviewDTOList(promotionProjectPreviewDTOList) // 변환된 프로젝트 DTO 리스트
+                .build();
+    }
 }
