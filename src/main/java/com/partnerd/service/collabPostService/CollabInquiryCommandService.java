@@ -11,4 +11,6 @@ public interface CollabInquiryCommandService {
     CollabInquiry modifyCollabInquiry(Long collabInquiryId, String contents);
     void deleteCollabInquiry(Long collabInquiryId);
     void deleteCollabChildInquiry(Long collabInquiryId);
+    Integer addLike(Long CollabInquiryId);
+    Integer removeLike(Long CollabInquiryId);;
 }

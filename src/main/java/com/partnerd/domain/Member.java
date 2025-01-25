@@ -98,7 +98,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
 
-    //동아리
+    // 동아리
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ClubMember> clubMembers = new ArrayList<>();
 
