@@ -1,5 +1,6 @@
 package com.partnerd.service.clubService;
 
+import com.partnerd.domain.Club;
 import com.partnerd.web.dto.clubDTO.*;
 
 import java.util.List;
@@ -11,4 +12,7 @@ public interface ClubService {
     ClubUpdateResponseDTO updateClub(Long clubId, ClubUpdateRequestDTO dto, Long memberId);
 
     List<ClubDTO> getClubs(Integer page, String sort, Long categoryId);
+
+    // 파트너드 목록 조회(마이페이지)
+    List<Club> getClubsByRole(Long memberId);
 }

@@ -5,6 +5,7 @@ import com.partnerd.domain.Club;
 import com.partnerd.web.dto.clubDTO.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClubConverter {
 
@@ -51,5 +52,21 @@ public class ClubConverter {
                 club.getName(),
                 club.getIntro()
         );
+    }
+
+    // 파트너드 목록 조회(마이페이지)
+    public static ClubResponseDTO.ReadClubPreviewListDTO clubPreviewListDTO(List<Club> clubs) {
+        List<ClubResponseDTO.ClubPreviewDTO> clubPreviewDTOList = clubs.stream()
+                .map(club -> ClubResponseDTO.ClubPreviewDTO.builder()
+                        .profile(club.getProfile())
+                        .category(club.getCategory().getName()) // 카테고리 이름
+                        .name(club.getName())
+                        .intro(club.getIntro())
+                        .build())
+                .toList();
+
+        return ClubResponseDTO.ReadClubPreviewListDTO.builder()
+                .clubPreviewDTOList(clubPreviewDTOList)
+                .build();
     }
 }
