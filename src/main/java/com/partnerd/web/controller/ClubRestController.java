@@ -4,6 +4,8 @@ import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.config.security.JwtTokenProvider;
+import com.partnerd.converter.ClubConverter;
+import com.partnerd.domain.Club;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -119,5 +121,25 @@ public class ClubRestController {
 
         List<ClubDTO> clubs = clubService.getClubs(page -1 ,sort,categoryID);
         return ApiResponse.of(SuccessStatus._OK,clubs);
+    }
+
+
+    // 파트너드 목록 조회(마이페이지)
+    @GetMapping("/myPartnerdPosts")
+    @Operation(summary = "마이페이지 파트너드 목록 조회 API",description = "마이페이지의 팀관리 페이지에서 파트너드 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<ClubResponseDTO.ReadClubPreviewListDTO> getClubsByRole(@RequestHeader("Authorization") String authorizationHeader){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        List<Club> clubs = clubService.getClubsByRole(memberId);
+
+       return ApiResponse.onSuccess(ClubConverter.clubPreviewListDTO(clubs));
     }
 }
