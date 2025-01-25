@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId);
+    
+  ClubMember findByMember_id(Long memberId);
 
     @Query("SELECT cm.club FROM ClubMember cm " +
             "WHERE cm.member.id = :memberId AND cm.role IN :roles")

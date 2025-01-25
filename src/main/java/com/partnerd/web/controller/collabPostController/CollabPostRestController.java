@@ -73,14 +73,15 @@ public class CollabPostRestController {
 
     // 콜라보 글 전체 조회 (최신순)
     @GetMapping("/")
-    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",description = "콜라보 글 전체 조회 API입니다.")
+    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",
+            description = "콜라보 글 전체 조회 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page,
                                                                                           @RequestParam(defaultValue = "endDate") String sortBy) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page, sortBy);
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page-1, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
@@ -101,7 +102,8 @@ public class CollabPostRestController {
 
     // 카테고리 별 콜라보 글 조회
     @GetMapping("/categories")
-    @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",description = "콜라보 글 카테고리 별 조회 API입니다.")
+    @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",
+            description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -109,7 +111,7 @@ public class CollabPostRestController {
                                                                                           @RequestParam(name = "page") Integer page,
                                                                                           @RequestParam(defaultValue = "endDate") String sortBy) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page, sortBy);
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page-1, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
