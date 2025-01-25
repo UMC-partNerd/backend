@@ -16,4 +16,6 @@ public interface CollabPostRepositoryCustom {
     CollabPost findCollabPostDetails(Long collabPostId);
     Optional<CollabPost> findByIdWithMember(Long collabPostId);
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    List<CollabPost> findCollabPostsByMemberId(Long memberId);
 }

@@ -46,4 +46,11 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
         return collabPostRepository.findCollabPostDetails(collabPostId);
     }
 
+
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<CollabPost> getMyCollabPosts(Long memberId) {
+        return collabPostRepository.findCollabPostsByMemberId(memberId);
+    }
 }

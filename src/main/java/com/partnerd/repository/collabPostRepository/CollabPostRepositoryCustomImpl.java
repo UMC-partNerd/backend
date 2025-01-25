@@ -119,4 +119,16 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
 
     }
 
+
+
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    @Override
+    public List<CollabPost> findCollabPostsByMemberId(Long memberId){
+        return queryFactory
+                .selectFrom(qCollabPost)
+                .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
+                .where(qClubMember.member.id.eq(memberId))
+                .distinct()
+                .fetch();
+    }
 }

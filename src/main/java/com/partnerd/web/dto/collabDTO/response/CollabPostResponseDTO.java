@@ -108,6 +108,27 @@ public class CollabPostResponseDTO {
 
 
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기 (한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCollabPostPreviewDTO {
+        private Long collabPostId;
+        private String title;
+        private String description;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기 (전체 리스트)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCollabPostPreviewListDTO {
+        private Long memberId;
+        private List<CollabPostResponseDTO.MypageCollabPostPreviewDTO> mypageCollabPostPreviewDTOList;
+    }
 
 }
