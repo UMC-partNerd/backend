@@ -55,7 +55,8 @@ public class CollabAskRestController {
 
     // 콜라보 요청 조회하기
     @GetMapping("/")
-    @Operation(summary = "콜라보 요청 조회 API", description = "콜라보 요청을 조회 할 수 있는 API입니다.")
+    @Operation(summary = "콜라보 요청 조회 API", description = "콜라보 요청을 조회 할 수 있는 API입니다. " +
+            "page는 1부터 시작합니다. askType 0은 보낸요청, 1은 받은 요청입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
@@ -64,7 +65,7 @@ public class CollabAskRestController {
             @RequestParam (name = "memberId") Long memberId,
             @RequestParam(name = "askType") Integer askType) {
 
-        Page<CollabAsk> collabAskPage = collabAskQueryService.getCollabAskList(page, askType, memberId);
+        Page<CollabAsk> collabAskPage = collabAskQueryService.getCollabAskList(page - 1, askType, memberId);
 
         return ApiResponse.onSuccess(CollabAskConverter.collabAskPreviewListDTO(collabAskPage));
     }
