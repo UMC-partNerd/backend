@@ -188,4 +188,9 @@ public class ClubServiceImpl implements ClubService {
 
     }
 
+    // 파트너드 목록 조회(마이페이지)
+    @Override
+    public List<Club> getClubsByRole(Long memberId) {
+        return clubMemberRepository.findClubsByRole(memberId, List.of(ClubMemberRole.LEADER, ClubMemberRole.OFFICER));
+    }
 }
