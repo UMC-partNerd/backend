@@ -1,6 +1,7 @@
 package com.partnerd.service.collabRequestService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabAskHandler;
 import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.domain.CollabPost;
@@ -55,9 +56,15 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
         return collabAskRepository.save(collabAsk);
     }
 
+    @Override
+    public void deleteCollabAsk(Long collabAskId, Long memberId) {
 
+        CollabAsk collabAsk = collabAskRepository.findByIdAndSenderMemberId(collabAskId, memberId).orElseThrow(()->
+                new CollabAskHandler(ErrorStatus.COLLAB_ASK_NOT_FOUND));
 
+        collabAskRepository.delete(collabAsk);
 
+    }
 
 
 }

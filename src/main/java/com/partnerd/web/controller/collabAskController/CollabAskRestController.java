@@ -1,4 +1,4 @@
-package com.partnerd.web.controller.collabRequestController;
+package com.partnerd.web.controller.collabAskController;
 
 
 import com.partnerd.apiPaylaod.ApiResponse;
@@ -36,6 +36,22 @@ public class CollabAskRestController {
         return ApiResponse.onSuccess(CollabAskConverter.toAddCollabAskResponseDTO(collabAsk));
 
     }
+
+    // 콜라보 요청 취소하기
+    @DeleteMapping("/{collabAskId}")
+    @Operation(summary = "콜라보 요청 취소 API", description = "콜라보 요청을 취소 할 수 있는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+    })
+    public ApiResponse<Long> deleteCollabAsk(@RequestParam(name = "memberId") Long memberId,
+                                                                                     @PathVariable(name = "collabAskId") Long collabAskId) {
+
+        collabAskCommandService.deleteCollabAsk(collabAskId, memberId);
+
+        return ApiResponse.onSuccess(collabAskId);
+
+    }
+
 
     // 콜라보 요청 조회하기
     @GetMapping("/")
