@@ -1,8 +1,8 @@
-package com.partnerd.service.collabRequestService.impl;
+package com.partnerd.service.collabAskService.impl;
 
 import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.repository.collabAskRepository.CollabAskRepository;
-import com.partnerd.service.collabRequestService.CollabAskQueryService;
+import com.partnerd.service.collabAskService.CollabAskQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
