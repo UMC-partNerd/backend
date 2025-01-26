@@ -16,19 +16,22 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-  
-  
-  
-  
-  
-  
-  
-    //로그인(인증)
-    AUTH400(HttpStatus.BAD_REQUEST, "AUTH400", "유효하지 않은 인가 코드입니다."),
 
-    //회원가입
-    REGISTER400(HttpStatus.BAD_REQUEST, "REGISTER400", "추가 정보 등록 중 오류가 발생했습니다."),
 
+
+
+
+
+
+    // 로그인(인증) 관련
+    AUTH_INVALID_CODE(HttpStatus.BAD_REQUEST, "AUTH4001", "유효하지 않은 인가 코드입니다."),
+    AUTH_FAILED_TOKEN_RETRIEVAL(HttpStatus.BAD_REQUEST, "AUTH4002", "토큰 조회에 실패했습니다."),
+    AUTH_FAILED_USER_INFO(HttpStatus.BAD_REQUEST, "AUTH4003", "사용자 정보 조회에 실패했습니다."),
+
+    // 회원가입 관련
+    REGISTER_INVALID_REQUEST(HttpStatus.BAD_REQUEST, "REGISTER4001", "잘못된 요청 데이터입니다."),
+    REGISTER_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "REGISTER4002", "사용자를 찾을 수 없습니다."),
+    REGISTER_AGREEMENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "REGISTER4003", "약관 정보를 찾을 수 없습니다."),
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),

@@ -95,7 +95,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null
                 || !response.getBody().containsKey("access_token")
                 || !response.getBody().containsKey("refresh_token")) {
-            throw new AuthHandler(ErrorStatus.AUTH400);
+            throw new AuthHandler(ErrorStatus.AUTH_FAILED_TOKEN_RETRIEVAL);
         }
 
         return Map.of(
@@ -112,7 +112,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         ResponseEntity<KakaoResponseDTO> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, request, KakaoResponseDTO.class);
 
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new AuthHandler(ErrorStatus.AUTH400);
+            throw new AuthHandler(ErrorStatus.AUTH_FAILED_USER_INFO);
         }
 
         return response.getBody();
