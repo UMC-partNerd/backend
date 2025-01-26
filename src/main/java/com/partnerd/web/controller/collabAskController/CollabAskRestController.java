@@ -24,14 +24,14 @@ public class CollabAskRestController {
     private final CollabAskQueryService collabAskQueryService;
 
     // 콜라보 요청하기
-    @PostMapping("/")
+    @PostMapping("/{collabPostId}")
     @Operation(summary = "콜라보 요청 API", description = "콜라보 요청 할 수 있는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
-    public ApiResponse<CollabAskResponseDTO.addCollabAskResponseDTO> addCollabAsk(@RequestBody CollabAskRequestDTO.addCollabAskRquestDTO requestDTO) {
+    public ApiResponse<CollabAskResponseDTO.addCollabAskResponseDTO> addCollabAsk(@PathVariable(name = "collabPostId")Long collabPostId, @RequestParam(name = "memberId")Long memberId) {
 
-        CollabAsk collabAsk = collabAskCommandService.addCollabAsk(requestDTO);
+        CollabAsk collabAsk = collabAskCommandService.addCollabAsk(collabPostId, memberId);
 
         return ApiResponse.onSuccess(CollabAskConverter.toAddCollabAskResponseDTO(collabAsk));
 

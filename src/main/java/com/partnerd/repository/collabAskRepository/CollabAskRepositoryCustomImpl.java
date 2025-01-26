@@ -1,6 +1,7 @@
 package com.partnerd.repository.collabAskRepository;
 
 import com.partnerd.domain.QClub;
+import com.partnerd.domain.QMember;
 import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabAsk;
@@ -20,6 +21,7 @@ public class CollabAskRepositoryCustomImpl implements CollabAskRepositoryCustom{
     private final JPAQueryFactory queryFactory;
     private final QCollabAsk qCollabAsk = QCollabAsk.collabAsk;
     private final QClubMember qClubMember = QClubMember.clubMember;
+    private final QMember qMember = QMember.member;
     private final QClub qClub = QClub.club;
 
 
@@ -33,7 +35,9 @@ public class CollabAskRepositoryCustomImpl implements CollabAskRepositoryCustom{
                 .fetchJoin()
                 .leftJoin(qClubMember.club, qClub)
                 .fetchJoin()
-                .where(qCollabAsk.sender.member.id.eq(senderId));
+                .leftJoin(qClubMember.member, qMember)
+                .fetchJoin()
+                .where(qMember.id.eq(senderId));
 
         long total = query.fetch().size();
         List<CollabAsk> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
@@ -49,7 +53,9 @@ public class CollabAskRepositoryCustomImpl implements CollabAskRepositoryCustom{
                 .fetchJoin()
                 .leftJoin(qClubMember.club, qClub)
                 .fetchJoin()
-                .where(qCollabAsk.receiver.member.id.eq(senderId));
+                .leftJoin(qClubMember.member, qMember)
+                .fetchJoin()
+                .where(qMember.id.eq(senderId));
 
         long total = query.fetch().size();
         List<CollabAsk> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
