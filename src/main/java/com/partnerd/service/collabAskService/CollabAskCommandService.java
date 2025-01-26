@@ -5,7 +5,7 @@ import com.partnerd.web.dto.collabDTO.request.CollabAskRequestDTO;
 
 public interface CollabAskCommandService {
 
-    CollabAsk addCollabAsk(CollabAskRequestDTO.addCollabAskRquestDTO requestDTO);
+    CollabAsk addCollabAsk(Long collabPostId, Long memberId);
     void deleteCollabAsk(Long collabAskId, Long memberId);
 
 }

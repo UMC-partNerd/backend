@@ -45,7 +45,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://part-nerd-fe.vercel.app",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "http://localhost:3001"
         )); // 허용할 Origin 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드 설정
         configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
