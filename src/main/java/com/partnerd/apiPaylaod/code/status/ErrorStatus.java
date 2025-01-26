@@ -21,8 +21,11 @@ public enum ErrorStatus implements BaseErrorCode {
   
   
   
-  
-  
+    //로그인(갱신)
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "TOKEN4001", "유효하지 않은 JWT 토큰입니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.FORBIDDEN, "TOKEN4002", "리프레시 토큰이 만료되었습니다. 다시 로그인하세요."),
+
+
     //로그인(인증)
     AUTH400(HttpStatus.BAD_REQUEST, "AUTH400", "유효하지 않은 인가 코드입니다."),
 
