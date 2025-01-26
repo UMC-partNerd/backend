@@ -63,6 +63,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 콜라보 요청 관련
     COLLAB_ASK_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABASK4001", "해당 콜라보레이션 요청이 없습니다."),
+    COLLAB_ASK_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 요청한 콜라보레이션입니다."),
 
     // 동아리
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),

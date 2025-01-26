@@ -34,11 +34,16 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
     @Transactional
     public CollabAsk addCollabAsk(CollabAskRequestDTO.addCollabAskRquestDTO requestDTO) {
 
+        CollabAsk isCheckDuplication = collabAskRepository.findBySender_Member_idAndCollabPost_id(requestDTO.getSenderId(), requestDTO.getCollabPostId());
+        if(isCheckDuplication != null) {
+            throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_ALREADY_EXIST);
+        }
+
         CollabPost collabPost = collabPostRepository.findByIdWithMember(requestDTO.getCollabPostId()).orElseThrow(() -> (
             new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND)));
 
-        // 보낸 사람 (동아리까지 함께 조회)
-        ClubMember sender = clubMemberRepository.findByMember_id(requestDTO.getSenderId());
+        // 보내는 사람 (동아리까지 함께 조회)
+        ClubMember sender = clubMemberRepository.findByMemberIdWithClub(requestDTO.getSenderId());
 
         if (sender == null) {
             throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);

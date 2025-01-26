@@ -1,5 +1,6 @@
 package com.partnerd.domain.mapping;
 
+import com.partnerd.domain.Club;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
