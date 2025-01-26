@@ -16,12 +16,14 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-
-
-
-
-
-
+  
+  
+  
+  
+  
+    //로그인(갱신)
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "TOKEN4001", "유효하지 않은 JWT 토큰입니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.FORBIDDEN, "TOKEN4002", "리프레시 토큰이 만료되었습니다. 다시 로그인하세요."),
 
     // 로그인(인증) 관련
     AUTH_INVALID_CODE(HttpStatus.BAD_REQUEST, "AUTH4001", "유효하지 않은 인가 코드입니다."),
