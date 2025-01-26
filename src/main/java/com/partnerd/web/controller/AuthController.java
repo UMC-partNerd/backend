@@ -1,11 +1,12 @@
 package com.partnerd.web.controller;
 
 import com.partnerd.apiPaylaod.ApiResponse;
-import com.partnerd.apiPaylaod.code.status.ErrorStatus;
-import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.service.auth.OAuthService;
 import com.partnerd.service.auth.RegisterService;
+import com.partnerd.service.auth.TokenManagementService;
 import com.partnerd.web.dto.authDTO.LoginResponseDTO;
+import com.partnerd.web.dto.authDTO.TokenRefreshRequestDTO;
+import com.partnerd.web.dto.authDTO.TokenRefreshResponseDTO;
 import com.partnerd.web.dto.registerDTO.RegisterRequestDTO;
 import com.partnerd.web.dto.registerDTO.RegisterResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ public class AuthController {
 
     private final OAuthService kakaoOAuthService;
     private final RegisterService registerService;
+    private final TokenManagementService tokenManagementService;
 
     @GetMapping("/api/auth/login/kakao")
     @Operation(summary = "카카오 로그인", description = "카카오 인가 코드를 사용하여 로그인")
@@ -42,5 +44,15 @@ public class AuthController {
         String token = authorizationHeader.replace("Bearer ", "");
         RegisterResponseDTO response = registerService.registerUser(request, token);
         return ApiResponse.onSuccess(response);
+    }
+
+    @PostMapping("/api/auth/token/refresh")
+    @Operation(summary = "JWT 토큰 갱신", description = "리프레시 토큰을 사용하여 새로운 JWT를 발급합니다.")
+    public ApiResponse<TokenRefreshResponseDTO> refreshJwtToken(
+            @RequestBody @Valid TokenRefreshRequestDTO request) {
+        String newJwtToken = tokenManagementService.refreshJwtToken(request.getExpiredToken());
+        return ApiResponse.onSuccess(TokenRefreshResponseDTO.builder()
+                .jwtToken(newJwtToken)
+                .build());
     }
 }
