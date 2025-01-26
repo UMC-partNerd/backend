@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class PromotionProjectRepositoryImpl implements PromotionProjectRepositoryCustiom{
@@ -35,5 +37,17 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
                 .leftJoin(qPromotionProject.promotionProjectMemberList, qPromotionProjectMember).fetchJoin()
                 .where(qPromotionProject.id.eq(promotionProjectId))
                 .fetchOne();
+    }
+
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    public List<PromotionProject> findPromotionProjectsByMemberId(Long memberId){
+        return queryFactory
+                .selectFrom(qPromotionProject)
+                .leftJoin(qPromotionProject.promotionProjectMemberList, qPromotionProjectMember).fetchJoin()
+                .where(qPromotionProjectMember.member.id.eq(memberId))
+                .distinct()
+                .fetch();
     }
 }

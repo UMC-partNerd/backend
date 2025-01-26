@@ -1,6 +1,7 @@
 package com.partnerd.web.controller.projectController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.service.projectService.PromotionProjectService;
@@ -25,6 +26,7 @@ import java.util.List;
 public class PromotionProjectRestController {
 
     private final PromotionProjectService promotionProjectService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 프로젝트 홍보 생성
     @PostMapping("/promotion")
@@ -119,5 +121,25 @@ public class PromotionProjectRestController {
 
         PromotionProject promotionProject = promotionProjectService.getPromotionProject(promotionProjectId);
         return ApiResponse.onSuccess(PromotionProjectConverter.toPromotionProjectDetailDTO(promotionProject));
+    }
+
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
+    @GetMapping("/promotion/mypage")
+    @Operation(summary = "마이페이지 내가 쓴 프로젝트 홍보글 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 프로젝트 홍보글 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<PromotionProjectResponseDTO.MypagePromotionProjectPreviewListDTO> getMyPromotionProjects(@RequestHeader("Authorization") String authorizationHeader){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        List<PromotionProject> promotionProjects = promotionProjectService.getMyPromotionProjects(memberId);
+
+        return ApiResponse.onSuccess(PromotionProjectConverter.toMyPromotionProjectsDTO(memberId, promotionProjects));
     }
 }

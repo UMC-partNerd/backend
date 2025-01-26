@@ -25,4 +25,6 @@ public interface ProjectService {
     // 프로젝트 모집글 상세페이지 조회
     Project getProject(Long projectId);
 
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    List<Project> getMyProjects(Long memberId);
 }

@@ -1,6 +1,7 @@
 package com.partnerd.web.controller.projectController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.domain.Project;
 import com.partnerd.service.projectService.ProjectService;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ProjectRestController {
 
     private final ProjectService projectService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 프로젝트 모집글 생성
     @PostMapping("/recruit")
@@ -96,5 +98,24 @@ public class ProjectRestController {
 
         Project project = projectService.getProject(projectId);
         return ApiResponse.onSuccess(ProjectConverter.toProjectDetailDTO(project));
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    @GetMapping("/recruit/mypage")
+    @Operation(summary = "마이페이지 내가 쓴 프로젝트 모집글 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 프로젝트 모집글 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<ProjectResponseDTO.MypageProjectPreviewListDTO> getMyProjects(@RequestHeader("Authorization") String authorizationHeader){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        List<Project> projects = projectService.getMyProjects(memberId);
+
+        return ApiResponse.onSuccess(ProjectConverter.toMyProjectsDTO(memberId, projects));
     }
 }

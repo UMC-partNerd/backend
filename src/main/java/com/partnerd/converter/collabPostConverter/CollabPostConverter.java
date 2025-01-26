@@ -144,4 +144,21 @@ public class CollabPostConverter {
     }
 
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    public static CollabPostResponseDTO.MypageCollabPostPreviewListDTO toMyCollabPostsDTO(Long memberId, List<CollabPost> collabPosts) {
+        List<CollabPostResponseDTO.MypageCollabPostPreviewDTO> collabPostPreviewDTOList = collabPosts.stream()
+                .map(collabPost -> CollabPostResponseDTO.MypageCollabPostPreviewDTO.builder()
+                        .collabPostId(collabPost.getId()) // 콜라보레이션 ID
+                        .title(collabPost.getTitle()) // 콜라보레이션 제목
+                        .description(collabPost.getDescription()) // 콜라보레이션 설명
+                        .createdAt(collabPost.getCreatedAt()) // 생성 날짜
+                        .updatedAt(collabPost.getUpdatedAt()) // 수정 날짜
+                        .build())
+                .toList();
+
+        return CollabPostResponseDTO.MypageCollabPostPreviewListDTO.builder()
+                .memberId(memberId) // 사용자 ID
+                .mypageCollabPostPreviewDTOList(collabPostPreviewDTOList) // 변환된 콜라보레이션 DTO 리스트
+                .build();
+    }
 }

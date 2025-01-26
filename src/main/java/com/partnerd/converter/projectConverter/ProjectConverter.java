@@ -132,4 +132,22 @@ public class ProjectConverter {
                         .build())
                 .build();
     }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    public static ProjectResponseDTO.MypageProjectPreviewListDTO toMyProjectsDTO(Long memberId, List<Project> projects) {
+        List<ProjectResponseDTO.MypageProjectPreviewDTO> projectPreviewDTOList = projects.stream()
+                .map(project -> ProjectResponseDTO.MypageProjectPreviewDTO.builder()
+                        .projectId(project.getId()) // 프로젝트 ID
+                        .title(project.getTitle()) // 프로젝트 제목
+                        .description(project.getDescription()) // 프로젝트 설명
+                        .createdAt(project.getCreatedAt()) // 생성 날짜
+                        .updatedAt(project.getUpdatedAt()) // 수정 날짜
+                        .build())
+                .toList();
+
+        return ProjectResponseDTO.MypageProjectPreviewListDTO.builder()
+                .memberId(memberId) // 사용자 ID
+                .mypagePprojectPreviewDTOList(projectPreviewDTOList) // 변환된 프로젝트 DTO 리스트
+                .build();
+    }
 }

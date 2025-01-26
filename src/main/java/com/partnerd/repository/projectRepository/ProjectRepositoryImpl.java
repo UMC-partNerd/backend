@@ -10,6 +10,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
@@ -30,5 +32,16 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
                 .leftJoin(qProject.projectCategoryPreferList, qProjectCategoryPrefer).fetchJoin()
                 .where(qProject.id.eq(projectId))
                 .fetchOne();
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    @Override
+    public List<Project> findProjectsByMemberId(Long memberId){
+        return queryFactory
+                .selectFrom(qProject)
+                .leftJoin(qProject.projectMemberList, qProjectMember).fetchJoin()
+                .where(qProjectMember.member.id.eq(memberId))
+                .distinct()
+                .fetch();
     }
 }
