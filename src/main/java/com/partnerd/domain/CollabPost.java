@@ -2,6 +2,7 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.domain.mapping.CollabPostCategory;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
@@ -82,7 +83,10 @@ public class CollabPost extends BaseEntity {
     // 배너 및 메인, 행사 사진
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostImg> collabPostImgList = new LinkedHashSet<>();
-    
+
+    // 콜라보 요청
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CollabAsk> collabAskList = new ArrayList<>();
 
     public void setClubMember(ClubMember addClubMember) {
         if (this.clubMember != null) {
