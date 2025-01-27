@@ -51,11 +51,12 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost( @PathVariable Long collabPostId, @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost(@PathVariable Long collabPostId, @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
         if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
         }
+
 
         CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO);
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
