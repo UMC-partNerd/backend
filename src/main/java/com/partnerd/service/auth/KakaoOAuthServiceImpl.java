@@ -74,7 +74,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         return LoginResponseDTO.builder()
                 .jwtToken(jwtToken)
                 .id(member.getId())
-                .nickname(member.getNickname())
+                .email(member.getEmail())
                 .build();
     }
 

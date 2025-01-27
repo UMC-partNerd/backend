@@ -8,5 +8,5 @@ import lombok.Data;
 public class LoginResponseDTO {
     private String jwtToken; // JWT 토큰
     private Long id; // 사용자 ID
-    private String nickname; // 닉네임
+    private String email; // 닉네임
 }
