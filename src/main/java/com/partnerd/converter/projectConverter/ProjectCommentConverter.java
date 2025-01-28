@@ -6,7 +6,7 @@ import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
 
 public class ProjectCommentConverter {
 
-    // 모집 프로젝트 댓글 작성
+    // 프로젝트 댓글/대댓글 생성/수정
     public static ProjectComment toProjectComment (ProjectCommentRequestDTO.AddProjectCommentDTO request){
         return ProjectComment.builder()
                 .contents(request.getContents())

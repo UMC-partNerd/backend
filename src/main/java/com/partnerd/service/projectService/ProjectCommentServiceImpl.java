@@ -3,6 +3,7 @@ package com.partnerd.service.projectService;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.converter.projectConverter.ProjectCommentConverter;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.ProjectComment;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.ProjectCommentRepository;
@@ -38,7 +39,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         return projectCommentRepository.save(projectComment);
     }
 
-    // 모집 프로젝트 댓글 작성
+    // 모집 프로젝트 대댓글 작성
     @Override
     @Transactional
     public ProjectComment addChildProjectComment(Long memberId, Long projectId, Long parentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
@@ -61,6 +62,24 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         } else {
             throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
         }
+
+        return projectCommentRepository.save(projectComment);
+    }
+
+    // 모집 프로젝트 댓글/대댓글 작성
+    @Override
+    @Transactional
+    public ProjectComment updateProjectComment(Long memberId, Long commentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        ProjectComment projectComment = projectCommentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        projectComment.setContents(request.getContents());
 
         return projectCommentRepository.save(projectComment);
     }

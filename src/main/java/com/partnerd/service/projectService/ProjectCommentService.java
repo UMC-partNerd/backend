@@ -10,4 +10,8 @@ public interface ProjectCommentService {
 
     // 모집 프로젝트 대댓글 작성
     ProjectComment addChildProjectComment(Long memberId, Long projectId, Long parentId, ProjectCommentRequestDTO.AddProjectCommentDTO request);
+
+    // 모집 프로젝트 댓글/대댓글 수정
+    ProjectComment updateProjectComment(Long memberId, Long commentId, ProjectCommentRequestDTO.AddProjectCommentDTO request);
+
 }

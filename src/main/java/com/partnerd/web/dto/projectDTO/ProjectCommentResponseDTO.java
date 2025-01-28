@@ -4,6 +4,7 @@ import lombok.*;
 
 public class ProjectCommentResponseDTO {
 
+    // 프로젝트 댓글/대댓글 생성/수정
     @Getter
     @Builder
     @NoArgsConstructor
