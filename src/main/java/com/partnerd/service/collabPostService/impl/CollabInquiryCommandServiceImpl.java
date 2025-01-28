@@ -35,7 +35,7 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
                 new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND)));
 
         // 멤버 하드 코딩
-        collabInquiry.setMember(memberRepository.findById(1L).orElseThrow(() ->
+        collabInquiry.setMember(memberRepository.findById(2L).orElseThrow(() ->
                 new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         return collabInquiryRepository.save(collabInquiry);
@@ -55,7 +55,7 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
             collabInquiry.addParentInquiry(parentInquiry);
 
-            collabInquiry.setMember(memberRepository.findById(1L).orElseThrow(() ->
+            collabInquiry.setMember(memberRepository.findById(3L).orElseThrow(() ->
                     new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
             collabInquiry.setCollabPost(parentInquiry.getCollabPost());
             // collabInquiryRepository.flush();
@@ -103,7 +103,7 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
         CollabInquiry parentInquiry = collabInquiry.getParentInquiry();
 
-        if (parentInquiry.getIsDeleted() == 1 && collabInquiry.getParentInquiry().getChildren().size() == 1) {
+        if (parentInquiry.getIsDeleted() == 1 & parentInquiry.getChildren().size() == 1) {
             collabInquiryRepository.delete(collabInquiry.getParentInquiry());
         } else {
             parentInquiry.getChildren().remove(collabInquiry);
@@ -126,11 +126,18 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
     }
 
     @Override
+    @Transactional
     public Integer removeLike(Long collabInquiryId) {
         CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
 
+        // 좋아요 개수가 0이면 취소할 수 없도록 예외 발생
+        if (collabInquiry.getLikes() <= 0) {
+            throw new CollabInquiryHandler(ErrorStatus.CANNOT_REMOVE_LIKE_BELOW_ZERO);
+        }
+
         collabInquiry.removeLikes();
+
 
         return collabInquiry.getLikes();
     }
