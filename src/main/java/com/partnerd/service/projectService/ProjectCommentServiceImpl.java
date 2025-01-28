@@ -1,0 +1,129 @@
+package com.partnerd.service.projectService;
+
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
+import com.partnerd.converter.projectConverter.ProjectCommentConverter;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.ProjectComment;
+import com.partnerd.repository.memberRepository.MemberRepository;
+import com.partnerd.repository.projectRepository.ProjectCommentRepository;
+import com.partnerd.repository.projectRepository.ProjectRepository;
+import com.partnerd.web.dto.projectDTO.ProjectCommentRequestDTO;
+import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ProjectCommentServiceImpl implements ProjectCommentService {
+
+    private final ProjectRepository projectRepository;
+    private final ProjectCommentRepository projectCommentRepository;
+    private final MemberRepository memberRepository;
+
+    // 모집 프로젝트 댓글 작성
+    @Override
+    @Transactional
+    public ProjectComment addProjectComment(Long memberId, Long projectId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
+
+        ProjectComment projectComment = ProjectCommentConverter.toProjectComment(request);
+
+        projectComment.setProject(projectRepository.findById(projectId)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND)));
+
+        projectComment.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+
+        return projectCommentRepository.save(projectComment);
+    }
+
+    // 모집 프로젝트 대댓글 작성
+    @Override
+    @Transactional
+    public ProjectComment addChildProjectComment(Long memberId, Long projectId, Long parentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
+
+        ProjectComment projectComment = ProjectCommentConverter.toProjectComment(request);
+
+        if (parentId != null) {
+            ProjectComment parentComment = projectCommentRepository.findById(parentId).orElseThrow(() ->
+                    new ProjectHandler(ErrorStatus.RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND));
+
+            projectComment.addParentComment(parentComment);
+
+            projectComment.setProject(projectRepository.findById(projectId)
+                    .orElseThrow(() ->
+                            new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND)));
+
+            projectComment.setMember(memberRepository.findById(memberId)
+                    .orElseThrow(() ->
+                            new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+        } else {
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
+        }
+
+        return projectCommentRepository.save(projectComment);
+    }
+
+    // 모집 프로젝트 댓글/대댓글 수정
+    @Override
+    @Transactional
+    public ProjectComment updateProjectComment(Long memberId, Long commentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        ProjectComment projectComment = projectCommentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() ->
+                        new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        projectComment.setContents(request.getContents());
+
+        return projectCommentRepository.save(projectComment);
+    }
+
+    // 모집 프로젝트 댓글/대댓글 삭제
+    @Override
+    @Transactional
+    public void deleteProjectComment(Long memberId, Long commentId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        ProjectComment projectComment = projectCommentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        ProjectComment parentComment = projectComment.getParentComment();
+
+        if (parentComment == null){  // 부모 댓글일때
+            if (!projectComment.getChildren().isEmpty()){
+                projectComment.changeToDeleted();
+            } else {
+                projectCommentRepository.delete(projectComment);
+            }
+        } else {    // 자식 댓글일 때
+            if (parentComment.getIsDeleted() && projectComment.getParentComment().getChildren().size() == 1){
+                System.out.println("ghkghkr");
+                projectCommentRepository.delete(projectComment.getParentComment());
+            } else {
+                parentComment.getChildren().remove(projectComment);
+                projectCommentRepository.delete(projectComment);
+            }
+        }
+    }
+
+    // 프로젝트 모집 댓글 전체 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO> getProjectCommentList(Long projectId){
+        List<ProjectComment> projectCommentList = projectCommentRepository.findProjectCommentList(projectId);
+
+        return projectCommentList.stream()
+                .map(ProjectCommentConverter::toGetProjectCommentListResultDTO)
+                .toList();
+    }
+}

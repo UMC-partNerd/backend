@@ -97,7 +97,7 @@ public class Project extends BaseEntity {
     private Set<ProjectCategoryPrefer> projectCategoryPreferList = new HashSet<>();
 
     // 프로젝트 댓글
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ProjectComment> projectCommentList = new ArrayList<>();
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectComment> projectCommentList = new LinkedHashSet<>();
 
 }
