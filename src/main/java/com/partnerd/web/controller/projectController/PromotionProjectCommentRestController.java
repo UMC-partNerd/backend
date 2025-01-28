@@ -29,7 +29,7 @@ public class PromotionProjectCommentRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addPromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                  @PathVariable(name = "promotionProjectId") Long promotionProjectId,
                                                                                                                  @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
         // jwt토큰으로 멤버id 뽑기
@@ -47,7 +47,7 @@ public class PromotionProjectCommentRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildPromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                       @PathVariable(name = "promotionProjectId") Long promotionProjectId,
                                                                                                                       @PathVariable(name = "parentId") Long parentId,
                                                                                                                       @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
@@ -57,6 +57,24 @@ public class PromotionProjectCommentRestController {
         Long memberId = Long.valueOf(claims.getSubject());
 
         PromotionProjectComment promotionProjectComment = promotionProjectCommentService.addChildPromotionProjectComment(memberId, promotionProjectId, parentId, request);
+        return ApiResponse.onSuccess(PromotionProjectCommentConverter.toAddPromotionProjectCommentResultDTO(promotionProjectComment));
+    }
+
+    // 프로젝트 홍보글 댓글/대댓글 수정
+    @PatchMapping("/promotion/comment/{commentId}")
+    @Operation(summary = "프로젝트 홍보글 댓글/대댓글 수정 API",description = "홍보하는 프로젝트에 댓글/대댓글을 수정하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> updatePromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                                    @PathVariable(name = "commentId") Long commentId,
+                                                                                                                    @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        PromotionProjectComment promotionProjectComment = promotionProjectCommentService.updatePromotionProjectComment(memberId, commentId, request);
         return ApiResponse.onSuccess(PromotionProjectCommentConverter.toAddPromotionProjectCommentResultDTO(promotionProjectComment));
     }
 }

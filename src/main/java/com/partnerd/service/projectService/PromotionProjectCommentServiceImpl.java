@@ -3,6 +3,7 @@ package com.partnerd.service.projectService;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectCommentConverter;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectCommentRepository;
@@ -38,7 +39,7 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
         return promotionProjectCommentRepository.save(promotionProjectComment);
     }
 
-    // 모집 프로젝트 대댓글 작성
+    // 프로젝트 홍보글 대댓글 작성
     @Override
     @Transactional
     public PromotionProjectComment addChildPromotionProjectComment(Long memberId, Long projectId, Long parentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
@@ -61,6 +62,24 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
         } else {
             throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
         }
+
+        return promotionProjectCommentRepository.save(promotionProjectComment);
+    }
+
+    // 프로젝트 홍보글 댓글/대댓글 수정
+    @Override
+    @Transactional
+    public PromotionProjectComment updatePromotionProjectComment(Long memberId, Long commentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        PromotionProjectComment promotionProjectComment = promotionProjectCommentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() ->
+                        new PromotionProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        promotionProjectComment.setContents(request.getContents());
 
         return promotionProjectCommentRepository.save(promotionProjectComment);
     }
