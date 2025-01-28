@@ -13,6 +13,7 @@ public class CollabPostRequestDTO {
     @Getter
     @Setter
     public static class RequestCollabPostDTO {
+        private Long memberId;
         private String title;
         private String intro;
         private Date openDate;

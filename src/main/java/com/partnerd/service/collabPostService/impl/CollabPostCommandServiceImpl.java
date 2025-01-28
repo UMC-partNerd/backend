@@ -8,7 +8,9 @@ import com.partnerd.apiPaylaod.exception.handler.EventTypeHandler;
 import com.partnerd.converter.collabPostConverter.CollabPostConverter;
 import com.partnerd.converter.collabPostConverter.CollapPostCategoryConverter;
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.enums.ImageType;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.CollabPostCategory;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
@@ -40,7 +42,15 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     @Transactional
     public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
-        CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO);
+        ClubMember clubMember = clubMemberRepository.findByMember_Id(requestDTO.getMemberId());
+
+        // 클럽 멤버의 리더가 아닐 경우 콜라보 글 생성 제한
+        if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHORIZED);
+        }
+
+        CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO, clubMember);
+
         // 카테고리 객체 찾아서 리스트로 만들기
         List<Category> categoryList =
                 requestDTO.getCategoryIds().stream()
@@ -55,6 +65,10 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
         List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.
                 toCollabPostCategoryList(categoryList);
         collabPostCategoryList.forEach(collabPostCategory -> { collabPostCategory.setCollabPost(collabPost); });
+
+        // 행사 유형 설정
+        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
+                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
 
         // ContactMethod 추가
         if (requestDTO.getContactMethodDTOList() != null) {
@@ -92,14 +106,6 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
                 eventImg.setCollabPost(collabPost);
             });
         }
-
-
-        // 팀 멤버 하드 코딩
-        collabPost.setClubMember(clubMemberRepository.findById(1L).orElseThrow(() ->
-                new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND)));
-        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
-                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
-
 
         return collabPostRepository.save(collabPost);
     }

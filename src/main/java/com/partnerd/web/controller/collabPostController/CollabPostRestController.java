@@ -34,12 +34,22 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> addCollabPost(@RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> addCollabPost(@RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
        if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
        }
         // 사용자가 동아리에 리더진인지 확인 후에 작성 가능 -> 추후에 해당 기능 추가
+
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        requestDTO.setMemberId(memberId);
+
         CollabPost collabPost = collabPostCommandService.addCollabPost(requestDTO);
 
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
