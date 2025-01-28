@@ -1,5 +1,7 @@
 package com.partnerd.domain;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabInquiryHandler;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -84,5 +86,14 @@ public class CollabInquiry extends BaseEntity {
     public void removeLikes() {
         if (this.likes > 0) { this.likes -= 1; }
     }
+
+    public void validateAuthor(Long memberId) {
+        if (!this.member.getId().equals(memberId)) {
+            throw new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_NOT_AUTHOR);
+        }
+    }
+
+
+
 
 }

@@ -70,7 +70,8 @@ public enum ErrorStatus implements BaseErrorCode {
     COLLAB_INQUIRY_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "해당 콜라보레이션 문의글이 없습니다."),
     COLLAB_INQUIRY_PARENT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "답변할 콜라보레이션 문의글이 없습니다."),
     CANNOT_REMOVE_LIKE_BELOW_ZERO(HttpStatus.FORBIDDEN, "COLLABINQUIRY403", "금지된 요청입니다."),
-
+    COLLAB_INQUIRY_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABINQUIRY4003", "문의글 작성자만 수행할 수 있습니다."),
+    COLLAB_INQUIRY_CHILD_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABINQUIRY4003", "답변 작성자만 수행할 수 있습니다."),
 
     // 콜라보 요청 관련
     COLLAB_ASK_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABASK4001", "해당 콜라보레이션 요청이 없습니다."),

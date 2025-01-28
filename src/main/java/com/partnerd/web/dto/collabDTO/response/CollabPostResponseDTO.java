@@ -91,6 +91,7 @@ public class CollabPostResponseDTO {
     @AllArgsConstructor
     public static class CollabInquiryDTO {
         private Long id;
+        private Long parentId;
         private String nickname;
         private String contents;
         private int likes;
@@ -101,6 +102,7 @@ public class CollabPostResponseDTO {
                     .nickname(collabInquiry.getMember().getNickname())
                     .contents(collabInquiry.getContents())
                     .likes(collabInquiry.getLikes())
+                    .parentId(collabInquiry.getParentInquiry().getId())
                     .build();
         }
 

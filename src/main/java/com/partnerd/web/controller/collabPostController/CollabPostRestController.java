@@ -29,6 +29,7 @@ public class CollabPostRestController {
     private final CollabPostCommandService collabPostCommandService;
     private final CollabPostQueryService collabPostQueryService;
     private final JwtTokenProvider jwtTokenProvider;
+
     // 콜라보 글 생성
     @PostMapping("/")
     @Operation(summary = "콜라보 글 생성 API",description = "콜라보 글을 생성하는 API입니다.")
@@ -42,10 +43,7 @@ public class CollabPostRestController {
            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
        }
 
-        // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
-
-        // 2. 토큰에서 userId 추출
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         CollabPost collabPost = collabPostCommandService.addCollabPost(requestDTO, memberId);
@@ -67,10 +65,7 @@ public class CollabPostRestController {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
         }
 
-        // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
-
-        // 2. 토큰에서 userId 추출
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO, memberId);
@@ -87,10 +82,7 @@ public class CollabPostRestController {
     public ApiResponse<Long> deleteCollabPost(@RequestHeader("Authorization") String authorizationHeader,
                                               @PathVariable(name = "collabPostId") Long collabPostId) {
 
-        // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
-
-        // 2. 토큰에서 userId 추출
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         collabPostCommandService.deleteCollabPost(collabPostId, memberId);
