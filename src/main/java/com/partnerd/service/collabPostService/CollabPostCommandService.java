@@ -5,10 +5,11 @@ import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 
 public interface CollabPostCommandService {
 
-    CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO);
 
-    CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO);
+    CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId);
 
-    void deleteCollabPost(Long collabPostId);
+    CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId);
+
+    void deleteCollabPost(Long collabPostId, Long memberId);
 
 }

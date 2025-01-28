@@ -1,5 +1,7 @@
 package com.partnerd.domain;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.CollabAsk;
@@ -7,12 +9,16 @@ import com.partnerd.domain.mapping.CollabPostCategory;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.*;
 
 @Entity
 @Getter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CollabPost extends BaseEntity {
@@ -115,6 +121,12 @@ public class CollabPost extends BaseEntity {
         this.eventType = eventType;
         this.eventMode = requestDTO.getEventMode();
         this.description = requestDTO.getDescription();
+    }
+
+    public void validateAuthor(Long memberId) {
+        if (!this.clubMember.getMember().getId().equals(memberId)) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHOR);
+        }
     }
 
 }
