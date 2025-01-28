@@ -38,4 +38,22 @@ public class ProjectCommentRestController {
         ProjectComment projectComment = projectCommentService.addProjectComment(memberId, recruitProjectId, request);
         return ApiResponse.onSuccess(ProjectCommentConverter.toAddProjectCommentResultDTO(projectComment));
     }
+
+    // 모집 프로젝트 대댓글 작성
+    @PostMapping("/recruit/{recruitProjectId}/{parentId}/comment")
+    @Operation(summary = "프로젝트 모집글 대댓글 생성 API",description = "모집할 프로젝트의 댓글에 대댓글을 작성하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<ProjectCommentResponseDTO.AddProjectCommentResultDTO> addChildProjectComment( @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                @PathVariable(name = "recruitProjectId") Long recruitProjectId,
+                                                                                                @PathVariable(name = "parentId") Long parentId,
+                                                                                                @RequestBody @Valid ProjectCommentRequestDTO.AddProjectCommentDTO request){
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        ProjectComment projectComment = projectCommentService.addChildProjectComment(memberId, recruitProjectId, parentId, request);
+        return ApiResponse.onSuccess(ProjectCommentConverter.toAddProjectCommentResultDTO(projectComment));
+    }
 }

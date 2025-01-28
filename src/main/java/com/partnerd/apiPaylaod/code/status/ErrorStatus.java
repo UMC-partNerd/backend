@@ -48,7 +48,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // 프로젝트 모집 관련
     RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "존재하지 않는 모집 프로젝트id입니다."),
     RECRUIT_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4002", "프로젝트 모집글이 없습니다."),
-
+    RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4003", "댓글달 댓글이 없습니다."),
+    
     // 콜라보레이션 글 관련
     COLLAB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABPOST4001", "콜라보레이션 포스트가 없습니다."),
     COLLAB_POST_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "COLLABPOST4002", "이미 존재하는 콜라보레이션 포스트입니다."),

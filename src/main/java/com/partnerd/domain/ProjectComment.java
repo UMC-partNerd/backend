@@ -41,10 +41,10 @@ public class ProjectComment extends BaseEntity {
 
     // 대댓글 작성을 위한 자기 참조
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_comment_id")
-    private ProjectComment projectComment;
+    @JoinColumn(name = "parent_comment_id")
+    private ProjectComment parentComment;
 
-    @OneToMany(mappedBy = "projectComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectComment> children = new ArrayList<>();
 
     public void setProject(Project addProject) {
@@ -63,5 +63,8 @@ public class ProjectComment extends BaseEntity {
         member.getProjectCommentList().add(this);
     }
 
-
+    public void addParentComment(ProjectComment projectComment){
+        this.parentComment = projectComment;
+        parentComment.getChildren().add(this);
+    }
 }

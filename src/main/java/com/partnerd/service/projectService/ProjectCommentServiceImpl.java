@@ -37,4 +37,31 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
 
         return projectCommentRepository.save(projectComment);
     }
+
+    // 모집 프로젝트 댓글 작성
+    @Override
+    @Transactional
+    public ProjectComment addChildProjectComment(Long memberId, Long projectId, Long parentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
+
+        ProjectComment projectComment = ProjectCommentConverter.toProjectComment(request);
+
+        if (parentId != null) {
+            ProjectComment parentComment = projectCommentRepository.findById(parentId).orElseThrow(() ->
+                    new ProjectHandler(ErrorStatus.RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND));
+
+            projectComment.addParentComment(parentComment);
+
+            projectComment.setProject(projectRepository.findById(projectId)
+                    .orElseThrow(() ->
+                            new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND)));
+
+            projectComment.setMember(memberRepository.findById(memberId)
+                    .orElseThrow(() ->
+                            new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+        } else {
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
+        }
+
+        return projectCommentRepository.save(projectComment);
+    }
 }
