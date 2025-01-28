@@ -81,10 +81,11 @@ public class CollabPost extends BaseEntity {
     // 콜라보 카테고리
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostCategory> collabPostCategoryList = new LinkedHashSet<>();
-  
+
     // 콜라보 문의글
+    @Setter
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CollabInquiry> collabInquiryList = new LinkedHashSet<>();
+    private List<CollabInquiry> collabInquiryList = new ArrayList<>();
 
     // 배너 및 메인, 행사 사진
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)

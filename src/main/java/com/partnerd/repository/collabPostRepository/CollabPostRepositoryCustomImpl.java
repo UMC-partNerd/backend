@@ -99,7 +99,6 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .selectFrom(qCollabPost).distinct()
                 .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
                 .leftJoin(qClubMember.member, qMember).fetchJoin()
-                .leftJoin(qCollabPost.collabInquiryList, qCollabInquiry).fetchJoin()
                 .leftJoin(qCollabPost.contactMethodList, qContactMethod).fetchJoin()
                 .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
                 .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
@@ -107,7 +106,19 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPost.collabPostImgList, qCollabPostImg).fetchJoin()
                 .where(qCollabPost.id.eq(collabPostId));
 
-        return query.fetchOne();
+        CollabPost collabPost = query.fetchOne();
+
+        // CollabInquiryList와 연관된 Member 로드
+        List<CollabInquiry> inquiries = queryFactory
+                .selectFrom(qCollabInquiry)
+                .leftJoin(qCollabInquiry.member, qMember).fetchJoin()
+                .where(qCollabInquiry.collabPost.id.eq(collabPostId))
+                .fetch();
+
+        // CollabPost에 Inquiries를 설정
+        collabPost.setCollabInquiryList(inquiries);
+
+        return collabPost;
       
     }
 

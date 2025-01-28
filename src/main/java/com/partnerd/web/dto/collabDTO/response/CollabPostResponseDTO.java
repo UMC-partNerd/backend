@@ -97,12 +97,16 @@ public class CollabPostResponseDTO {
         private int likes;
 
         public static CollabInquiryDTO fromEntity(CollabInquiry collabInquiry) {
+            Long parentId = null;
+            if (collabInquiry.getParentInquiry() != null) {
+                parentId = collabInquiry.getParentInquiry().getId();
+            }
             return CollabInquiryDTO.builder()
                     .id(collabInquiry.getId())
                     .nickname(collabInquiry.getMember().getNickname())
                     .contents(collabInquiry.getContents())
                     .likes(collabInquiry.getLikes())
-                    .parentId(collabInquiry.getParentInquiry().getId())
+                    .parentId(parentId)
                     .build();
         }
 
