@@ -9,9 +9,12 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.ProjectCommentRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
 import com.partnerd.web.dto.projectDTO.ProjectCommentRequestDTO;
+import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +114,16 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
                 projectCommentRepository.delete(projectComment);
             }
         }
+    }
+
+    // 프로젝트 모집 댓글 전체 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO> getProjectCommentList(Long projectId){
+        List<ProjectComment> projectCommentList = projectCommentRepository.findProjectCommentList(projectId);
+
+        return projectCommentList.stream()
+                .map(ProjectCommentConverter::toGetProjectCommentListResultDTO)
+                .toList();
     }
 }

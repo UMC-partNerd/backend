@@ -15,6 +15,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/project")
 @RequiredArgsConstructor
@@ -93,5 +95,16 @@ public class ProjectCommentRestController {
 
         projectCommentService.deleteProjectComment(memberId, commentId);
         return ApiResponse.onSuccess(null);
+    }
+
+    // 프로젝트 모집 댓글 전체 조회
+    @GetMapping("/recruit/{recruitProjectId}/comment")
+    @Operation(summary = "프로젝트 모집글 댓글/대댓글 전체 조회 API",description = "모집할 프로젝트 하단에 있는 댓글 전체를 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO>> getProjectComment(@PathVariable(name = "recruitProjectId") Long recruitProjectId){
+        List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO> projectCommentList = projectCommentService.getProjectCommentList(recruitProjectId);
+        return ApiResponse.onSuccess(projectCommentList);
     }
 }

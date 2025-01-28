@@ -23,4 +23,22 @@ public class ProjectCommentConverter {
                 .profile_url(projectComment.getMember().getProfile_url())
                 .build();
     }
+
+    // 프로젝트 모집 댓글 전체 조회
+    public static ProjectCommentResponseDTO.GetProjectCommentListResultDTO toGetProjectCommentListResultDTO(ProjectComment projectComment) {
+        return ProjectCommentResponseDTO.GetProjectCommentListResultDTO.builder()
+                .projectCommentId(projectComment.getId())
+                .nickname(projectComment.getMember().getNickname())
+                .profile_url(projectComment.getMember().getProfile_url())
+                .contents(projectComment.getContents())
+                .likes(projectComment.getLikes())
+                .createdAt(projectComment.getCreatedAt())
+                .updatedAt(projectComment.getUpdatedAt())
+                .children(
+                        projectComment.getChildren().stream()
+                                .map(ProjectCommentConverter::toGetProjectCommentListResultDTO)
+                                .toList()
+                )
+                .build();
+    }
 }
