@@ -58,7 +58,9 @@ public enum ErrorStatus implements BaseErrorCode {
     COLLAB_POST_BAD_REQUEST(HttpStatus.BAD_REQUEST,"COLLABPOST4000","잘못된 요청입니다. 필수 항목을 모두 입력해주세요."),
     COLLAB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABPOST4001", "콜라보레이션 포스트가 없습니다."),
     COLLAB_POST_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "COLLABPOST4002", "이미 존재하는 콜라보레이션 포스트입니다."),
-    COLLAB_POST_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABPOST4003", "권한이 없습니다."),
+    COLLAB_POST_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABPOST4003", "동아리 리더만 콜라보 글을 작성할 수 있습니다."),
+    COLLAB_POST_CLUB_MEMBERSHIP_REQUIRED(HttpStatus.BAD_REQUEST, "COLLABPOST4003", "동아리에 가입하지 않은 사용자는 글을 작성할 수 없습니다."),
+    COLLAB_POST_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABPOST4003", "글 작성자만 수행할 수 있습니다."),
     // 요청 데이터가 누락 됐을 경우, 요청 메소드가 잘못 됐을 경우 ..
     COLLAB_POST_NOT_VALID(HttpStatus.BAD_REQUEST, "COLLABPOST4004", "유효하지 않은 콜라보레이션 포스트입니다."),
 
@@ -85,6 +87,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "CLUBMEMBER4002", "이미 존재하는 클럽 멤버입니다."),
     CLUB_MEMBER_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBER4003", "권한이 없습니다."),
     CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

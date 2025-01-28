@@ -40,9 +40,11 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
 
     @Override
     @Transactional
-    public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
-        ClubMember clubMember = clubMemberRepository.findByMember_Id(requestDTO.getMemberId());
+        ClubMember clubMember = clubMemberRepository.findByMember_id(memberId).orElseThrow(() -> {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_CLUB_MEMBERSHIP_REQUIRED);
+        });
 
         // 클럽 멤버의 리더가 아닐 경우 콜라보 글 생성 제한
         if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
@@ -109,11 +111,19 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
 
         return collabPostRepository.save(collabPost);
     }
+
     @Override
     @Transactional
-    public CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
         CollabPost collabPost = collabPostRepository.findByIdWithCollabPostImg(collabPostId);
+
+        if (collabPost == null) {
+            throw  new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND);
+        }
+
+        // 작성자 검증
+        collabPost.validateAuthor(memberId);
 
         EventType eventType = eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
                 new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND));
@@ -235,10 +245,13 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     }
 
         @Override
-        public void deleteCollabPost (Long collabPostId){
+        public void deleteCollabPost (Long collabPostId, Long memberId){
 
             CollabPost collabPost = collabPostRepository.findById(collabPostId).orElseThrow(() ->
                     new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND));
+
+            // 작성자 검증
+            collabPost.validateAuthor(memberId);
 
             collabPostRepository.delete(collabPost);
 
