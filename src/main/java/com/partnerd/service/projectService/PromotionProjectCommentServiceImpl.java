@@ -9,9 +9,12 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectCommentRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentRequestDTO;
+import com.partnerd.web.dto.projectDTO.PromotionProjectCommentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +113,16 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
                 promotionProjectCommentRepository.delete(promotionProjectComment);
             }
         }
+    }
+
+    // 프로젝트 홍보글 댓글 전체 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<PromotionProjectCommentResponseDTO.GetPromotionProjectCommentListResultDTO> getPromotionProjectCommentList(Long projectId){
+        List<PromotionProjectComment> promotionProjectCommentList = promotionProjectCommentRepository.findPromotionProjectCommentList(projectId);
+
+        return promotionProjectCommentList.stream()
+                .map(PromotionProjectCommentConverter::toGetPromotionProjectCommentListResultDTO)
+                .toList();
     }
 }

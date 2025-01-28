@@ -29,6 +29,7 @@ public class PromotionProjectCommentResponseDTO {
     @AllArgsConstructor
     public static class GetPromotionProjectCommentListResultDTO {
         private Long promotionProjectCommentId;    // 댓글 ID
+        private Boolean isDeleted;      // 삭제됨 여부
         private String nickname;          // 작성자 닉네임
         private String profile_url;       // 프로필 사진
         private String contents;          // 내용

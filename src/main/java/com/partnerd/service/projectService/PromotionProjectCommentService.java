@@ -2,6 +2,9 @@ package com.partnerd.service.projectService;
 
 import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentRequestDTO;
+import com.partnerd.web.dto.projectDTO.PromotionProjectCommentResponseDTO;
+
+import java.util.List;
 
 public interface PromotionProjectCommentService {
 
@@ -16,4 +19,7 @@ public interface PromotionProjectCommentService {
 
     // 프로젝트 홍보글 댓글/대댓글 삭제
     void deletePromotionProjectComment(Long memberId, Long commentId);
+
+    // 프로젝트 홍보글 댓글 전체 조회
+    List<PromotionProjectCommentResponseDTO.GetPromotionProjectCommentListResultDTO> getPromotionProjectCommentList(Long projectId);
 }
