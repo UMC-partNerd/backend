@@ -54,14 +54,7 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
         CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO, clubMember);
 
         // 카테고리 객체 찾아서 리스트로 만들기
-        List<Category> categoryList =
-                requestDTO.getCategoryIds().stream()
-                        .map(categoryId ->{
-                            Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
-                                    new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
-                            return category;
-                        })
-                        .collect(Collectors.toList());
+        List<Category> categoryList = categoryRepository.findAllByIdWithCollabPostCategory(requestDTO.getCategoryIds());
 
         // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성하고 양방향 관계 설정
         List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.

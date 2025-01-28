@@ -74,6 +74,7 @@ public class CollabPostRestController {
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO, memberId);
+  
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
     }
 
@@ -99,7 +100,8 @@ public class CollabPostRestController {
     // 콜라보 글 전체 조회 (최신순)
     @GetMapping("/")
     @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",
-            description = "콜라보 글 전체 조회 API입니다. page는 1부터 시작합니다.")
+            description = "콜라보 글 전체 조회 API입니다. page는 1부터 시작합니다." +
+                    "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -128,7 +130,8 @@ public class CollabPostRestController {
     // 카테고리 별 콜라보 글 조회
     @GetMapping("/categories")
     @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",
-            description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다.")
+            description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다." +
+                    "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })

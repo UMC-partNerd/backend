@@ -3,9 +3,10 @@ package com.partnerd.repository.collabPostRepository;
 import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
-import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,7 +34,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QCollabPostImg qCollabPostImg = QCollabPostImg.collabPostImg;
 
 
-    private void applySorting(JPAQuery<CollabPost> query, Pageable pageable) {
+    private PagingResultDTO applySortingAndPaging(JPAQuery<CollabPost> query, Pageable pageable) {
         Sort sort = pageable.getSort();
         for (Sort.Order order : sort) {
             String property = order.getProperty();
@@ -43,6 +44,21 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 query.orderBy(qCollabPost.endDate.asc());
             }
         }
+        long total = queryFactory
+                .select(qCollabPost.count())
+                .from(qCollabPost)
+                .fetchOne();
+
+        List<CollabPost> results = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return PagingResultDTO.builder()
+                .total(total)
+                .results(results)
+                .build();
+
     }
 
     @Override
@@ -54,12 +70,9 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPostCategory.category, qCategory) // Category도 즉시 로딩
                 .fetchJoin();
 
-       applySorting(query, pageable);
+       PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
 
-        long total = query.fetch().size();
-        List<CollabPost> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-
-        return new PageImpl<>(results, pageable, total);
+        return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
 
 
@@ -73,15 +86,9 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .where(qCollabPost.collabPostCategoryList.any().category.id.in(categories))
                 .distinct();
 
-        applySorting(query, pageable);
+        PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
 
-        QueryResults<CollabPost> queryResults = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
-
-
-        return new PageImpl<>(queryResults.getResults(), pageable,  queryResults.getTotal());
+        return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
 
 
@@ -131,4 +138,13 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .distinct()
                 .fetch();
     }
+
+
+    @Builder
+    @Getter
+    public static class PagingResultDTO {
+        private long total;
+        private List<CollabPost> results;
+    }
+
 }
