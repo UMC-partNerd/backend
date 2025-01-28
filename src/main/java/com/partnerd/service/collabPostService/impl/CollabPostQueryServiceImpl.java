@@ -1,5 +1,7 @@
 package com.partnerd.service.collabPostService.impl;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.repository.collabPostRepository.CollabPostRepository;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
@@ -43,7 +45,12 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
     @Transactional(readOnly=true)
     public CollabPost getCollabPost(Long collabPostId) {
 
-        return collabPostRepository.findCollabPostDetails(collabPostId);
+        CollabPost collabPost = collabPostRepository.findCollabPostDetails(collabPostId);
+        if (collabPost == null) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND);
+        }
+
+        return collabPost;
     }
 
 
