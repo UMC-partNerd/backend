@@ -90,8 +90,12 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBER4001", "클럽 멤버가 없습니다."),
     CLUB_MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "CLUBMEMBER4002", "이미 존재하는 클럽 멤버입니다."),
     CLUB_MEMBER_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBER4003", "권한이 없습니다."),
-    CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다.");
+    CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다."),
+    CLUB_MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CLUBMEMBER4005", "이미 가입된 클럽 멤버입니다."),
 
+    // 동아리 가입 요청 관련
+    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리 리더만 가입 요청을 승인/거절할 수 있습니다."),
+    CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

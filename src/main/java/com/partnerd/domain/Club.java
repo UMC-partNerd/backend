@@ -2,6 +2,7 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.ClubMembershipRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +49,10 @@ public class Club extends BaseEntity{
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClubActivity> activities = new ArrayList<>();
+
+    // 동아리 가입 요청 리스트
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClubMembershipRequest> receivedClubMembershipRequests = new ArrayList<>();
 
     // 클럽 정보를 업데이트하는 메서드
     public void update(String name, String intro, Category category) {
