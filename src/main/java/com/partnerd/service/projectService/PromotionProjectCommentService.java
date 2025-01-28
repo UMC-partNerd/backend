@@ -13,4 +13,7 @@ public interface PromotionProjectCommentService {
 
     // 프로젝트 홍보글 댓글/대댓글 수정
     PromotionProjectComment updatePromotionProjectComment(Long memberId, Long commentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request);
+
+    // 프로젝트 홍보글 댓글/대댓글 삭제
+    void deletePromotionProjectComment(Long memberId, Long commentId);
 }

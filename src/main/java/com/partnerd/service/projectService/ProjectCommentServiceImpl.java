@@ -107,7 +107,6 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
             }
         } else {    // 자식 댓글일 때
             if (parentComment.getIsDeleted() && projectComment.getParentComment().getChildren().size() == 1){
-                System.out.println("ghkghkr");
                 projectCommentRepository.delete(projectComment.getParentComment());
             } else {
                 parentComment.getChildren().remove(projectComment);

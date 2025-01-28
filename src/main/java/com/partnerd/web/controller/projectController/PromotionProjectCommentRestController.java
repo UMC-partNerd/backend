@@ -77,4 +77,21 @@ public class PromotionProjectCommentRestController {
         PromotionProjectComment promotionProjectComment = promotionProjectCommentService.updatePromotionProjectComment(memberId, commentId, request);
         return ApiResponse.onSuccess(PromotionProjectCommentConverter.toAddPromotionProjectCommentResultDTO(promotionProjectComment));
     }
+
+    // 프로젝트 홍보글 댓글/대댓글 삭제
+    @DeleteMapping("/promotion/comment/{commentId}")
+    @Operation(summary = "프로젝트 홍보글 댓글/대댓글 삭제 API",description = "홍보하는 프로젝트에 댓글/대댓글을 삭제하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<Void> deletePromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                                             @PathVariable(name = "commentId") Long commentId){
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        promotionProjectCommentService.deletePromotionProjectComment(memberId, commentId);
+        return ApiResponse.onSuccess(null);
+    }
 }
