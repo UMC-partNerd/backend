@@ -4,6 +4,9 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -18,7 +21,13 @@ public class ProjectComment extends BaseEntity {
 
     // 댓글 내용
     @Column(nullable = false)
-    private String content;
+    private String contents;
+
+    // 좋아요 수
+    private int likes = 0;
+
+    // 삭제 여부
+    private Integer isDeleted = 0;
 
     // 프로젝트 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,4 +38,30 @@ public class ProjectComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    // 대댓글 작성을 위한 자기 참조
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_comment_id")
+    private ProjectComment projectComment;
+
+    @OneToMany(mappedBy = "projectComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectComment> children = new ArrayList<>();
+
+    public void setProject(Project addProject) {
+        if(this.project != null){
+            this.project.getProjectCommentList().remove(this);
+        }
+        this.project = addProject;
+        project.getProjectCommentList().add(this);
+    }
+
+    public void setMember(Member addMember) {
+        if (this.member != null) {
+            member.getProjectCommentList().remove(this);
+        }
+        this.member = addMember;
+        member.getProjectCommentList().add(this);
+    }
+
+
 }

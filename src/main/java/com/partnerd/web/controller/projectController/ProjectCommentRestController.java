@@ -1,0 +1,41 @@
+package com.partnerd.web.controller.projectController;
+
+import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.config.security.JwtTokenProvider;
+import com.partnerd.converter.projectConverter.ProjectCommentConverter;
+import com.partnerd.domain.ProjectComment;
+import com.partnerd.service.projectService.ProjectCommentService;
+import com.partnerd.web.dto.projectDTO.ProjectCommentRequestDTO;
+import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
+import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/project")
+@RequiredArgsConstructor
+public class ProjectCommentRestController {
+
+    private final ProjectCommentService projectCommentService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    // 모집 프로젝트 댓글 작성
+    @PostMapping("/recruit/{recruitProjectId}/comment")
+    @Operation(summary = "프로젝트 모집글 댓글 생성 API",description = "모집할 프로젝트에 댓글을 작성하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<ProjectCommentResponseDTO.AddProjectCommentResultDTO> addProjectComment( @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                @PathVariable(name = "recruitProjectId") Long recruitProjectId, @RequestBody @Valid ProjectCommentRequestDTO.AddProjectCommentDTO request){
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        ProjectComment projectComment = projectCommentService.addProjectComment(memberId, recruitProjectId, request);
+        return ApiResponse.onSuccess(ProjectCommentConverter.toAddProjectCommentResultDTO(projectComment));
+    }
+}
