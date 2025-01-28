@@ -59,7 +59,7 @@ public class CollabPostRestController {
     })
     public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost(@RequestHeader("Authorization") String authorizationHeader,
                                                                                       @PathVariable Long collabPostId,
-                                                                                       @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+                                                                                      @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
         if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
