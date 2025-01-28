@@ -7,4 +7,8 @@ public interface PromotionProjectCommentService {
 
     // 프로젝트 홍보글 댓글 작성
     PromotionProjectComment addPromotionProjectComment(Long memberId, Long projectId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request);
+
+    // 모집 프로젝트 대댓글 작성
+    PromotionProjectComment addChildPromotionProjectComment(Long memberId, Long projectId, Long parentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request);
+
 }

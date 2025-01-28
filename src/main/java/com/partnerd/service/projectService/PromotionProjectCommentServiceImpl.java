@@ -1,7 +1,7 @@
 package com.partnerd.service.projectService;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
-import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
+import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectCommentConverter;
 import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -29,13 +29,39 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
 
         promotionProjectComment.setPromotionProject(promotionProjectRepository.findById(projectId)
                 .orElseThrow(() ->
-                        new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND)));
+                        new PromotionProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND)));
 
         promotionProjectComment.setMember(memberRepository.findById(memberId)
                 .orElseThrow(() ->
-                        new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+                        new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         return promotionProjectCommentRepository.save(promotionProjectComment);
     }
 
+    // 모집 프로젝트 대댓글 작성
+    @Override
+    @Transactional
+    public PromotionProjectComment addChildPromotionProjectComment(Long memberId, Long projectId, Long parentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
+
+        PromotionProjectComment promotionProjectComment = PromotionProjectCommentConverter.toPromotionProjectComment(request);
+
+        if (parentId != null) {
+            PromotionProjectComment parentComment = promotionProjectCommentRepository.findById(parentId).orElseThrow(() ->
+                    new PromotionProjectHandler(ErrorStatus.PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND));
+
+            promotionProjectComment.addParentComment(parentComment);
+
+            promotionProjectComment.setPromotionProject(promotionProjectRepository.findById(projectId)
+                    .orElseThrow(() ->
+                            new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND)));
+
+            promotionProjectComment.setMember(memberRepository.findById(memberId)
+                    .orElseThrow(() ->
+                            new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+        } else {
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
+        }
+
+        return promotionProjectCommentRepository.save(promotionProjectComment);
+    }
 }

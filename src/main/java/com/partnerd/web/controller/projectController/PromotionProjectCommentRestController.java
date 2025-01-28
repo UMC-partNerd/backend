@@ -40,5 +40,23 @@ public class PromotionProjectCommentRestController {
         PromotionProjectComment promotionProjectComment = promotionProjectCommentService.addPromotionProjectComment(memberId, promotionProjectId, request);
         return ApiResponse.onSuccess(PromotionProjectCommentConverter.toAddPromotionProjectCommentResultDTO(promotionProjectComment));
     }
-    
+
+    // 프로젝트 홍보글 대댓글 작성
+    @PostMapping("/promotion/{promotionProjectId}/{parentId}/comment")
+    @Operation(summary = "프로젝트 홍보글 대댓글 생성 API",description = "홍보하는 프로젝트의 댓글에 대댓글을 작성하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                                      @PathVariable(name = "promotionProjectId") Long promotionProjectId,
+                                                                                                                      @PathVariable(name = "parentId") Long parentId,
+                                                                                                                      @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        PromotionProjectComment promotionProjectComment = promotionProjectCommentService.addChildPromotionProjectComment(memberId, promotionProjectId, parentId, request);
+        return ApiResponse.onSuccess(PromotionProjectCommentConverter.toAddPromotionProjectCommentResultDTO(promotionProjectComment));
+    }
 }
