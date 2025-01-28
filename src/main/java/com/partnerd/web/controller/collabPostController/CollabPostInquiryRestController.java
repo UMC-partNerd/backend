@@ -1,8 +1,12 @@
 package com.partnerd.web.controller.collabPostController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabInquiryHandler;
+import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.collabPostConverter.CollabInquiryConverter;
 import com.partnerd.domain.CollabInquiry;
+import com.partnerd.domain.enums.LikedAction;
 import com.partnerd.service.collabPostService.CollabInquiryCommandService;
 import com.partnerd.service.collabPostService.CollabInquiryQueryService;
 import com.partnerd.web.dto.collabDTO.request.CollabInquiryRequestDTO;
@@ -19,6 +23,7 @@ public class CollabPostInquiryRestController {
 
     private final CollabInquiryCommandService collabInquiryCommandService;
     private final CollabInquiryQueryService collabInquiryQueryService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/register")
     @Operation(summary = "콜라보 문의글 작성 API",description = "콜라보 문의글 작성 API입니다.")
@@ -26,7 +31,8 @@ public class CollabPostInquiryRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> addCollabInquiry (@RequestBody CollabInquiryRequestDTO.addCollabInquiryDTO
-                                                                                              requestDTO) {
+                                                                                                           requestDTO) {
+
 
         CollabInquiry collabInquiry = collabInquiryCommandService.addCollabInquiry(requestDTO);
 
@@ -90,18 +96,21 @@ public class CollabPostInquiryRestController {
     }
 
     @PatchMapping("/{collabInquiryId}/likes")
-    @Operation(summary = "콜라보 문의글 및 답변글 좋아요/좋아요 취소 API",description = "콜라보 문의글 및 답변글 좋아요 개수 증가/감소 API입니다.")
+    @Operation(summary = "콜라보 문의글 및 답변글 좋아요/좋아요 취소 API",description = "콜라보 문의글 및 답변글 좋아요 개수 증가/감소 API입니다. " +
+            "LikedAction 이 REMOVE 이면 좋아요 취소, ADD 이면 좋아요 추가입니다. ")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<Integer> addInquiryLikes(@PathVariable(name = "collabInquiryId") Long collabInquiryId,
-                                                @RequestParam(name = "liked") Integer liked) {
+                                                @RequestParam(name = "liked") LikedAction liked) {
 
         Integer likes = 0;
-        if (liked == 0) {
+        if (liked.equals(LikedAction.REMOVE)) {
             likes = collabInquiryCommandService.removeLike(collabInquiryId);
-        } else {
+        } else if (liked.equals(LikedAction.ADD)) {
             likes = collabInquiryCommandService.addLike(collabInquiryId);
+        } else {
+            throw new CollabInquiryHandler(ErrorStatus._BAD_REQUEST);
         }
 
         return ApiResponse.onSuccess(likes);

@@ -126,11 +126,18 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
     }
 
     @Override
+    @Transactional
     public Integer removeLike(Long collabInquiryId) {
         CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
 
+        // 좋아요 개수가 0이면 취소할 수 없도록 예외 발생
+        if (collabInquiry.getLikes() <= 0) {
+            throw new CollabInquiryHandler(ErrorStatus.CANNOT_REMOVE_LIKE_BELOW_ZERO);
+        }
+
         collabInquiry.removeLikes();
+
 
         return collabInquiry.getLikes();
     }

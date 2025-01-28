@@ -81,6 +81,8 @@ public class CollabInquiry extends BaseEntity {
 
     public void addLikes() { this.likes += 1; }
 
-    public void removeLikes() { this.likes -= 1; }
+    public void removeLikes() {
+        if (this.likes > 0) { this.likes -= 1; }
+    }
 
 }
