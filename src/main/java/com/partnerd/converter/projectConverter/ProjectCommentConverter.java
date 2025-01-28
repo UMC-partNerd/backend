@@ -28,6 +28,7 @@ public class ProjectCommentConverter {
     public static ProjectCommentResponseDTO.GetProjectCommentListResultDTO toGetProjectCommentListResultDTO(ProjectComment projectComment) {
         return ProjectCommentResponseDTO.GetProjectCommentListResultDTO.builder()
                 .projectCommentId(projectComment.getId())
+                .isDeleted(projectComment.getIsDeleted())
                 .nickname(projectComment.getMember().getNickname())
                 .profile_url(projectComment.getMember().getProfile_url())
                 .contents(projectComment.getContents())
