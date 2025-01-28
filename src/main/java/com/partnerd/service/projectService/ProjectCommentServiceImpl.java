@@ -66,7 +66,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         return projectCommentRepository.save(projectComment);
     }
 
-    // 모집 프로젝트 댓글/대댓글 작성
+    // 모집 프로젝트 댓글/대댓글 수정
     @Override
     @Transactional
     public ProjectComment updateProjectComment(Long memberId, Long commentId, ProjectCommentRequestDTO.AddProjectCommentDTO request){
@@ -82,5 +82,34 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         projectComment.setContents(request.getContents());
 
         return projectCommentRepository.save(projectComment);
+    }
+
+    // 모집 프로젝트 댓글/대댓글 삭제
+    @Override
+    @Transactional
+    public void deleteProjectComment(Long memberId, Long commentId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        ProjectComment projectComment = projectCommentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        ProjectComment parentComment = projectComment.getParentComment();
+
+        if (parentComment == null){  // 부모 댓글일때
+            if (!projectComment.getChildren().isEmpty()){
+                projectComment.changeToDeleted();
+            } else {
+                projectCommentRepository.delete(projectComment);
+            }
+        } else {    // 자식 댓글일 때
+            if (parentComment.getIsDeleted() && projectComment.getParentComment().getChildren().size() == 1){
+                System.out.println("ghkghkr");
+                projectCommentRepository.delete(projectComment.getParentComment());
+            } else {
+                parentComment.getChildren().remove(projectComment);
+                projectCommentRepository.delete(projectComment);
+            }
+        }
     }
 }

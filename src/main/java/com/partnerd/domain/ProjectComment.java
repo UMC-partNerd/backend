@@ -28,7 +28,7 @@ public class ProjectComment extends BaseEntity {
     private int likes = 0;
 
     // 삭제 여부
-    private Integer isDeleted = 0;
+    private Boolean isDeleted = false;
 
     // 프로젝트 ID (FK)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,5 +67,9 @@ public class ProjectComment extends BaseEntity {
     public void addParentComment(ProjectComment projectComment){
         this.parentComment = projectComment;
         parentComment.getChildren().add(this);
+    }
+
+    public void changeToDeleted(){
+        this.isDeleted = true;
     }
 }

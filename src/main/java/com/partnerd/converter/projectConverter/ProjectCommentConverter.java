@@ -10,7 +10,7 @@ public class ProjectCommentConverter {
     public static ProjectComment toProjectComment (ProjectCommentRequestDTO.AddProjectCommentDTO request){
         return ProjectComment.builder()
                 .contents(request.getContents())
-                .isDeleted(0)
+                .isDeleted(false)
                 .build();
     }
 
