@@ -163,12 +163,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     @Override
     @Transactional(readOnly = true)
     public List<PromotionProject> getPromotionProjectTop3(){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        return queryFactory.selectFrom(promotionProject)
-                .orderBy(promotionProject.views.desc())
-                .limit(3)
-                .fetch();
+        return promotionProjectRepository.getPromotionProjectTop3();
     }
 
     // 프로젝트 홍보 모아보기 (검색)

@@ -40,6 +40,16 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
     }
 
 
+    // 프로젝트 홍보글 모아보기 (인기 top3)
+    @Override
+    public List<PromotionProject> getPromotionProjectTop3(){
+        return queryFactory.selectFrom(qPromotionProject)
+                .orderBy(qPromotionProject.views.desc())
+                .limit(3)
+                .fetch();
+    }
+
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     @Override
     public List<PromotionProject> findPromotionProjectsByMemberId(Long memberId){
