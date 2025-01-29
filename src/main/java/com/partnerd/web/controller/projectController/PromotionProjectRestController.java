@@ -73,12 +73,16 @@ public class PromotionProjectRestController {
 
     // 프로젝트 홍보 모아보기 (인기순 / 최신순)
     @GetMapping("/promotion")
-    @Operation(summary = "프로젝트 홍보글 모아보기 (인기순/최신순) API",description = "홍보할 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다. status 0은 인기순, 1은 최신순입니다.")
+    @Operation(summary = "프로젝트 홍보글 모아보기 (인기순/최신순) API",description = "홍보할 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true),
+            @Parameter(name = "sort", description = "나열 순서 (0 = 인기순, 1 = 최신순)", required = true),
+    })
     public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPromotionProjectList(@RequestParam(name = "page") Integer page,
-                                                                                                           @RequestParam(name = "status") Integer sort){
+                                                                                                           @RequestParam(name = "sort") Integer sort){
 
         Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectList(page - 1, sort);
         return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));

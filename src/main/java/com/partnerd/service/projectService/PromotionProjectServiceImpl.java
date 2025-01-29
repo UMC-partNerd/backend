@@ -120,43 +120,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     @Override
     @Transactional(readOnly = true)
     public Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        Pageable pageable = PageRequest.of(page, 12);
-
-        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
-
-        if (sort != null && sort == 0) {
-            List<Long> top3Ids = queryFactory
-                    .select(promotionProject.id)
-                    .from(promotionProject)
-                    .orderBy(promotionProject.views.desc())
-                    .limit(3)
-                    .fetch();
-
-            query.where(promotionProject.id.notIn(top3Ids))
-                    .orderBy(promotionProject.views.desc());
-        } else {
-            query.orderBy(promotionProject.createdAt.desc());
-        }
-
-        query.offset(pageable.getOffset()).limit(pageable.getPageSize());
-
-        List<PromotionProject> content = query.fetch();
-
-        long total = queryFactory
-                .selectFrom(promotionProject)
-                .where(sort != null && sort == 0 ? promotionProject.id.notIn(
-                        queryFactory
-                                .select(promotionProject.id)
-                                .from(promotionProject)
-                                .orderBy(promotionProject.views.desc())
-                                .limit(3)
-                                .fetch()
-                ) : null)
-                .fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return promotionProjectRepository.getPromotionProjectList(page, sort);
     }
 
     // 프로젝트 홍보글 모아보기 (인기 top3)
