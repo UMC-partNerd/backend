@@ -34,9 +34,16 @@ public class ProjectCommentRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
+    @Parameters({
+            @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+    })
     public ApiResponse<ProjectCommentResponseDTO.AddProjectCommentResultDTO> addProjectComment( @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
                                                                                                 @PathVariable(name = "recruitProjectId") Long recruitProjectId,
                                                                                                 @RequestBody @Valid ProjectCommentRequestDTO.AddProjectCommentDTO request){
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
         // jwt토큰으로 멤버id 뽑기
         String token = authorizationHeader.substring(7);
         Claims claims = jwtTokenProvider.getClaims(token);
@@ -113,6 +120,9 @@ public class ProjectCommentRestController {
     @Operation(summary = "프로젝트 모집글 댓글/대댓글 전체 조회 API",description = "모집할 프로젝트 하단에 있는 댓글 전체를 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
     })
     public ApiResponse<List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO>> getProjectComment(@PathVariable(name = "recruitProjectId") Long recruitProjectId){
         List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO> projectCommentList = projectCommentService.getProjectCommentList(recruitProjectId);
