@@ -63,9 +63,20 @@ public class ProjectRestController {
     @Parameters({
             @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
     })
-    public ApiResponse<ProjectResponseDTO.UpdateProjectResultDTO> updateProject(@PathVariable(name = "recruitProjectId") Long recruitProjectId, @RequestBody @Valid ProjectRequestDTO.UpdateProjectDTO request){
+    public ApiResponse<ProjectResponseDTO.UpdateProjectResultDTO> updateProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @PathVariable(name = "recruitProjectId") Long recruitProjectId, @RequestBody @Valid ProjectRequestDTO.UpdateProjectDTO request){
 
-        Project project = projectService.updateProject(request, recruitProjectId);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        Project project = projectService.updateProject(memberId, request, recruitProjectId);
         return ApiResponse.onSuccess(ProjectConverter.toUpdateProjectResultDTO(project));
     }
     

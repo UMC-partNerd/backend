@@ -93,10 +93,14 @@ public class ProjectServiceImpl implements ProjectService {
     // 프로젝트 모집글 수정
     @Override
     @Transactional
-    public Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId) {
+    public Project updateProject(Long memberId, ProjectRequestDTO.UpdateProjectDTO request, Long projectId) {
 
         Project existingProject = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingProject.getMember().getId().equals(memberId))
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_AUTHOR);
 
         existingProject.setTitle(request.getTitle());
         existingProject.setIntro(request.getInfo());
@@ -115,7 +119,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
