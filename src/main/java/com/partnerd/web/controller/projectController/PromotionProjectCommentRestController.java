@@ -28,7 +28,7 @@ public class PromotionProjectCommentRestController {
     private final PromotionProjectCommentService promotionProjectCommentService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 프로젝트 홍보글 작성
+    // 프로젝트 홍보글 댓글 작성
     @PostMapping("/promotion/{promotionProjectId}/comment")
     @Operation(summary = "프로젝트 홍보글 댓글 생성 API",description = "홍보하는 프로젝트에 댓글을 작성하는 API입니다.")
     @ApiResponses({
@@ -59,10 +59,17 @@ public class PromotionProjectCommentRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
+    @Parameters({
+            @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
+    })
     public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildPromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                       @PathVariable(name = "promotionProjectId") Long promotionProjectId,
                                                                                                                       @PathVariable(name = "parentId") Long parentId,
                                                                                                                       @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
         // jwt토큰으로 멤버id 뽑기
         String token = authorizationHeader.substring(7);
         Claims claims = jwtTokenProvider.getClaims(token);
