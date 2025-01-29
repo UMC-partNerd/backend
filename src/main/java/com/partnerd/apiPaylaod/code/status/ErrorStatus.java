@@ -49,12 +49,15 @@ public enum ErrorStatus implements BaseErrorCode {
     // 프로젝트 홍보 관련
     PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "존재하지 않는 홍보 프로젝트id입니다."),
     PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4002", "프로젝트 홍보글이 없습니다."),
+    PROMOTION_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4003", "존재하지 않는 댓글입니다."),
+    PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4004", "댓글달 댓글이 없습니다."),
+
 
     // 프로젝트 모집 관련
     RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "존재하지 않는 모집 프로젝트id입니다."),
     RECRUIT_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4002", "프로젝트 모집글이 없습니다."),
     RECRUIT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4003", "존재하지 않는 댓글입니다."),
-    RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4003", "댓글달 댓글이 없습니다."),
+    RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4004", "댓글달 댓글이 없습니다."),
 
     // 콜라보레이션 글 관련
     COLLAB_POST_BAD_REQUEST(HttpStatus.BAD_REQUEST,"COLLABPOST4000","잘못된 요청입니다. 필수 항목을 모두 입력해주세요."),

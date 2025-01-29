@@ -25,9 +25,11 @@ public class ProjectComment extends BaseEntity {
     private String contents;
 
     // 좋아요 수
+    @Column(nullable = false)
     private int likes = 0;
 
     // 삭제 여부
+    @Column(nullable = false)
     private Boolean isDeleted = false;
 
     // 프로젝트 ID (FK)
