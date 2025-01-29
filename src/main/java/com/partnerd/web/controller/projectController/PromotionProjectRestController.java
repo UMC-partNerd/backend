@@ -1,12 +1,15 @@
 package com.partnerd.web.controller.projectController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.service.projectService.PromotionProjectService;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -34,9 +37,20 @@ public class PromotionProjectRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<PromotionProjectResponseDTO.CreatePromotionProjectResultDTO> addPromotionProject(@RequestBody @Valid PromotionProjectRequestDTO.CreatePromotionProjectDTO request){
+    public ApiResponse<PromotionProjectResponseDTO.CreatePromotionProjectResultDTO> addPromotionProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestBody @Valid PromotionProjectRequestDTO.CreatePromotionProjectDTO request){
 
-        PromotionProject promotionProject = promotionProjectService.addPromotionProject(request);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        PromotionProject promotionProject = promotionProjectService.addPromotionProject(memberId, request);
         return ApiResponse.onSuccess(PromotionProjectConverter.toCreatePromotionProjectResultDTO(promotionProject));
     }
     

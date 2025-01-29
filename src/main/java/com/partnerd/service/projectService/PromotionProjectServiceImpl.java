@@ -33,13 +33,18 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final MemberRepository memberRepository;
     private final JPAQueryFactory queryFactory;
 
-    // 프로젝트 홍보 생성
+    // 프로젝트 홍보글 생성
     @Override
-    public PromotionProject addPromotionProject(PromotionProjectRequestDTO.CreatePromotionProjectDTO request) {
+    public PromotionProject addPromotionProject(Long memberId, PromotionProjectRequestDTO.CreatePromotionProjectDTO request) {
         PromotionProject newPromotionProject = PromotionProjectConverter.toPromotionProject(request);
 
+        // 작성자
+        newPromotionProject.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+
+
         Set<Member> memberList = request.getPromotionProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
@@ -66,7 +71,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return promotionProjectRepository.save(newPromotionProject);
     }
 
-    // 프로젝트 홍보 수정
+    // 프로젝트 홍보글 수정
     @Override
     @Transactional
     public PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId) {
@@ -107,7 +112,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return promotionProjectRepository.save(existingPromotionProject);
     }
 
-    // 프로젝트 홍보 삭제
+    // 프로젝트 홍보글 삭제
     public Void deletePromotionProject(Long promotionProjectId) {
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
