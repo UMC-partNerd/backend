@@ -72,9 +72,15 @@ public class ProjectRestController {
 
     // 프로젝트 모집글 모아보기
     @GetMapping("/recruit")
-    @Operation(summary = "프로젝트 모집글 모아보기 API",description = "모집글 프로젝트를 모아보는 API입니다.")
+    @Operation(summary = "프로젝트 모집글 모아보기 API",description = "모집글 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true),
+            @Parameter(name = "status", description = "모집 상태 (0 = 모집중, 1 = 모집완료, 없으면 전체)"),
+            @Parameter(name = "category", description = "카테고리 (복수 선택 가능, 1 = Web, 2 = Server, 3 = iOS, 4 = Android, 5 = Design, 6 = PM, 7 = AI/데이터, 8 = 게임 개발, 9 = 기타, 없으면 전체)"),
+            @Parameter(name = "keyword", description = "검색 키워드")
     })
     public ApiResponse<ProjectResponseDTO.ProjectPreviewListDTO> getProjectList(@RequestParam(name = "page") Integer page,
                                                                                 @RequestParam(name = "status", required = false) Integer status,

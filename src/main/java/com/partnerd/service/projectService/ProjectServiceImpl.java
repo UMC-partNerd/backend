@@ -166,44 +166,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public Page<Project> getProjectList(Integer page, Integer status, List<Long> category, String keyword) {
-        QProject project = QProject.project;
-
-        Pageable pageable = PageRequest.of(page, 16);
-
-        JPQLQuery<Project> query = queryFactory.selectFrom(project);
-
-        Date now = new Date();
-
-        // 모집 상태 필터링
-        if (status != null) {
-            switch (status) {
-                case 0:
-                    query.where(project.endDate.goe(now));
-                    break;
-                case 1:
-                    query.where(project.endDate.lt(now));
-                    break;
-            }
-        }
-
-        // 카테고리 필터링
-        if (category != null && !category.isEmpty()) {
-            query.where(project.projectCategoryPreferList.any().projectCategory.id.in(category));
-        }
-
-        // 검색 필터링
-        if (keyword != null && !keyword.isEmpty()) {
-            query.where(project.title.containsIgnoreCase(keyword));
-        }
-
-        query.orderBy(project.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        List<Project> content = query.fetch();
-        long total = query.fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return projectRepository.getProjectList(page, status, category, keyword);
     }
 
     // 프로젝트 모집글 상세페이지 조회
