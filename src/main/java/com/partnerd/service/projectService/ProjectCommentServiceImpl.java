@@ -91,11 +91,15 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
     @Override
     @Transactional
     public void deleteProjectComment(Long memberId, Long commentId){
-        Member member = memberRepository.findById(memberId)
+        memberRepository.findById(memberId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        ProjectComment projectComment = projectCommentRepository.findByIdAndMember(commentId, member)
+        ProjectComment projectComment = projectCommentRepository.findById(commentId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!projectComment.getMember().getId().equals(memberId))
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_AUTHOR);
 
         ProjectComment parentComment = projectComment.getParentComment();
 
