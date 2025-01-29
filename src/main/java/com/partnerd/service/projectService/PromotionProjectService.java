@@ -15,7 +15,7 @@ public interface PromotionProjectService {
     PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId);
 
     // 프로젝트 홍보글 삭제
-    Void deletePromotionProject(Long promotionProjectId);
+    Void deletePromotionProject(Long memberId, Long promotionProjectId);
     
     // 프로젝트 홍보글 모아보기 (인기순/최신순)
     Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort);

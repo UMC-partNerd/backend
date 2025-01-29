@@ -113,9 +113,13 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     }
 
     // 프로젝트 홍보글 삭제
-    public Void deletePromotionProject(Long promotionProjectId) {
+    public Void deletePromotionProject(Long memberId, Long promotionProjectId) {
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingPromotionProject.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_AUTHOR);
 
         promotionProjectRepository.deleteById(existingPromotionProject.getId());
         return null;
