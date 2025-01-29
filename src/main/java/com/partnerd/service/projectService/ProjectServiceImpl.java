@@ -38,19 +38,21 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectCategoryRepository projectCategoryRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectCategoryPreferRepository projectCategoryPreferRepository;
-    private final JPAQueryFactory queryFactory;
 
     // 프로젝트 모집글 생성
     @Override
     @Transactional
-    public Project addProject(ProjectRequestDTO.CreateProjectDTO request) {
+    public Project addProject(Long memberId, ProjectRequestDTO.CreateProjectDTO request) {
         Project newProject = ProjectConverter.toProject(request);
 
+        // 작성자
+        newProject.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<ProjectMember> projectMemberList = ProjectMemberConverter.toProjectMemberList(memberList);
@@ -76,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
                                 .contactType(contactMethodDTO.getContactType())
                                 .contactUrl(contactMethodDTO.getContactUrl())
                                 .build();
-                        contactMethod.setProject(newProject); // 프로젝트와 연결
+                        contactMethod.setProject(newProject);
                         return contactMethod;
                     })
                     .collect(Collectors.toSet());

@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProjectService {
 
     // 프로젝트 모집글 생성
-    Project addProject(ProjectRequestDTO.CreateProjectDTO request);
+    Project addProject(Long memberId, ProjectRequestDTO.CreateProjectDTO request);
 
 
     // 프로젝트 모집글 수정

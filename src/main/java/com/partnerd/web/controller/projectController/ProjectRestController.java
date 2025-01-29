@@ -1,12 +1,15 @@
 package com.partnerd.web.controller.projectController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.domain.Project;
 import com.partnerd.service.projectService.ProjectService;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -34,9 +37,20 @@ public class ProjectRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<ProjectResponseDTO.CreateProjectResultDTO> addProject(@RequestBody @Valid ProjectRequestDTO.CreateProjectDTO request){
+    public ApiResponse<ProjectResponseDTO.CreateProjectResultDTO> addProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestBody @Valid ProjectRequestDTO.CreateProjectDTO request){
 
-        Project project = projectService.addProject(request);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        Project project = projectService.addProject(memberId, request);
         return ApiResponse.onSuccess(ProjectConverter.toCreateProjectResultDTO(project));
     }
 
