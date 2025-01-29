@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class CollabPostInquiryRestController {
 
     private final CollabInquiryCommandService collabInquiryCommandService;
-    private final CollabInquiryQueryService collabInquiryQueryService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/register")
@@ -30,11 +29,15 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> addCollabInquiry (@RequestBody CollabInquiryRequestDTO.addCollabInquiryDTO
+    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> addCollabInquiry (@RequestHeader("Authorization") String authorizationHeader,
+                                                                                               @RequestBody CollabInquiryRequestDTO.addCollabInquiryDTO
                                                                                                            requestDTO) {
 
 
-        CollabInquiry collabInquiry = collabInquiryCommandService.addCollabInquiry(requestDTO);
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        CollabInquiry collabInquiry = collabInquiryCommandService.addCollabInquiry(requestDTO, memberId);
 
         return ApiResponse.onSuccess(CollabInquiryConverter.toCollabInquiryResultDTO(collabInquiry));
     }
@@ -44,10 +47,15 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> addChildCollabInquiry (@PathVariable(name = "parentId") Long parentId,
+    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> addChildCollabInquiry (@RequestHeader("Authorization") String authorizationHeader,
+                                                                                                    @PathVariable(name = "parentId") Long parentId,
                                                                                                     @RequestBody CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
 
-        CollabInquiry collabInquiry = collabInquiryCommandService.addChildInquiry(parentId, requestDTO);
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        CollabInquiry collabInquiry = collabInquiryCommandService.addChildInquiry(parentId, requestDTO, memberId);
 
         return ApiResponse.onSuccess(CollabInquiryConverter.toChildCollabInquiryResultDTO(collabInquiry));
     }
@@ -57,10 +65,17 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> ModifyCollabInquiry (@PathVariable(name = "collabInquiryId") Long collabInquiryId,
+    public ApiResponse<CollabInquiryResponseDTO.addCollabInquiryResponseDTO> ModifyCollabInquiry (@RequestHeader("Authorization") String authorizationHeader,
+                                                                                                  @PathVariable(name = "collabInquiryId") Long collabInquiryId,
                                                                                                   @RequestParam String contents) {
 
-        CollabInquiry collabInquiry = collabInquiryCommandService.modifyCollabInquiry(collabInquiryId, contents);
+
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        CollabInquiry collabInquiry = collabInquiryCommandService.modifyCollabInquiry(collabInquiryId, contents, memberId);
+
         CollabInquiryResponseDTO.addCollabInquiryResponseDTO responseDTO = null;
         if (collabInquiry.getParentInquiry() != null) {
             responseDTO= CollabInquiryConverter.toChildCollabInquiryResultDTO(collabInquiry);
@@ -76,9 +91,13 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> deleteCollabInquiry(@PathVariable(name = "collabInquiryId") Long collabInquiryId) {
+    public ApiResponse<Long> deleteCollabInquiry(@RequestHeader("Authorization") String authorizationHeader,
+                                                 @PathVariable(name = "collabInquiryId") Long collabInquiryId) {
 
-        collabInquiryCommandService.deleteCollabInquiry(collabInquiryId);
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        collabInquiryCommandService.deleteCollabInquiry(collabInquiryId, memberId);
 
         return ApiResponse.onSuccess(collabInquiryId);
     }
@@ -88,9 +107,14 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> deleteCollabChildInquiry(@PathVariable(name = "collabInquiryId") Long collabInquiryId) {
+    public ApiResponse<Long> deleteCollabChildInquiry(@RequestHeader("Authorization") String authorizationHeader,
+                                                      @PathVariable(name = "collabInquiryId") Long collabInquiryId) {
 
-        collabInquiryCommandService.deleteCollabChildInquiry(collabInquiryId);
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        collabInquiryCommandService.deleteCollabChildInquiry(collabInquiryId, memberId);
 
         return ApiResponse.onSuccess(collabInquiryId);
     }
@@ -101,14 +125,18 @@ public class CollabPostInquiryRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Integer> addInquiryLikes(@PathVariable(name = "collabInquiryId") Long collabInquiryId,
+    public ApiResponse<Integer> addInquiryLikes(@RequestHeader("Authorization") String authorizationHeader,
+                                                @PathVariable(name = "collabInquiryId") Long collabInquiryId,
                                                 @RequestParam(name = "liked") LikedAction liked) {
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         Integer likes = 0;
         if (liked.equals(LikedAction.REMOVE)) {
-            likes = collabInquiryCommandService.removeLike(collabInquiryId);
+            likes = collabInquiryCommandService.removeLike(collabInquiryId, memberId);
         } else if (liked.equals(LikedAction.ADD)) {
-            likes = collabInquiryCommandService.addLike(collabInquiryId);
+            likes = collabInquiryCommandService.addLike(collabInquiryId, memberId);
         } else {
             throw new CollabInquiryHandler(ErrorStatus._BAD_REQUEST);
         }

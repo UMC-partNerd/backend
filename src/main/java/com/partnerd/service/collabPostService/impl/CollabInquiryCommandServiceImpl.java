@@ -26,16 +26,14 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public CollabInquiry addCollabInquiry(CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
+    public CollabInquiry addCollabInquiry(CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO, Long memberId) {
 
         CollabInquiry collabInquiry = CollabInquiryConverter.toCollabInquiry(requestDTO);
 
-
-        collabInquiry.setCollabPost(collabPostRepository.findByIdWithMember(requestDTO.getCollabPostId()).orElseThrow(() ->
+        collabInquiry.setCollabPost(collabPostRepository.findByIdWithInquiry(requestDTO.getCollabPostId()).orElseThrow(() ->
                 new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND)));
 
-        // 멤버 하드 코딩
-        collabInquiry.setMember(memberRepository.findById(2L).orElseThrow(() ->
+        collabInquiry.setMember(memberRepository.findById(memberId).orElseThrow(() ->
                 new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         return collabInquiryRepository.save(collabInquiry);
@@ -44,7 +42,7 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public CollabInquiry addChildInquiry(Long parentId, CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO) {
+    public CollabInquiry addChildInquiry(Long parentId, CollabInquiryRequestDTO.addCollabInquiryDTO requestDTO, Long memberId) {
 
         CollabInquiry collabInquiry = CollabInquiryConverter.toCollabInquiry(requestDTO);
 
@@ -55,10 +53,9 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
             collabInquiry.addParentInquiry(parentInquiry);
 
-            collabInquiry.setMember(memberRepository.findById(3L).orElseThrow(() ->
+            collabInquiry.setMember(memberRepository.findById(memberId).orElseThrow(() ->
                     new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
             collabInquiry.setCollabPost(parentInquiry.getCollabPost());
-            // collabInquiryRepository.flush();
 
         } else {
             throw new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND);
@@ -69,11 +66,12 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public CollabInquiry modifyCollabInquiry(Long collabInquiryId, String contents) {
+    public CollabInquiry modifyCollabInquiry(Long collabInquiryId, String contents, Long memberId) {
 
         CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithMember(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
 
+        collabInquiry.validateAuthor(memberId);
         collabInquiry.updateCollabInquiry(contents);
 
         return collabInquiryRepository.save(collabInquiry);
@@ -81,10 +79,12 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public void deleteCollabInquiry(Long collabInquiryId) {
+    public void deleteCollabInquiry(Long collabInquiryId, Long memberId) {
 
         CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithParentIdIsNULL(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        collabInquiry.validateAuthor(memberId);
 
         if (collabInquiry.getChildren().size() != 0) {
             collabInquiry.changeIsDeleted();
@@ -96,12 +96,14 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public void deleteCollabChildInquiry(Long collabInquiryId) {
+    public void deleteCollabChildInquiry(Long collabInquiryId, Long memberId) {
 
         CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithParentIdIsNOTNULL(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
 
         CollabInquiry parentInquiry = collabInquiry.getParentInquiry();
+
+        collabInquiry.validateAuthor(memberId);
 
         if (parentInquiry.getIsDeleted() == 1 & parentInquiry.getChildren().size() == 1) {
             collabInquiryRepository.delete(collabInquiry.getParentInquiry());
@@ -114,22 +116,25 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
 
     @Override
     @Transactional
-    public Integer addLike (Long collabInquiryId) {
+    public Integer addLike (Long collabInquiryId, Long memberId) {
 
-        CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
+        CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithMember(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
 
+        collabInquiry.validateAuthor(memberId);
         collabInquiry.addLikes();
-
 
         return collabInquiry.getLikes();
     }
 
     @Override
     @Transactional
-    public Integer removeLike(Long collabInquiryId) {
-        CollabInquiry collabInquiry = collabInquiryRepository.findById(collabInquiryId).orElseThrow(() ->
+    public Integer removeLike(Long collabInquiryId, Long memberId) {
+
+        CollabInquiry collabInquiry = collabInquiryRepository.findByIdWithMember(collabInquiryId).orElseThrow(() ->
                 new CollabInquiryHandler(ErrorStatus.COLLAB_INQUIRY_ID_NOT_FOUND));
+
+        collabInquiry.validateAuthor(memberId);
 
         // 좋아요 개수가 0이면 취소할 수 없도록 예외 발생
         if (collabInquiry.getLikes() <= 0) {
@@ -137,7 +142,6 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
         }
 
         collabInquiry.removeLikes();
-
 
         return collabInquiry.getLikes();
     }
