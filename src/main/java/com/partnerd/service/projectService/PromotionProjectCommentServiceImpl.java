@@ -74,13 +74,17 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
     @Transactional
     public PromotionProjectComment updatePromotionProjectComment(Long memberId, Long commentId, PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
 
-        Member member = memberRepository.findById(memberId)
+        memberRepository.findById(memberId)
                 .orElseThrow(() ->
                         new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        PromotionProjectComment promotionProjectComment = promotionProjectCommentRepository.findByIdAndMember(commentId, member)
+        PromotionProjectComment promotionProjectComment = promotionProjectCommentRepository.findById(commentId)
                 .orElseThrow(() ->
                         new PromotionProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!promotionProjectComment.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_COMMENT_NOT_AUTHOR);
 
         promotionProjectComment.setContents(request.getContents());
 
@@ -91,11 +95,15 @@ public class PromotionProjectCommentServiceImpl implements PromotionProjectComme
     @Override
     @Transactional
     public void deletePromotionProjectComment(Long memberId, Long commentId){
-        Member member = memberRepository.findById(memberId)
+        memberRepository.findById(memberId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        PromotionProjectComment promotionProjectComment = promotionProjectCommentRepository.findByIdAndMember(commentId, member)
+        PromotionProjectComment promotionProjectComment = promotionProjectCommentRepository.findById(commentId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!promotionProjectComment.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_COMMENT_NOT_AUTHOR);
 
         PromotionProjectComment parentComment = promotionProjectComment.getParentComment();
 

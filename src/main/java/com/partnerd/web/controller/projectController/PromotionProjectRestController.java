@@ -1,12 +1,15 @@
 package com.partnerd.web.controller.projectController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.service.projectService.PromotionProjectService;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -34,9 +37,20 @@ public class PromotionProjectRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<PromotionProjectResponseDTO.CreatePromotionProjectResultDTO> addPromotionProject(@RequestBody @Valid PromotionProjectRequestDTO.CreatePromotionProjectDTO request){
+    public ApiResponse<PromotionProjectResponseDTO.CreatePromotionProjectResultDTO> addPromotionProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestBody @Valid PromotionProjectRequestDTO.CreatePromotionProjectDTO request){
 
-        PromotionProject promotionProject = promotionProjectService.addPromotionProject(request);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        PromotionProject promotionProject = promotionProjectService.addPromotionProject(memberId, request);
         return ApiResponse.onSuccess(PromotionProjectConverter.toCreatePromotionProjectResultDTO(promotionProject));
     }
     
@@ -50,9 +64,20 @@ public class PromotionProjectRestController {
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<PromotionProjectResponseDTO.UpdatePromotionProjectResultDTO> updatePromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId, @RequestBody @Valid PromotionProjectRequestDTO.UpdatePromotionProjectDTO request){
+    public ApiResponse<PromotionProjectResponseDTO.UpdatePromotionProjectResultDTO> updatePromotionProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @PathVariable(name = "promotionProjectId") Long promotionProjectId, @RequestBody @Valid PromotionProjectRequestDTO.UpdatePromotionProjectDTO request){
 
-        PromotionProject promotionProject = promotionProjectService.updatePromotionProject(request, promotionProjectId);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        PromotionProject promotionProject = promotionProjectService.updatePromotionProject(memberId, request, promotionProjectId);
         return ApiResponse.onSuccess(PromotionProjectConverter.toUpdatePromotionProjectResultDTO(promotionProject));
     }
     
@@ -65,20 +90,35 @@ public class PromotionProjectRestController {
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<Void> deletePromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
+    public ApiResponse<Void> deletePromotionProject(
+            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @PathVariable(name = "promotionProjectId") Long promotionProjectId){
 
-        promotionProjectService.deletePromotionProject(promotionProjectId);
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        promotionProjectService.deletePromotionProject(memberId, promotionProjectId);
         return ApiResponse.onSuccess(null);
     }
 
     // 프로젝트 홍보 모아보기 (인기순 / 최신순)
     @GetMapping("/promotion")
-    @Operation(summary = "프로젝트 홍보글 모아보기 (인기순/최신순) API",description = "홍보할 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다. status 0은 인기순, 1은 최신순입니다.")
+    @Operation(summary = "프로젝트 홍보글 모아보기 (인기순/최신순) API",description = "홍보할 프로젝트를 모아보는 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true),
+            @Parameter(name = "sort", description = "나열 순서 (0 = 인기순, 1 = 최신순)", required = true),
+    })
     public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPromotionProjectList(@RequestParam(name = "page") Integer page,
-                                                                                                           @RequestParam(name = "status") Integer sort){
+                                                                                                           @RequestParam(name = "sort") Integer sort){
 
         Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectList(page - 1, sort);
         return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
@@ -101,6 +141,10 @@ public class PromotionProjectRestController {
     @Operation(summary = "프로젝트 홍보글 검색하기 API",description = "홍보할 프로젝트를 검색하는 API입니다. page는 1부터 시작합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true),
+            @Parameter(name = "keyword", description = "검색 키워드", required = true)
     })
     public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPromotionProjectList(@RequestParam(name = "page") Integer page,
                                                                                                              @RequestParam(name = "keyword") String keyword){

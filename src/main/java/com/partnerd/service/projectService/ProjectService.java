@@ -10,14 +10,14 @@ import java.util.List;
 public interface ProjectService {
 
     // 프로젝트 모집글 생성
-    Project addProject(ProjectRequestDTO.CreateProjectDTO request);
+    Project addProject(Long memberId, ProjectRequestDTO.CreateProjectDTO request);
 
 
     // 프로젝트 모집글 수정
-    Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId);
+    Project updateProject(Long memberId, ProjectRequestDTO.UpdateProjectDTO request, Long projectId);
 
     // 프로젝트 모집글 삭제
-    Void deleteProject(Long projectId);
+    Void deleteProject(Long memberId, Long projectId);
 
     // 프로젝트 모집글 모아보기
     Page<Project> getProjectList(Integer page,Integer status, List<Long> category, String keyword);
