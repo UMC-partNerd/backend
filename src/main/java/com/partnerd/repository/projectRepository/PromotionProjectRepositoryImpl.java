@@ -94,6 +94,23 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
                 .fetch();
     }
 
+    // 프로젝트 홍보 모아보기 (검색)
+    @Override
+    public Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword){
+        Pageable pageable = PageRequest.of(page, 12);
+
+        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(qPromotionProject);
+        query.where(qPromotionProject.title.containsIgnoreCase(keyword))
+                .orderBy(qPromotionProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<PromotionProject> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
 
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     @Override

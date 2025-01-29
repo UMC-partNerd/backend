@@ -142,6 +142,10 @@ public class PromotionProjectRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true),
+            @Parameter(name = "keyword", description = "검색 키워드", required = true)
+    })
     public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPromotionProjectList(@RequestParam(name = "page") Integer page,
                                                                                                              @RequestParam(name = "keyword") String keyword){
         Page<PromotionProject> promotionProjectPage = promotionProjectService.getPromotionProjectSearchList(page - 1, keyword);

@@ -10,13 +10,9 @@ import com.partnerd.repository.projectRepository.PromotionProjectMemberRepositor
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +27,6 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final PromotionProjectRepository promotionProjectRepository;
     private final PromotionProjectMemberRepository promotionProjectMemberRepository;
     private final MemberRepository memberRepository;
-    private final JPAQueryFactory queryFactory;
 
     // 프로젝트 홍보글 생성
     @Override
@@ -146,20 +141,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     @Override
     @Transactional(readOnly = true)
     public Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        Pageable pageable = PageRequest.of(page, 12);
-
-        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
-        query.where(promotionProject.title.containsIgnoreCase(keyword))
-                .orderBy(promotionProject.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        List<PromotionProject> content = query.fetch();
-        long total = query.fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return promotionProjectRepository.getPromotionProjectSearchList(page, keyword);
     }
 
 

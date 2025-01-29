@@ -17,6 +17,9 @@ public interface PromotionProjectRepositoryCustiom {
     // 프로젝트 홍보글 모아보기 (인기 top3)
     List<PromotionProject> getPromotionProjectTop3();
 
+    // 프로젝트 홍보 모아보기 (검색)
+    Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword);
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     List<PromotionProject> findPromotionProjectsByMemberId(Long memberId);
 }
