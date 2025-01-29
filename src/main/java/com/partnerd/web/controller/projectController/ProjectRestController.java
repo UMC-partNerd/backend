@@ -55,32 +55,32 @@ public class ProjectRestController {
     }
 
     // 프로젝트 모집글 수정
-    @PatchMapping("/recruit/{projectId}")
+    @PatchMapping("/recruit/{recruitProjectId}")
     @Operation(summary = "프로젝트 모집글 수정 API",description = "모집하는 프로젝트를 수정하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
-            @Parameter(name = "projectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+            @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
     })
-    public ApiResponse<ProjectResponseDTO.UpdateProjectResultDTO> updateProject(@PathVariable(name = "projectId") Long projectId, @RequestBody @Valid ProjectRequestDTO.UpdateProjectDTO request){
+    public ApiResponse<ProjectResponseDTO.UpdateProjectResultDTO> updateProject(@PathVariable(name = "recruitProjectId") Long recruitProjectId, @RequestBody @Valid ProjectRequestDTO.UpdateProjectDTO request){
 
-        Project project = projectService.updateProject(request, projectId);
+        Project project = projectService.updateProject(request, recruitProjectId);
         return ApiResponse.onSuccess(ProjectConverter.toUpdateProjectResultDTO(project));
     }
     
     // 프로젝트 모집글 삭제
-    @DeleteMapping("/recruit/{projectId}")
+    @DeleteMapping("/recruit/{recruitProjectId}")
     @Operation(summary = "프로젝트 모집글 삭제 API",description = "모집글 프로젝트를 삭제하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
-            @Parameter(name = "projectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+            @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
     })
-    public ApiResponse<Void> deleteProject(@PathVariable(name = "projectId") Long projectId){
+    public ApiResponse<Void> deleteProject(@PathVariable(name = "recruitProjectId") Long recruitProjectId){
 
-        projectService.deleteProject(projectId);
+        projectService.deleteProject(recruitProjectId);
         return ApiResponse.onSuccess(null);
     }
 
@@ -106,17 +106,17 @@ public class ProjectRestController {
     }
     
     // 프로젝트 모집글 상세페이지 조회
-    @GetMapping("/recruit/{projectId}")
+    @GetMapping("/recruit/{recruitProjectId}")
     @Operation(summary = "프로젝트 모집글 상세페이지 조회 API",description = "모집글 프로젝트를 상세 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
-            @Parameter(name = "projectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
+            @Parameter(name = "recruitProjectId", description = "프로젝트 모집글의 ID, path variable 입니다!")
     })
-    public ApiResponse<ProjectResponseDTO.ProjectDetailDTO> getProject(@PathVariable(name = "projectId") Long projectId){
+    public ApiResponse<ProjectResponseDTO.ProjectDetailDTO> getProject(@PathVariable(name = "recruitProjectId") Long recruitProjectId){
 
-        Project project = projectService.getProject(projectId);
+        Project project = projectService.getProject(recruitProjectId);
         return ApiResponse.onSuccess(ProjectConverter.toProjectDetailDTO(project));
     }
 
