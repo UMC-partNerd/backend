@@ -156,9 +156,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     // 프로젝트 모집글 삭제
-    public Void deleteProject(Long projectId){
+    public Void deleteProject(Long memberId, Long projectId){
+
         Project existingProject = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingProject.getMember().getId().equals(memberId))
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_AUTHOR);
 
         projectRepository.deleteById(existingProject.getId());
         return null;

@@ -17,7 +17,7 @@ public interface ProjectService {
     Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId);
 
     // 프로젝트 모집글 삭제
-    Void deleteProject(Long projectId);
+    Void deleteProject(Long memberId, Long projectId);
 
     // 프로젝트 모집글 모아보기
     Page<Project> getProjectList(Integer page,Integer status, List<Long> category, String keyword);
