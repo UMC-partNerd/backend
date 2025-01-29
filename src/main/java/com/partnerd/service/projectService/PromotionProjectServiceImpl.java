@@ -74,10 +74,14 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     // 프로젝트 홍보글 수정
     @Override
     @Transactional
-    public PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId) {
+    public PromotionProject updatePromotionProject(Long memberId, PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId) {
 
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingPromotionProject.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_AUTHOR);
 
         existingPromotionProject.setTitle(request.getTitle());
         existingPromotionProject.setIntro(request.getInfo());
@@ -86,7 +90,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         promotionProjectMemberRepository.deleteByPromotionProject(existingPromotionProject);
 
         Set<Member> memberList = request.getPromotionProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
@@ -113,7 +117,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     }
 
     // 프로젝트 홍보글 삭제
-    public Void deletePromotionProject(Long memberId, Long promotionProjectId) {
+    public void deletePromotionProject(Long memberId, Long promotionProjectId) {
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
 
@@ -122,7 +126,6 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
             throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_AUTHOR);
 
         promotionProjectRepository.deleteById(existingPromotionProject.getId());
-        return null;
     }
 
     // 프로젝트 홍보글 모아보기 (인기순/최신순)

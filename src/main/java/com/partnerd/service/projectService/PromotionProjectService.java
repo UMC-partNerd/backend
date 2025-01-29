@@ -12,10 +12,10 @@ public interface PromotionProjectService {
     PromotionProject addPromotionProject(Long memberId, PromotionProjectRequestDTO.CreatePromotionProjectDTO request);
 
     // 프로젝트 홍보글 수정
-    PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId);
+    PromotionProject updatePromotionProject(Long memberId, PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId);
 
     // 프로젝트 홍보글 삭제
-    Void deletePromotionProject(Long memberId, Long promotionProjectId);
+    void deletePromotionProject(Long memberId, Long promotionProjectId);
     
     // 프로젝트 홍보글 모아보기 (인기순/최신순)
     Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort);
