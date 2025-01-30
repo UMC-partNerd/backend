@@ -1,10 +1,9 @@
-package com.partnerd.web.controller;
+package com.partnerd.web.controller.clubController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
-import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.config.security.JwtTokenProvider;
-import com.partnerd.converter.ClubConverter;
+import com.partnerd.converter.clubConverter.ClubConverter;
 import com.partnerd.domain.Club;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
