@@ -21,14 +21,19 @@ public enum ErrorStatus implements BaseErrorCode {
   
   
   
-  
-  
-    //로그인(인증)
-    AUTH400(HttpStatus.BAD_REQUEST, "AUTH400", "유효하지 않은 인가 코드입니다."),
+    //로그인(갱신)
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "TOKEN4001", "유효하지 않은 JWT 토큰입니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.FORBIDDEN, "TOKEN4002", "리프레시 토큰이 만료되었습니다. 다시 로그인하세요."),
 
-    //회원가입
-    REGISTER400(HttpStatus.BAD_REQUEST, "REGISTER400", "추가 정보 등록 중 오류가 발생했습니다."),
+    // 로그인(인증) 관련
+    AUTH_INVALID_CODE(HttpStatus.BAD_REQUEST, "AUTH4001", "유효하지 않은 인가 코드입니다."),
+    AUTH_FAILED_TOKEN_RETRIEVAL(HttpStatus.BAD_REQUEST, "AUTH4002", "토큰 조회에 실패했습니다."),
+    AUTH_FAILED_USER_INFO(HttpStatus.BAD_REQUEST, "AUTH4003", "사용자 정보 조회에 실패했습니다."),
 
+    // 회원가입 관련
+    REGISTER_INVALID_REQUEST(HttpStatus.BAD_REQUEST, "REGISTER4001", "잘못된 요청 데이터입니다."),
+    REGISTER_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "REGISTER4002", "사용자를 찾을 수 없습니다."),
+    REGISTER_AGREEMENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "REGISTER4003", "약관 정보를 찾을 수 없습니다."),
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),
@@ -44,22 +49,41 @@ public enum ErrorStatus implements BaseErrorCode {
     // 프로젝트 홍보 관련
     PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "존재하지 않는 홍보 프로젝트id입니다."),
     PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4002", "프로젝트 홍보글이 없습니다."),
+    PROMOTION_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4003", "존재하지 않는 댓글입니다."),
+    PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4004", "댓글달 댓글이 없습니다."),
+    PROMOTION_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4005", "해당 프로젝트 홍보글의 작성자가 아닙니다."),
+    PROMOTION_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4006", "해당 프로젝트 홍보글 댓글의 작성자가 아닙니다."),
+
 
     // 프로젝트 모집 관련
     RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "존재하지 않는 모집 프로젝트id입니다."),
     RECRUIT_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4002", "프로젝트 모집글이 없습니다."),
+    RECRUIT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4003", "존재하지 않는 댓글입니다."),
+    RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4004", "댓글달 댓글이 없습니다."),
+    RECRUIT_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4005", "해당 프로젝트 모집글의 작성자가 아닙니다."),
+    RECRUIT_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4006", "해당 프로젝트 모집글 댓글의 작성자가 아닙니다."),
 
     // 콜라보레이션 글 관련
     COLLAB_POST_BAD_REQUEST(HttpStatus.BAD_REQUEST,"COLLABPOST4000","잘못된 요청입니다. 필수 항목을 모두 입력해주세요."),
     COLLAB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABPOST4001", "콜라보레이션 포스트가 없습니다."),
     COLLAB_POST_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "COLLABPOST4002", "이미 존재하는 콜라보레이션 포스트입니다."),
-    COLLAB_POST_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABPOST4003", "권한이 없습니다."),
+    COLLAB_POST_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABPOST4003", "동아리 리더만 콜라보 글을 작성할 수 있습니다."),
+    COLLAB_POST_CLUB_MEMBERSHIP_REQUIRED(HttpStatus.BAD_REQUEST, "COLLABPOST4003", "동아리에 가입하지 않은 사용자는 글을 작성할 수 없습니다."),
+    COLLAB_POST_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABPOST4003", "글 작성자만 수행할 수 있습니다."),
     // 요청 데이터가 누락 됐을 경우, 요청 메소드가 잘못 됐을 경우 ..
     COLLAB_POST_NOT_VALID(HttpStatus.BAD_REQUEST, "COLLABPOST4004", "유효하지 않은 콜라보레이션 포스트입니다."),
 
     // 콜라보레이션 문의글 관련
-    COLLAB_INQUIRY_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "콜라보레이션 문의글이 없습니다."),
+    COLLAB_INQUIRY_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "해당 콜라보레이션 문의글이 없습니다."),
     COLLAB_INQUIRY_PARENT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABINQUIRY4001", "답변할 콜라보레이션 문의글이 없습니다."),
+    CANNOT_REMOVE_LIKE_BELOW_ZERO(HttpStatus.FORBIDDEN, "COLLABINQUIRY403", "금지된 요청입니다."),
+    COLLAB_INQUIRY_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABINQUIRY4003", "문의글 작성자만 수행할 수 있습니다."),
+    COLLAB_INQUIRY_CHILD_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COLLABINQUIRY4003", "답변 작성자만 수행할 수 있습니다."),
+
+    // 콜라보 요청 관련
+    COLLAB_ASK_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABASK4001", "해당 콜라보레이션 요청이 없습니다."),
+    COLLAB_ASK_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 요청한 콜라보레이션입니다."),
+    COLLAB_ASK_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABASK4003", "작성자는 자신의 글에 요청할 수 없습니다."),
 
     // 동아리
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),
@@ -74,7 +98,13 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBER4001", "클럽 멤버가 없습니다."),
     CLUB_MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "CLUBMEMBER4002", "이미 존재하는 클럽 멤버입니다."),
     CLUB_MEMBER_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBER4003", "권한이 없습니다."),
-    CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다.");
+    CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다."),
+    CLUB_MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CLUBMEMBER4005", "이미 가입된 클럽 멤버입니다."),
+
+    // 동아리 가입 요청 관련
+    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리 리더만 가입 요청을 승인/거절할 수 있습니다."),
+    CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
+    CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

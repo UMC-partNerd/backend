@@ -7,10 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -68,8 +65,8 @@ public class PromotionProject extends BaseEntity {
     private Set<PromotionProjectImage> promotionProjectImageList = new HashSet<>();
 
     // 홍보 프로젝트 댓글
-    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
-    private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
+    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PromotionProjectComment> promotionProjectCommentList = new LinkedHashSet<>();
 
     
 }

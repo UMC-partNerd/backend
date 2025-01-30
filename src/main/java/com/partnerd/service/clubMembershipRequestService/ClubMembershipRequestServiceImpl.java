@@ -1,0 +1,115 @@
+package com.partnerd.service.clubMembershipRequestService;
+
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ClubMembershipRequestHandler;
+import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.enums.ActiveType;
+import com.partnerd.domain.enums.ClubMemberRole;
+import com.partnerd.domain.enums.RequestStatus;
+import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.ClubMembershipRequest;
+import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
+import com.partnerd.repository.clubMemberRepository.ClubMemberRepositoryCustom;
+import com.partnerd.repository.clubMembershipRequestRepository.ClubMembershipRequestRepository;
+import com.partnerd.repository.clubMembershipRequestRepository.ClubMembershipRequestRepositoryCustom;
+import com.partnerd.web.dto.clubDTO.ClubRequestDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+
+@Service
+@RequiredArgsConstructor
+public class ClubMembershipRequestServiceImpl implements ClubMembershipRequestService {
+    private final ClubMembershipRequestRepository clubMembershipRequestRepository;
+    private final ClubMembershipRequestRepositoryCustom clubMembershipRequestRepositoryCustom;
+    private final ClubMemberRepositoryCustom clubMemberRepositoryCustom;
+    private final ClubMemberRepository clubMemberRepository;
+
+    // 파트너드(동아리) 가입 요청 승인
+    @Override
+    @Transactional
+    public ClubMembershipRequest putClubJoinApprove(Long leaderId, ClubRequestDTO.ClubJoinDTO request){
+        // leaderId의 소유자가 클럽 멤버인지 확인
+        ClubMember clubMember = clubMemberRepositoryCustom.findByClubIdAndMemberId(request.getClubId(), leaderId).orElseThrow(() -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND);
+        });
+
+        // 클럽 멤버의 리더가 아닐 경우 동아리 가입 요청 승인 권한 제한
+        if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_NOT_AUTHORIZED);
+        }
+
+        // 동아리 가입 요청 정보가 없을 경우 가입 승인 제한
+        ClubMembershipRequest newClubMembershipRequest = clubMembershipRequestRepositoryCustom.findByRequest(request.getMemberId(), request.getClubId(), request.getRequestId()).orElseThrow(() -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_REQUEST_NOT_FOUND);
+        });
+
+        // 동아리 가입 요청자가 이미 동아리 회원인 경우 예외 처리
+        clubMemberRepositoryCustom.findByClubIdAndMemberId(request.getClubId(), request.getMemberId()).ifPresent((checkClubMember) -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_ALREADY_EXISTS);
+        });
+
+        // ClubMembershipRequest 엔티티 status 업데이트
+        newClubMembershipRequest.changeStatus(RequestStatus.APPROVED);
+
+        // ClubMember에 추가
+        Member approvedMember = newClubMembershipRequest.getMember();
+
+        if (approvedMember == null) {
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        ClubMember newClubMember = ClubMember.builder()
+                .member(approvedMember)
+                .club(clubMember.getClub())
+                .role(ClubMemberRole.MEMBER) // 기본 역할 설정
+                .joined_date(new Date()) // 현재 날짜로 설정
+                .status(ActiveType.ACTIVE) // 기본 활동 상태 설정
+                .build();
+
+        clubMemberRepository.save(newClubMember);
+
+        return clubMembershipRequestRepository.save(newClubMembershipRequest);
+    }
+
+    // 파트너드(동아리) 가입 요청 거절
+    @Override
+    @Transactional
+    public ClubMembershipRequest putClubJoinReject(Long leaderId, ClubRequestDTO.ClubJoinDTO request){
+        // leaderId의 소유자가 클럽 멤버인지 확인
+        ClubMember clubMember = clubMemberRepositoryCustom.findByClubIdAndMemberId(request.getClubId(), leaderId).orElseThrow(() -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND);
+        });
+
+        // 클럽 멤버의 리더가 아닐 경우 동아리 가입 요청 거절 권한 제한
+        if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_NOT_AUTHORIZED);
+        }
+
+        // 동아리 가입 요청 정보가 없을 경우 가입 거절 제한
+        ClubMembershipRequest newClubMembershipRequest = clubMembershipRequestRepositoryCustom.findByRequest(request.getMemberId(), request.getClubId(), request.getRequestId()).orElseThrow(() -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_REQUEST_NOT_FOUND);
+        });
+
+        // 동아리 가입 요청자가 이미 동아리 회원인 경우 요청 거부
+        clubMemberRepositoryCustom.findByClubIdAndMemberId(request.getClubId(), request.getMemberId()).ifPresent((checkClubMember) -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_ALREADY_EXISTS);
+        });
+
+        // 동아리 가입 요청자의 가입 요청이 이미 거부된 상태일 경우
+        clubMembershipRequestRepositoryCustom.findByMemberIdAndClubId(request.getMemberId(), request.getClubId())
+                .ifPresent((checkClubMembershipRequest) -> {
+                    if (RequestStatus.REJECTED.equals(checkClubMembershipRequest.getStatus())) {
+                        throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBERSHIP_REQUEST_REJECTED);
+                    }
+                });
+
+        // ClubMembershipRequest 엔티티 status 업데이트
+        newClubMembershipRequest.changeStatus(RequestStatus.REJECTED);
+
+        return clubMembershipRequestRepository.save(newClubMembershipRequest);
+    }
+}

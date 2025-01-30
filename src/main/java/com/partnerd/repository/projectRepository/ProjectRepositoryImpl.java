@@ -6,9 +6,17 @@ import com.partnerd.domain.QContactMethod;
 import com.partnerd.domain.QProject;
 import com.partnerd.domain.mapping.QProjectCategoryPrefer;
 import com.partnerd.domain.mapping.QProjectMember;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,5 +38,58 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
                 .leftJoin(qProject.projectCategoryPreferList, qProjectCategoryPrefer).fetchJoin()
                 .where(qProject.id.eq(projectId))
                 .fetchOne();
+    }
+
+    // 프로젝트 모집글 모아보기
+    @Override
+    public Page<Project> getProjectList(Integer page, Integer status, List<Long> category, String keyword){
+
+        Pageable pageable = PageRequest.of(page, 16);
+
+        JPQLQuery<Project> query = queryFactory.selectFrom(qProject);
+
+        Date now = new Date();
+
+        // 모집 상태 필터링
+        if (status != null) {
+            switch (status) {
+                case 0:
+                    query.where(qProject.endDate.goe(now));
+                    break;
+                case 1:
+                    query.where(qProject.endDate.lt(now));
+                    break;
+            }
+        }
+
+        // 카테고리 필터링
+        if (category != null && !category.isEmpty()) {
+            query.where(qProject.projectCategoryPreferList.any().projectCategory.id.in(category));
+        }
+
+        // 검색 필터링
+        if (keyword != null && !keyword.isEmpty()) {
+            query.where(qProject.title.containsIgnoreCase(keyword));
+        }
+
+        query.orderBy(qProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<Project> content = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    @Override
+    public List<Project> findProjectsByMemberId(Long memberId){
+        return queryFactory
+                .selectFrom(qProject)
+                .leftJoin(qProject.projectMemberList, qProjectMember).fetchJoin()
+                .where(qProjectMember.member.id.eq(memberId))
+                .distinct()
+                .fetch();
     }
 }

@@ -72,4 +72,27 @@ public class PromotionProjectResponseDTO {
         private Set<PromotionProjectMemberDTO> promotionProjectMembers;   // 팀원
         private Set<ContactMethodDTO> contactMethods;   // 컨택
     }
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기 (한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypagePromotionProjectPreviewDTO {
+        private Long promotionProjectId;
+        private String title;
+        private String description;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기 (전체 리스트)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypagePromotionProjectPreviewListDTO {
+        private Long memberId;
+        private List<PromotionProjectResponseDTO.MypagePromotionProjectPreviewDTO> mypagePromotionPprojectPreviewDTOList;
+    }
 }

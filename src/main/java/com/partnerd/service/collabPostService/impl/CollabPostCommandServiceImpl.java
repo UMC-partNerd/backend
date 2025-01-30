@@ -8,21 +8,20 @@ import com.partnerd.apiPaylaod.exception.handler.EventTypeHandler;
 import com.partnerd.converter.collabPostConverter.CollabPostConverter;
 import com.partnerd.converter.collabPostConverter.CollapPostCategoryConverter;
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.enums.ImageType;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.CollabPostCategory;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostImgRepository;
 import com.partnerd.repository.collabPostRepository.CollabPostRepository;
 import com.partnerd.repository.collabPostRepository.EventTypeRepository;
-import com.partnerd.service.categoryService.CategoryService;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
-import com.partnerd.service.s3Service.S3Service;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.ErrorHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,23 +40,30 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
 
     @Override
     @Transactional
-    public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
-        CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO);
+        ClubMember clubMember = clubMemberRepository.findByMember_id(memberId).orElseThrow(() -> {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_CLUB_MEMBERSHIP_REQUIRED);
+        });
+
+        // 클럽 멤버의 리더가 아닐 경우 콜라보 글 생성 제한
+        if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHORIZED);
+        }
+
+        CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO, clubMember);
+
         // 카테고리 객체 찾아서 리스트로 만들기
-        List<Category> categoryList =
-                requestDTO.getCategoryIds().stream()
-                        .map(categoryId ->{
-                            Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
-                                    new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
-                            return category;
-                        })
-                        .collect(Collectors.toList());
+        List<Category> categoryList = categoryRepository.findAllByIdWithCollabPostCategory(requestDTO.getCategoryIds());
 
         // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성하고 양방향 관계 설정
         List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.
                 toCollabPostCategoryList(categoryList);
         collabPostCategoryList.forEach(collabPostCategory -> { collabPostCategory.setCollabPost(collabPost); });
+
+        // 행사 유형 설정
+        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
+                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
 
         // ContactMethod 추가
         if (requestDTO.getContactMethodDTOList() != null) {
@@ -96,21 +102,21 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
             });
         }
 
-
-        // 팀 멤버 하드 코딩
-        collabPost.setClubMember(clubMemberRepository.findById(1L).orElseThrow(() ->
-                new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND)));
-        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
-                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
-
-
         return collabPostRepository.save(collabPost);
     }
+
     @Override
     @Transactional
-    public CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public CollabPost modifyCollabPost(Long collabPostId, CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
         CollabPost collabPost = collabPostRepository.findByIdWithCollabPostImg(collabPostId);
+
+        if (collabPost == null) {
+            throw  new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND);
+        }
+
+        // 작성자 검증
+        collabPost.validateAuthor(memberId);
 
         EventType eventType = eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
                 new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND));
@@ -232,10 +238,13 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     }
 
         @Override
-        public void deleteCollabPost (Long collabPostId){
+        public void deleteCollabPost (Long collabPostId, Long memberId){
 
             CollabPost collabPost = collabPostRepository.findById(collabPostId).orElseThrow(() ->
                     new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_FOUND));
+
+            // 작성자 검증
+            collabPost.validateAuthor(memberId);
 
             collabPostRepository.delete(collabPost);
 

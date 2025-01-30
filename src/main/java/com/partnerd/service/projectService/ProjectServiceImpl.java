@@ -38,19 +38,21 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectCategoryRepository projectCategoryRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectCategoryPreferRepository projectCategoryPreferRepository;
-    private final JPAQueryFactory queryFactory;
 
     // 프로젝트 모집글 생성
     @Override
     @Transactional
-    public Project addProject(ProjectRequestDTO.CreateProjectDTO request) {
+    public Project addProject(Long memberId, ProjectRequestDTO.CreateProjectDTO request) {
         Project newProject = ProjectConverter.toProject(request);
 
+        // 작성자
+        newProject.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
-                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<ProjectMember> projectMemberList = ProjectMemberConverter.toProjectMemberList(memberList);
@@ -76,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
                                 .contactType(contactMethodDTO.getContactType())
                                 .contactUrl(contactMethodDTO.getContactUrl())
                                 .build();
-                        contactMethod.setProject(newProject); // 프로젝트와 연결
+                        contactMethod.setProject(newProject);
                         return contactMethod;
                     })
                     .collect(Collectors.toSet());
@@ -91,10 +93,14 @@ public class ProjectServiceImpl implements ProjectService {
     // 프로젝트 모집글 수정
     @Override
     @Transactional
-    public Project updateProject(ProjectRequestDTO.UpdateProjectDTO request, Long projectId) {
+    public Project updateProject(Long memberId, ProjectRequestDTO.UpdateProjectDTO request, Long projectId) {
 
         Project existingProject = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingProject.getMember().getId().equals(memberId))
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_AUTHOR);
 
         existingProject.setTitle(request.getTitle());
         existingProject.setIntro(request.getInfo());
@@ -113,7 +119,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
@@ -154,9 +160,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     // 프로젝트 모집글 삭제
-    public Void deleteProject(Long projectId){
+    public Void deleteProject(Long memberId, Long projectId){
+
         Project existingProject = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingProject.getMember().getId().equals(memberId))
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_NOT_AUTHOR);
 
         projectRepository.deleteById(existingProject.getId());
         return null;
@@ -166,44 +177,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public Page<Project> getProjectList(Integer page, Integer status, List<Long> category, String keyword) {
-        QProject project = QProject.project;
-
-        Pageable pageable = PageRequest.of(page, 16);
-
-        JPQLQuery<Project> query = queryFactory.selectFrom(project);
-
-        Date now = new Date();
-
-        // 모집 상태 필터링
-        if (status != null) {
-            switch (status) {
-                case 0:
-                    query.where(project.endDate.goe(now));
-                    break;
-                case 1:
-                    query.where(project.endDate.lt(now));
-                    break;
-            }
-        }
-
-        // 카테고리 필터링
-        if (category != null && !category.isEmpty()) {
-            query.where(project.projectCategoryPreferList.any().projectCategory.id.in(category));
-        }
-
-        // 검색 필터링
-        if (keyword != null && !keyword.isEmpty()) {
-            query.where(project.title.containsIgnoreCase(keyword));
-        }
-
-        query.orderBy(project.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        List<Project> content = query.fetch();
-        long total = query.fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return projectRepository.getProjectList(page, status, category, keyword);
     }
 
     // 프로젝트 모집글 상세페이지 조회
@@ -215,5 +189,12 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
         }
         return project;
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<Project> getMyProjects(Long memberId) {
+        return projectRepository.findProjectsByMemberId(memberId);
     }
 }

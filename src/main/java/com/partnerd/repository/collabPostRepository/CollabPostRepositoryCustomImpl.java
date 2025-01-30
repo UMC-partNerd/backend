@@ -3,9 +3,10 @@ package com.partnerd.repository.collabPostRepository;
 import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
-import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,7 +34,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QCollabPostImg qCollabPostImg = QCollabPostImg.collabPostImg;
 
 
-    private void applySorting(JPAQuery<CollabPost> query, Pageable pageable) {
+    private PagingResultDTO applySortingAndPaging(JPAQuery<CollabPost> query, Pageable pageable) {
         Sort sort = pageable.getSort();
         for (Sort.Order order : sort) {
             String property = order.getProperty();
@@ -43,6 +44,21 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 query.orderBy(qCollabPost.endDate.asc());
             }
         }
+        long total = queryFactory
+                .select(qCollabPost.count())
+                .from(qCollabPost)
+                .fetchOne();
+
+        List<CollabPost> results = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return PagingResultDTO.builder()
+                .total(total)
+                .results(results)
+                .build();
+
     }
 
     @Override
@@ -54,12 +70,9 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPostCategory.category, qCategory) // Category도 즉시 로딩
                 .fetchJoin();
 
-       applySorting(query, pageable);
+       PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
 
-        long total = query.fetch().size();
-        List<CollabPost> results = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-
-        return new PageImpl<>(results, pageable, total);
+        return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
 
 
@@ -73,15 +86,9 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .where(qCollabPost.collabPostCategoryList.any().category.id.in(categories))
                 .distinct();
 
-        applySorting(query, pageable);
+        PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
 
-        QueryResults<CollabPost> queryResults = query
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
-
-
-        return new PageImpl<>(queryResults.getResults(), pageable,  queryResults.getTotal());
+        return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
 
 
@@ -92,7 +99,6 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .selectFrom(qCollabPost).distinct()
                 .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
                 .leftJoin(qClubMember.member, qMember).fetchJoin()
-                .leftJoin(qCollabPost.collabInquiryList, qCollabInquiry).fetchJoin()
                 .leftJoin(qCollabPost.contactMethodList, qContactMethod).fetchJoin()
                 .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory).fetchJoin()
                 .leftJoin(qCollabPostCategory.category, qCategory).fetchJoin()
@@ -100,7 +106,19 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPost.collabPostImgList, qCollabPostImg).fetchJoin()
                 .where(qCollabPost.id.eq(collabPostId));
 
-        return query.fetchOne();
+        CollabPost collabPost = query.fetchOne();
+
+        // CollabInquiryList와 연관된 Member 로드
+        List<CollabInquiry> inquiries = queryFactory
+                .selectFrom(qCollabInquiry)
+                .leftJoin(qCollabInquiry.member, qMember).fetchJoin()
+                .where(qCollabInquiry.collabPost.id.eq(collabPostId))
+                .fetch();
+
+        // CollabPost에 Inquiries를 설정
+        collabPost.setCollabInquiryList(inquiries);
+
+        return collabPost;
       
     }
 
@@ -117,6 +135,27 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
 
         return collabPost;
 
+    }
+
+
+
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    @Override
+    public List<CollabPost> findCollabPostsByMemberId(Long memberId){
+        return queryFactory
+                .selectFrom(qCollabPost)
+                .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
+                .where(qClubMember.member.id.eq(memberId))
+                .distinct()
+                .fetch();
+    }
+
+
+    @Builder
+    @Getter
+    public static class PagingResultDTO {
+        private long total;
+        private List<CollabPost> results;
     }
 
 }

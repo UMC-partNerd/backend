@@ -21,4 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      * @return 중복 여부
      */
     boolean existsByNickname(String nickname);
+
+
+
 }

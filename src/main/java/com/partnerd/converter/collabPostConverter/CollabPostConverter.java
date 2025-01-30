@@ -2,6 +2,7 @@ package com.partnerd.converter.collabPostConverter;
 
 import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.CollabPostImg;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
@@ -53,9 +54,10 @@ public class CollabPostConverter {
 
 
     // 콜라보 글 생성 결과 DTO 변환
-    public static CollabPost toCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public static CollabPost toCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, ClubMember clubMember) {
 
         return CollabPost.builder()
+                .clubMember(clubMember)
                 .title(requestDTO.getTitle())
                 .intro(requestDTO.getIntro())
                 .description(requestDTO.getDescription())
@@ -144,4 +146,21 @@ public class CollabPostConverter {
     }
 
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    public static CollabPostResponseDTO.MypageCollabPostPreviewListDTO toMyCollabPostsDTO(Long memberId, List<CollabPost> collabPosts) {
+        List<CollabPostResponseDTO.MypageCollabPostPreviewDTO> collabPostPreviewDTOList = collabPosts.stream()
+                .map(collabPost -> CollabPostResponseDTO.MypageCollabPostPreviewDTO.builder()
+                        .collabPostId(collabPost.getId()) // 콜라보레이션 ID
+                        .title(collabPost.getTitle()) // 콜라보레이션 제목
+                        .description(collabPost.getDescription()) // 콜라보레이션 설명
+                        .createdAt(collabPost.getCreatedAt()) // 생성 날짜
+                        .updatedAt(collabPost.getUpdatedAt()) // 수정 날짜
+                        .build())
+                .toList();
+
+        return CollabPostResponseDTO.MypageCollabPostPreviewListDTO.builder()
+                .memberId(memberId) // 사용자 ID
+                .mypageCollabPostPreviewDTOList(collabPostPreviewDTOList) // 변환된 콜라보레이션 DTO 리스트
+                .build();
+    }
 }

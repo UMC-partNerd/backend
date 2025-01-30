@@ -3,6 +3,7 @@ package com.partnerd.web.controller.collabPostController;
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
+import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.collabPostConverter.CollabPostConverter;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,19 +28,25 @@ public class CollabPostRestController {
 
     private final CollabPostCommandService collabPostCommandService;
     private final CollabPostQueryService collabPostQueryService;
+    private final JwtTokenProvider jwtTokenProvider;
+
     // 콜라보 글 생성
     @PostMapping("/")
     @Operation(summary = "콜라보 글 생성 API",description = "콜라보 글을 생성하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> addCollabPost(@RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> addCollabPost(@RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
        if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
        }
-        // 사용자가 동아리에 리더진인지 확인 후에 작성 가능 -> 추후에 해당 기능 추가
-        CollabPost collabPost = collabPostCommandService.addCollabPost(requestDTO);
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        CollabPost collabPost = collabPostCommandService.addCollabPost(requestDTO, memberId);
 
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
     }
@@ -49,13 +57,19 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost( @PathVariable Long collabPostId, @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
+    public ApiResponse<CollabPostResponseDTO.addCollabPostResultDTO> modifyCollabPost(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                      @PathVariable Long collabPostId,
+                                                                                      @RequestBody CollabPostRequestDTO.RequestCollabPostDTO requestDTO) {
 
         if (requestDTO.getBannerKeyName() == null || requestDTO.getMainKeyName() == null) {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_BAD_REQUEST);
         }
 
-        CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO);
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        CollabPost collabPost = collabPostCommandService.modifyCollabPost(collabPostId, requestDTO, memberId);
+  
         return ApiResponse.onSuccess(CollabPostConverter.toCollabPostResultDTO(collabPost));
     }
 
@@ -65,22 +79,28 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<Long> deleteCollabPost(@PathVariable(name = "collabPostId") Long collabPostId) {
+    public ApiResponse<Long> deleteCollabPost(@RequestHeader("Authorization") String authorizationHeader,
+                                              @PathVariable(name = "collabPostId") Long collabPostId) {
 
-        collabPostCommandService.deleteCollabPost(collabPostId);
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        collabPostCommandService.deleteCollabPost(collabPostId, memberId);
         return ApiResponse.onSuccess(collabPostId);
     }
 
     // 콜라보 글 전체 조회 (최신순)
     @GetMapping("/")
-    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",description = "콜라보 글 전체 조회 API입니다.")
+    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",
+            description = "콜라보 글 전체 조회 API입니다. page는 1부터 시작합니다." +
+                    "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page,
                                                                                           @RequestParam(defaultValue = "endDate") String sortBy) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page, sortBy);
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page-1, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
@@ -101,7 +121,9 @@ public class CollabPostRestController {
 
     // 카테고리 별 콜라보 글 조회
     @GetMapping("/categories")
-    @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",description = "콜라보 글 카테고리 별 조회 API입니다.")
+    @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",
+            description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다." +
+                    "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
@@ -109,10 +131,27 @@ public class CollabPostRestController {
                                                                                           @RequestParam(name = "page") Integer page,
                                                                                           @RequestParam(defaultValue = "endDate") String sortBy) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page, sortBy);
+        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page-1, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
     }
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
+    @GetMapping("/mypage")
+    @Operation(summary = "마이페이지 내가 쓴 콜라보레이션 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 콜라보레이션 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CollabPostResponseDTO.MypageCollabPostPreviewListDTO> getMyCollabPosts(@RequestHeader("Authorization") String authorizationHeader){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
 
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        List<CollabPost> collabPosts = collabPostQueryService.getMyCollabPosts(memberId);
+
+        return ApiResponse.onSuccess(CollabPostConverter.toMyCollabPostsDTO(memberId, collabPosts));
+    }
 }

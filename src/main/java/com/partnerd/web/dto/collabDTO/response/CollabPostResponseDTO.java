@@ -91,16 +91,22 @@ public class CollabPostResponseDTO {
     @AllArgsConstructor
     public static class CollabInquiryDTO {
         private Long id;
+        private Long parentId;
         private String nickname;
         private String contents;
         private int likes;
 
         public static CollabInquiryDTO fromEntity(CollabInquiry collabInquiry) {
+            Long parentId = null;
+            if (collabInquiry.getParentInquiry() != null) {
+                parentId = collabInquiry.getParentInquiry().getId();
+            }
             return CollabInquiryDTO.builder()
                     .id(collabInquiry.getId())
                     .nickname(collabInquiry.getMember().getNickname())
                     .contents(collabInquiry.getContents())
                     .likes(collabInquiry.getLikes())
+                    .parentId(parentId)
                     .build();
         }
 
@@ -108,6 +114,27 @@ public class CollabPostResponseDTO {
 
 
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기 (한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCollabPostPreviewDTO {
+        private Long collabPostId;
+        private String title;
+        private String description;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
 
+    // 마이페이지 - 내가 쓴 콜라보레이션 모아보기 (전체 리스트)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCollabPostPreviewListDTO {
+        private Long memberId;
+        private List<CollabPostResponseDTO.MypageCollabPostPreviewDTO> mypageCollabPostPreviewDTOList;
+    }
 
 }

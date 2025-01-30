@@ -50,7 +50,15 @@ public class ClubMember extends BaseEntity {
 
     // 콜라보 글 (LEADER, OFFICER 만 작성할 수 있음)
     @OneToMany(mappedBy = "clubMember", cascade = CascadeType.ALL)
-    List<CollabPost> collabPostList = new ArrayList<>();
+    private List<CollabPost> collabPostList = new ArrayList<>();
+
+    // 보낸 콜라보 요청
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true )
+    private List<CollabAsk> sendCollabAsks = new ArrayList<>();
+
+    // 받은 콜라보 요청
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true )
+    private List<CollabAsk> receivedCollabAsks = new ArrayList<>();
 
 
 

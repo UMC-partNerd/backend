@@ -10,13 +10,9 @@ import com.partnerd.repository.projectRepository.PromotionProjectMemberRepositor
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,15 +27,19 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final PromotionProjectRepository promotionProjectRepository;
     private final PromotionProjectMemberRepository promotionProjectMemberRepository;
     private final MemberRepository memberRepository;
-    private final JPAQueryFactory queryFactory;
 
-    // 프로젝트 홍보 생성
+    // 프로젝트 홍보글 생성
     @Override
-    public PromotionProject addPromotionProject(PromotionProjectRequestDTO.CreatePromotionProjectDTO request) {
+    public PromotionProject addPromotionProject(Long memberId, PromotionProjectRequestDTO.CreatePromotionProjectDTO request) {
         PromotionProject newPromotionProject = PromotionProjectConverter.toPromotionProject(request);
 
+        // 작성자
+        newPromotionProject.setMember(memberRepository.findById(memberId)
+                .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+
+
         Set<Member> memberList = request.getPromotionProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
@@ -66,13 +66,17 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return promotionProjectRepository.save(newPromotionProject);
     }
 
-    // 프로젝트 홍보 수정
+    // 프로젝트 홍보글 수정
     @Override
     @Transactional
-    public PromotionProject updatePromotionProject(PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId) {
+    public PromotionProject updatePromotionProject(Long memberId, PromotionProjectRequestDTO.UpdatePromotionProjectDTO request, Long promotionProjectId) {
 
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
+
+        // 작성자 검증
+        if (!existingPromotionProject.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_AUTHOR);
 
         existingPromotionProject.setTitle(request.getTitle());
         existingPromotionProject.setIntro(request.getInfo());
@@ -81,7 +85,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         promotionProjectMemberRepository.deleteByPromotionProject(existingPromotionProject);
 
         Set<Member> memberList = request.getPromotionProjectMember().stream()
-                .map(memberId -> memberRepository.findById(memberId)
+                .map(teamMemberId -> memberRepository.findById(teamMemberId)
                         .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
@@ -107,88 +111,37 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return promotionProjectRepository.save(existingPromotionProject);
     }
 
-    // 프로젝트 홍보 삭제
-    public Void deletePromotionProject(Long promotionProjectId) {
+    // 프로젝트 홍보글 삭제
+    public void deletePromotionProject(Long memberId, Long promotionProjectId) {
         PromotionProject existingPromotionProject = promotionProjectRepository.findById(promotionProjectId)
                 .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_FOUND));
 
+        // 작성자 검증
+        if (!existingPromotionProject.getMember().getId().equals(memberId))
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_NOT_AUTHOR);
+
         promotionProjectRepository.deleteById(existingPromotionProject.getId());
-        return null;
     }
 
     // 프로젝트 홍보글 모아보기 (인기순/최신순)
     @Override
     @Transactional(readOnly = true)
     public Page<PromotionProject> getPromotionProjectList(Integer page, Integer sort){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        Pageable pageable = PageRequest.of(page, 12);
-
-        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
-
-        if (sort != null && sort == 0) {
-            List<Long> top3Ids = queryFactory
-                    .select(promotionProject.id)
-                    .from(promotionProject)
-                    .orderBy(promotionProject.views.desc())
-                    .limit(3)
-                    .fetch();
-
-            query.where(promotionProject.id.notIn(top3Ids))
-                    .orderBy(promotionProject.views.desc());
-        } else {
-            query.orderBy(promotionProject.createdAt.desc());
-        }
-
-        query.offset(pageable.getOffset()).limit(pageable.getPageSize());
-
-        List<PromotionProject> content = query.fetch();
-
-        long total = queryFactory
-                .selectFrom(promotionProject)
-                .where(sort != null && sort == 0 ? promotionProject.id.notIn(
-                        queryFactory
-                                .select(promotionProject.id)
-                                .from(promotionProject)
-                                .orderBy(promotionProject.views.desc())
-                                .limit(3)
-                                .fetch()
-                ) : null)
-                .fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return promotionProjectRepository.getPromotionProjectList(page, sort);
     }
 
     // 프로젝트 홍보글 모아보기 (인기 top3)
     @Override
     @Transactional(readOnly = true)
     public List<PromotionProject> getPromotionProjectTop3(){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        return queryFactory.selectFrom(promotionProject)
-                .orderBy(promotionProject.views.desc())
-                .limit(3)
-                .fetch();
+        return promotionProjectRepository.getPromotionProjectTop3();
     }
 
     // 프로젝트 홍보 모아보기 (검색)
     @Override
     @Transactional(readOnly = true)
     public Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword){
-        QPromotionProject promotionProject = QPromotionProject.promotionProject;
-
-        Pageable pageable = PageRequest.of(page, 12);
-
-        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(promotionProject);
-        query.where(promotionProject.title.containsIgnoreCase(keyword))
-                .orderBy(promotionProject.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        List<PromotionProject> content = query.fetch();
-        long total = query.fetchCount();
-
-        return new PageImpl<>(content, pageable, total);
+        return promotionProjectRepository.getPromotionProjectSearchList(page, keyword);
     }
 
 
@@ -201,5 +154,12 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
             throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
         }
         return promotionProject;
+    }
+
+    // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<PromotionProject> getMyPromotionProjects(Long memberId) {
+        return promotionProjectRepository.findPromotionProjectsByMemberId(memberId);
     }
 }

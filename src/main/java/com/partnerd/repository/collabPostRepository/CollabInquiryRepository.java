@@ -16,13 +16,15 @@ public interface CollabInquiryRepository extends JpaRepository<CollabInquiry, Lo
 
     @Query("SELECT ci FROM CollabInquiry ci " +
             "LEFT JOIN FETCH ci.children " +
+            "LEFT JOIN FETCH ci.member " +
             "WHERE ci.id = :id AND ci.parentInquiry IS NULL")
     Optional<CollabInquiry> findByIdWithParentIdIsNULL(@Param("id") Long id);
 
 
-    @Query("SELECT ci FROM CollabInquiry ci " +
+    @Query("SELECT DISTINCT ci FROM CollabInquiry ci " +
             "LEFT JOIN FETCH ci.parentInquiry cp " +
-            "LEFT JOIN FETCH cp.children cc " +
+            "LEFT JOIN FETCH ci.children cc " +
+            "LEFT JOIN FETCH ci.member " +
             "WHERE ci.id = :id AND ci.parentInquiry IS NOT NULL")
     Optional<CollabInquiry> findByIdWithParentIdIsNOTNULL(@Param("id") Long id);
 
