@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -45,6 +47,10 @@ public class Club extends BaseEntity{
     //동아리회원
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ClubMember> clubMembers = new ArrayList<>();
+
+    // 배너 및 메인, 행사 사진
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClubImage> clubImgList = new LinkedHashSet<>();
 
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -43,7 +43,7 @@ public class ClubRestController {
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         // 3. 서비스 호출
-        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO);
+        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO,memberId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 

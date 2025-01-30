@@ -5,12 +5,10 @@ import com.partnerd.apiPaylaod.exception.handler.CategoryHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
 import com.partnerd.converter.ClubConverter;
-import com.partnerd.domain.Category;
-import com.partnerd.domain.Club;
-import com.partnerd.domain.ContactMethod;
-import com.partnerd.domain.Member;
+import com.partnerd.domain.*;
 import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
@@ -39,17 +37,17 @@ public class ClubServiceImpl implements ClubService {
     private final ClubMemberRepository clubMemberRepository;
 
     @Override
-    public ClubRegisterResponseDTO registerClub(ClubRegisterRequestDTO dto) {
+    public ClubRegisterResponseDTO registerClub(ClubRegisterRequestDTO dto , Long memberId) {
 
 
-        //DTO에서받은 카테고리 id로 카테고리 받아옴
+        // 1. DTO에서받은 카테고리 id로 카테고리 받아옴
         Category category = categoryRepository.findById( (long) dto.getCategoryId())
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.CATEGORY_NOT_FOUND));
 
-        //클럽객체생성
+        // 2. 클럽객체생성
         Club club =ClubConverter.toClubEntity(dto,category);
 
-        //DTO에 있는 컨택트메서드 클럽에 매핑
+        //3. 연락 방법 추가 dto에 있는 contact Method매칭
         if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()){
 
             List<ContactMethod> contactMethods = dto.getContactMethod().stream()
@@ -68,11 +66,30 @@ public class ClubServiceImpl implements ClubService {
 
 
         }
-        // 멤버 ID로 멤버 조회
-        Member member = memberRepository.findById(dto.getMemberId())
+
+        // 4. 클럽 이미지 (배너, 프로필) 저장
+        if (dto.getBannerKeyName() != null) {
+            ClubImage bannerImage = ClubImage.builder()
+                    .keyName(dto.getBannerKeyName())
+                    .image_type(ImageType.BANNER)
+                    .club(club)
+                    .build();
+            club.getClubImgList().add(bannerImage);
+        }
+
+        if (dto.getMainKeyName() != null) {
+            ClubImage profileImage = ClubImage.builder()
+                    .keyName(dto.getMainKeyName())
+                    .image_type(ImageType.MAIN)
+                    .club(club)
+                    .build();
+            club.getClubImgList().add(profileImage);
+        }
+
+        // 5. 멤버 조회 및 리더 추가
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // ClubMember 객체 생성 및 설정
         ClubMember clubMember = ClubMember.builder()
                 .role(ClubMemberRole.LEADER)
                 .status(ActiveType.ACTIVE)
@@ -80,9 +97,31 @@ public class ClubServiceImpl implements ClubService {
                 .club(club)
                 .member(member)
                 .build();
-
-        // Club의 ClubMembers 리스트에 추가
         club.getClubMembers().add(clubMember);
+
+
+        // 6. 클럽 활동 추가
+        if (dto.getActivities() != null && !dto.getActivities().isEmpty()) {
+            for (ClubActivityDTO activityDTO : dto.getActivities()) {
+                ClubActivity clubActivity = ClubActivity.builder()
+                        .intro(activityDTO.getIntro())
+                        .club(club)
+                        .build();
+
+                // 활동 이미지 추가
+                if (activityDTO.getActivityImageKeyNames() != null && !activityDTO.getActivityImageKeyNames().isEmpty()) {
+                    for (String keyName : activityDTO.getActivityImageKeyNames()) {
+                        ClubActivityImage clubActivityImage = ClubActivityImage.builder()
+                                .keyName(keyName)
+                                .clubActivity(clubActivity)
+                                .build();
+                        clubActivity.getClubActivityImageList().add(clubActivityImage);
+                    }
+                }
+
+                club.getActivities().add(clubActivity);
+            }
+        }
 
 
 

@@ -5,6 +5,9 @@ import com.partnerd.domain.enums.ActiveType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Builder
@@ -24,4 +27,11 @@ public class ClubActivity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id", nullable = false)
     private Club club;
+
+    // 활동사진
+    @OneToMany(mappedBy = "clubActivity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClubActivityImage> clubActivityImageList = new LinkedHashSet<>();
+
+
+
 }
