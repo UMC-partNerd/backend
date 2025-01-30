@@ -7,6 +7,8 @@ import com.partnerd.domain.mapping.ClubMembershipRequest;
 import com.partnerd.service.clubMembershipRequestService.ClubMembershipRequestService;
 import com.partnerd.web.dto.clubDTO.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +58,29 @@ public class ClubMembershipRequestRestController {
         ClubMembershipRequest clubMembershipRequest = clubMembershipRequestService.putClubJoinReject(leaderId, request);
 
         return ApiResponse.onSuccess(ClubMembershipRequestConverter.clubJoinRejectDTO(clubMembershipRequest));
+    }
+
+
+    // 파트너드(동아리) 가입 요청
+    @PostMapping("/{clubId}")
+    @Operation(summary = "파트너드(동아리) 가입 요청 API",description = "사용자가 특정 파트너드(동아리)에 가입을 요청하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "clubId", description = "가입하고자 하는 특정 파트너드(동아리)의 ID, path variable 입니다!"),
+    })
+    public ApiResponse<ClubResponseDTO.ClubJoinRequestResultDTO> addClubMembershipRequest(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                          @PathVariable(name = "clubId") Long clubId){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        ClubMembershipRequest clubMembershipRequest = clubMembershipRequestService.addClubMembershipRequest(memberId, clubId);
+
+        return ApiResponse.onSuccess(ClubMembershipRequestConverter.addClubMembershipRequestDTO(clubMembershipRequest));
     }
 }

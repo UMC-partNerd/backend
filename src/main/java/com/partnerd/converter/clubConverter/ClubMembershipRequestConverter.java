@@ -28,4 +28,15 @@ public class ClubMembershipRequestConverter {
                 .updatedAt(LocalDateTime.now())
                 .build();
     }
+
+    // 파트너드(동아리) 가입 요청
+    public static ClubResponseDTO.ClubJoinRequestResultDTO addClubMembershipRequestDTO(ClubMembershipRequest clubMembershipRequest){
+        return ClubResponseDTO.ClubJoinRequestResultDTO.builder()
+                .memberId(clubMembershipRequest.getMember().getId())
+                .clubId(clubMembershipRequest.getClub().getId())
+                .requestId(clubMembershipRequest.getId())
+                .status(clubMembershipRequest.getStatus().toString())
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
