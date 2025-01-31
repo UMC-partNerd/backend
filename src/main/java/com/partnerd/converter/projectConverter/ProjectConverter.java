@@ -108,6 +108,18 @@ public class ProjectConverter {
 
     // 프로젝트 모집글 상세페이지 조회
     public static ProjectResponseDTO.ProjectDetailDTO toProjectDetailDTO(Project project) {
+
+        String thumbnailKeyName = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(ProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
+        List<String> projectImgKeyNameList = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.INTRO)
+                .map(ProjectImage::getKeyName)
+                .collect(Collectors.toList());
+
         return ProjectResponseDTO.ProjectDetailDTO.builder()
                 .title(project.getTitle())
                 .intro(project.getIntro())
@@ -121,6 +133,8 @@ public class ProjectConverter {
                 .skill(project.getSkill())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
+                .thumbnailKeyName(thumbnailKeyName)
+                .projectImgKeyNameList(projectImgKeyNameList)
                 .contactMethods(project.getContactMethodList().stream()
                         .map(ContactMethodDTO::toContactMethodDTO)
                         .collect(Collectors.toSet()))
