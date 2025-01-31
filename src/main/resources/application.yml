@@ -22,8 +22,8 @@ spring:
       client: ${MONGODB_CLIENT}
       name: ${MONGODB_NAME}
     redis:
-      host: redis
-      port: 6379           # 매핑된 Redis 포트 (Docker 명령에서 `-p`로 설정)
+      host: ${SPRING_REDIS_HOST:redis}
+      port: ${SPRING_REDIS_PORT:6379}
       password:            # Redis에 비밀번호 설정이 없다면 비워둠
       timeout: 5000        # 연결 타임아웃 (밀리초)
       lettuce:

@@ -2,7 +2,7 @@ name: Partnerd CI/CD # 알맞은 이름으로 변경
 
 on:
   push:
-    branches: [ develop ]  # main 브랜치에 push가 일어날 때 실행
+    branches: [ develop ]  # develop 브랜치에 push가 일어날 때 실행
 
 jobs:
   build:
@@ -55,6 +55,8 @@ jobs:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
+          SPRING_REDIS_HOST: ${{ secrets.SPRING_REDIS_HOST }}
+          SPRING_REDIS_PORT: ${{ secrets.SPRING_REDIS_PORT }}
         run: |
           echo "$EC2_SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
@@ -62,9 +64,13 @@ jobs:
           # 최신 Docker 이미지 pull
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            docker pull $DOCKER_USERNAME/partner-backend:latest
+            export SPRING_REDIS_HOST=${{ secrets.SPRING_REDIS_HOST }}
+            export SPRING_REDIS_PORT=${{ secrets.SPRING_REDIS_PORT }}
+          
+            docker pull \$DOCKER_USERNAME/partnerd-backend:latest
             cd /home/ubuntu/docker
             docker-compose down
-            docker-compose up -d
+            SPRING_REDIS_HOST=\$SPRING_REDIS_HOST SPRING_REDIS_PORT=\$SPRING_REDIS_PORT docker-compose up -d
           "
-          rm -f private_key.pem  # 민감한 정보 삭제
+          
+          rm -f private_key.pem  # 보안 유지
