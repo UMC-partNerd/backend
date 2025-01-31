@@ -33,6 +33,7 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰 생성
+     * 추후 JWT_EXPIRATION 3600000ms (1시간)으로 변경
      */
     public String createToken(Long userId, String nickname) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
@@ -107,5 +108,20 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    /**
+     * JWT 토큰 유효성 검사 (만료된 토큰은 통과)
+     */
+    public boolean validateTokenIgnoringExpiration(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰은 통과
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

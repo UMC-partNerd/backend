@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/login/kakao").permitAll() // 카카오 로그인 허용
+                        .requestMatchers("/api/auth/login/kakao", "/api/auth/token/refresh").permitAll() // 카카오 로그인 허용
                         .requestMatchers("/**").permitAll() // 모든 요청 허용 (테스트 단계)
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
@@ -45,7 +45,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://part-nerd-fe.vercel.app",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "http://localhost:3001"
         )); // 허용할 Origin 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드 설정
         configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용

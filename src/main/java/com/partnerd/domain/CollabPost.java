@@ -1,17 +1,24 @@
 package com.partnerd.domain;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.domain.mapping.CollabPostCategory;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.*;
 
 @Entity
 @Getter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CollabPost extends BaseEntity {
@@ -74,15 +81,19 @@ public class CollabPost extends BaseEntity {
     // 콜라보 카테고리
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostCategory> collabPostCategoryList = new LinkedHashSet<>();
-  
+
     // 콜라보 문의글
+    @Setter
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CollabInquiry> collabInquiryList = new LinkedHashSet<>();
+    private List<CollabInquiry> collabInquiryList = new ArrayList<>();
 
     // 배너 및 메인, 행사 사진
     @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CollabPostImg> collabPostImgList = new LinkedHashSet<>();
-    
+
+    // 콜라보 요청
+    @OneToMany(mappedBy = "collabPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CollabAsk> collabAskList = new ArrayList<>();
 
     public void setClubMember(ClubMember addClubMember) {
         if (this.clubMember != null) {
@@ -111,6 +122,12 @@ public class CollabPost extends BaseEntity {
         this.eventType = eventType;
         this.eventMode = requestDTO.getEventMode();
         this.description = requestDTO.getDescription();
+    }
+
+    public void validateAuthor(Long memberId) {
+        if (!this.clubMember.getMember().getId().equals(memberId)) {
+            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHOR);
+        }
     }
 
 }

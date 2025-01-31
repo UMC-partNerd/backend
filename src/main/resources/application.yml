@@ -35,7 +35,7 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY_ID:default}
       secretKey: ${AWS_SECRET_ACCESS_KEY:default}
     cloudfront:
-      url: ${AWS_CLOUD_FRONT_DOMAIN}
+      url: ${AWS_CLOUD_FRONT_DOMAIN:default}
 
 
 security:

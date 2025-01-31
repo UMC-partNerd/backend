@@ -91,16 +91,22 @@ public class CollabPostResponseDTO {
     @AllArgsConstructor
     public static class CollabInquiryDTO {
         private Long id;
+        private Long parentId;
         private String nickname;
         private String contents;
         private int likes;
 
         public static CollabInquiryDTO fromEntity(CollabInquiry collabInquiry) {
+            Long parentId = null;
+            if (collabInquiry.getParentInquiry() != null) {
+                parentId = collabInquiry.getParentInquiry().getId();
+            }
             return CollabInquiryDTO.builder()
                     .id(collabInquiry.getId())
                     .nickname(collabInquiry.getMember().getNickname())
                     .contents(collabInquiry.getContents())
                     .likes(collabInquiry.getLikes())
+                    .parentId(parentId)
                     .build();
         }
 

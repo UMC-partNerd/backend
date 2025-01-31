@@ -2,9 +2,7 @@ package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
 import com.partnerd.domain.enums.SocialType;
-import com.partnerd.domain.mapping.ClubMember;
-import com.partnerd.domain.mapping.ProjectMember;
-import com.partnerd.domain.mapping.PromotionProjectMember;
+import com.partnerd.domain.mapping.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -83,7 +81,7 @@ public class Member extends BaseEntity {
     private List<ProjectMember> projectMemberList = new ArrayList<>();
 
     // 프로젝트 댓글
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectComment> projectCommentList = new ArrayList<>();
 
     // 프로젝트 홍보
@@ -95,12 +93,16 @@ public class Member extends BaseEntity {
     private List<PromotionProjectMember> promotionProjectMemberList = new ArrayList<>();
 
     // 프로젝트 홍보 댓글
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionProjectComment> promotionProjectCommentList = new ArrayList<>();
 
     // 동아리
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ClubMember> clubMembers = new ArrayList<>();
+
+    // 보낸 동아리 가입 요청
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true )
+    private List<ClubMembershipRequest> sendClubMembershipRequests = new ArrayList<>();
 
     @PrePersist
     public void setDefaultValues() {

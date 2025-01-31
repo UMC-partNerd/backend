@@ -33,7 +33,7 @@ public class RegisterServiceImpl implements RegisterService {
             // 예외 처리: 요청 데이터와 약관 검증
             if (request == null || request.getAgreements() == null) {
                 log.error("Request or Agreements data is null");
-                throw new RegisterHandler(ErrorStatus.REGISTER400);
+                throw new RegisterHandler(ErrorStatus.REGISTER_INVALID_REQUEST);
             }
 
             // JWT 토큰에서 사용자 ID 추출
@@ -52,7 +52,7 @@ public class RegisterServiceImpl implements RegisterService {
             Agreements agreements = member.getAgreement();
             if (agreements == null) {
                 log.error("Agreements not found for Member ID: {}", userId);
-                throw new RegisterHandler(ErrorStatus.REGISTER400);
+                throw new RegisterHandler(ErrorStatus.REGISTER_AGREEMENTS_NOT_FOUND);
             }
             log.debug("Fetched Agreements before update: {}", agreements);
 
