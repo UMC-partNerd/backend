@@ -114,6 +114,7 @@ public class PromotionProjectConverter {
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(promotionProject.getMember().getId())
                         .name(promotionProject.getMember().getName())
+                        .profileImg(null)  // 임시 이미지 (추후 리팩)
                         .occupation_of_interest(promotionProject.getMember().getOccupation_of_interest())
                         .belong_to_club(promotionProject.getMember().getBelong_to_club())
                         .build())
