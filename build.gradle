@@ -69,7 +69,7 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'io.lettuce.core:lettuce-core:6.1.5' // 버전은 최신 버전으로 설정해주세요
+	implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.5.3.RELEASE'
 
 	// kafka
 	implementation 'org.springframework.kafka:spring-kafka'
