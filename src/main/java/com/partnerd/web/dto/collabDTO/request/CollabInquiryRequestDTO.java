@@ -9,8 +9,8 @@ public class CollabInquiryRequestDTO {
     @Setter
     public static class addCollabInquiryDTO {
 
-        private String contents;
         private Long collabPostId;
+        private String contents;
 
     }
 
