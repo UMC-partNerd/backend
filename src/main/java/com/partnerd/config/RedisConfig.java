@@ -19,7 +19,7 @@ public class RedisConfig {
     @Value("${redis.host}")
     private String host;
 
-    @Value("${.redis.port}")
+    @Value("${redis.port}")
     private int port;
 
     @Bean
