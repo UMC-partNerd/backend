@@ -44,6 +44,7 @@ public class ProjectResponseDTO {
         private String projectStatus;
         private String title;
         private String intro;
+        private String thumbnailKeyName;
         private List<ProjectCategoryDTO> categoryDTOList;
     }
 
