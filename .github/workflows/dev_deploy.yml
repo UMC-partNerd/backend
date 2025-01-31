@@ -64,7 +64,7 @@ jobs:
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             docker pull $DOCKER_USERNAME/partner-backend:latest
             cd /home/ubuntu/docker
-            docker-compose -f down
-            docker-compose -f up -d
+            docker-compose down
+            docker-compose up -d
           "
           rm -f private_key.pem  # 민감한 정보 삭제
