@@ -8,7 +8,7 @@ import com.partnerd.domain.Member;
 import com.partnerd.domain.enums.SocialType;
 import com.partnerd.repository.agreementsRepository.AgreementsRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
-import com.partnerd.service.token.TokenService;
+//import com.partnerd.service.token.TokenService;
 import com.partnerd.web.dto.authDTO.LoginResponseDTO;
 import com.partnerd.web.dto.oauthDTO.KakaoResponseDTO;
 import lombok.RequiredArgsConstructor;
