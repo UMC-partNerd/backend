@@ -69,6 +69,15 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	// STOMP
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// mongoDB
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {
