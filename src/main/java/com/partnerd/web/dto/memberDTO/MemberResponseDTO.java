@@ -44,6 +44,7 @@ public class MemberResponseDTO {
     public static class MemberForProjectDetailDTO {
         private Long id; // 사용자 ID
         private String name; // 이름
+        private String profileImg;  // 프로필 사진
         private String occupation_of_interest; // 관심 직군
         private String belong_to_club; // 소속
     }

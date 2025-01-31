@@ -50,6 +50,10 @@ public class ProjectRestController {
         Claims claims = jwtTokenProvider.getClaims(token);
         Long memberId = Long.valueOf(claims.getSubject());
 
+        if (request.getThumbnailKeyName() == null){
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_BAD_REQUEST);
+        }
+
         Project project = projectService.addProject(memberId, request);
         return ApiResponse.onSuccess(ProjectConverter.toCreateProjectResultDTO(project));
     }
@@ -75,6 +79,10 @@ public class ProjectRestController {
         String token = authorizationHeader.substring(7);
         Claims claims = jwtTokenProvider.getClaims(token);
         Long memberId = Long.valueOf(claims.getSubject());
+
+        if (request.getThumbnailKeyName() == null){
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_BAD_REQUEST);
+        }
 
         Project project = projectService.updateProject(memberId, request, recruitProjectId);
         return ApiResponse.onSuccess(ProjectConverter.toUpdateProjectResultDTO(project));

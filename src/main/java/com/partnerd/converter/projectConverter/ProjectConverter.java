@@ -2,6 +2,8 @@ package com.partnerd.converter.projectConverter;
 
 
 import com.partnerd.domain.Project;
+import com.partnerd.domain.ProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;
@@ -73,11 +75,18 @@ public class ProjectConverter {
                 ? "모집완료"
                 : "모집중";
 
+        String thumbnailKeyName = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(ProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
         return ProjectResponseDTO.ProjectPreviewDTO.builder()
                 .projectId(project.getId())
                 .projectStatus(status)
                 .title(project.getTitle())
                 .intro(project.getIntro())
+                .thumbnailKeyName(thumbnailKeyName)
                 .categoryDTOList(projectCategoryDTOS)
                 .build();
     }
@@ -99,6 +108,18 @@ public class ProjectConverter {
 
     // 프로젝트 모집글 상세페이지 조회
     public static ProjectResponseDTO.ProjectDetailDTO toProjectDetailDTO(Project project) {
+
+        String thumbnailKeyName = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(ProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
+        List<String> projectImgKeyNameList = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.INTRO)
+                .map(ProjectImage::getKeyName)
+                .collect(Collectors.toList());
+
         return ProjectResponseDTO.ProjectDetailDTO.builder()
                 .title(project.getTitle())
                 .intro(project.getIntro())
@@ -112,6 +133,8 @@ public class ProjectConverter {
                 .skill(project.getSkill())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
+                .thumbnailKeyName(thumbnailKeyName)
+                .projectImgKeyNameList(projectImgKeyNameList)
                 .contactMethods(project.getContactMethodList().stream()
                         .map(ContactMethodDTO::toContactMethodDTO)
                         .collect(Collectors.toSet()))
@@ -127,6 +150,7 @@ public class ProjectConverter {
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(project.getMember().getId())
                         .name(project.getMember().getName())
+                        .profileImg(null)  // 임시 이미지 (추후 리팩)
                         .occupation_of_interest(project.getMember().getOccupation_of_interest())
                         .belong_to_club(project.getMember().getBelong_to_club())
                         .build())
