@@ -69,6 +69,8 @@ public class PromotionProjectResponseDTO {
         private String intro;   // 한줄 소개
         private String description; // 설명
         private Long vote;  // 투표수
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private MemberResponseDTO.MemberForProjectDetailDTO leaderInfo; // 리더(작성자) 정보
         private Set<PromotionProjectMemberDTO> promotionProjectMembers;   // 팀원
         private Set<ContactMethodDTO> contactMethods;   // 컨택
