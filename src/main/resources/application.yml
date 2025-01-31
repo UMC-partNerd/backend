@@ -21,6 +21,16 @@ spring:
     mongodb:
       client: ${MONGODB_CLIENT}
       name: ${MONGODB_NAME}
+    redis:
+      host: redis
+      port: 6379           # 매핑된 Redis 포트 (Docker 명령에서 `-p`로 설정)
+      password:            # Redis에 비밀번호 설정이 없다면 비워둠
+      timeout: 5000        # 연결 타임아웃 (밀리초)
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
 cloud:
   aws:
     s3:
@@ -67,14 +77,4 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
 
 
-redis:
-  host: redis      # Redis Docker 컨테이너가 실행 중인 호스트 (로컬 Docker)
-  port: 6379           # 매핑된 Redis 포트 (Docker 명령에서 `-p`로 설정)
-  password:            # Redis에 비밀번호 설정이 없다면 비워둠
-  timeout: 100000        # 연결 타임아웃 (밀리초)
-  lettuce:
-    pool:
-      max-active: 8
-      max-idle: 8
-      min-idle: 0
 
