@@ -157,6 +157,24 @@ public class ProjectServiceImpl implements ProjectService {
 
         existingProject.setProjectCategoryPreferList(newCategoryPrefers);
 
+        existingProject.getProjectImageList().clear();
+        
+        // 대표 이미지 저장
+        ProjectImage thumbnailImg = ProjectImage.builder()
+                .keyName(request.getThumbnailKeyName())
+                .imageType(ImageType.THUMBNAIL)
+                .build();
+        thumbnailImg.setProject(existingProject);
+
+        // 프로젝트 이미지 목록
+        request.getProjectImgKeyNameList().forEach(keyName -> {
+            ProjectImage projectImage = ProjectImage.builder()
+                    .keyName(keyName)
+                    .imageType(ImageType.INTRO)
+                    .build();
+            projectImage.setProject(existingProject);
+        });
+
         // 컨텍트 방식
         if (request.getContactMethod() != null) {
             existingProject.getContactMethodList().clear();
