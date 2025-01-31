@@ -29,7 +29,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final AgreementsRepository agreementsRepository;
-    private final TokenService tokenService; // TokenService 추가 (Redis 관련 로직 처리)
+    //private final TokenService tokenService; // TokenService 추가 (Redis 관련 로직 처리)
 
     @Value("${security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
