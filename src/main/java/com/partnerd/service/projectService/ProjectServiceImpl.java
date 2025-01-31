@@ -6,6 +6,7 @@ import com.partnerd.converter.projectConverter.ProjectCategoryPreferConverter;
 import com.partnerd.converter.projectConverter.ProjectConverter;
 import com.partnerd.converter.projectConverter.ProjectMemberConverter;
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import com.partnerd.domain.mapping.ProjectMember;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -69,6 +70,21 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectCategoryPreferList.forEach(projectCategoryPrefer -> {projectCategoryPrefer.setProject(newProject);});
 
+        // 대표 이미지 저장
+        ProjectImage thumbnailImg = ProjectImage.builder()
+                .keyName(request.getThumbnailKeyName())
+                .imageType(ImageType.THUMBNAIL)
+                .build();
+        thumbnailImg.setProject(newProject);
+        
+        // 프로젝트 이미지 목록
+        request.getProjectImgKeyNameList().forEach(keyName -> {
+            ProjectImage projectImage = ProjectImage.builder()
+                    .keyName(keyName)
+                    .imageType(ImageType.INTRO)
+                    .build();
+            projectImage.setProject(newProject);
+        });
 
         // 컨택트 방식
         if (request.getContactMethod() != null) {
