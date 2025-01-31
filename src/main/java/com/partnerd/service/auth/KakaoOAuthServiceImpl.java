@@ -65,7 +65,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
                 .orElseGet(() -> createNewMember(socialId, email));
 
         // Refresh Token을 Redis에 저장
-        tokenService.saveRefreshToken(refreshToken, member.getId());
+        //tokenService.saveRefreshToken(refreshToken, member.getId());
 
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
