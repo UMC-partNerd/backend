@@ -12,6 +12,8 @@ import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
+import com.partnerd.repository.clubRepository.ClubActivityImageRepository;
+import com.partnerd.repository.clubRepository.ClubActivityRepository;
 import com.partnerd.repository.clubRepository.ClubRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.clubService.ClubService;
@@ -22,19 +24,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ClubActivityRepository clubActivityRepository;
+    private final ClubActivityImageRepository clubActivityImageRepository;
 
     @Override
     public ClubRegisterResponseDTO registerClub(ClubRegisterRequestDTO dto , Long memberId) {
@@ -47,85 +55,39 @@ public class ClubServiceImpl implements ClubService {
         // 2. 클럽객체생성
         Club club =ClubConverter.toClubEntity(dto,category);
 
-        //3. 연락 방법 추가 dto에 있는 contact Method매칭
-        if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()){
-
-            List<ContactMethod> contactMethods = dto.getContactMethod().stream()
-                    .map(contactMethodDTO -> {
-                        ContactMethod contactMethod = ContactMethod.builder()
-                                .contactType(contactMethodDTO.getContactType())
-                                .contactUrl(contactMethodDTO.getContactUrl())
-                                .build();
-                        contactMethod.setClub(club);
-                        return contactMethod;
-                    })
-                    .collect(Collectors.toList());
-
-            // Club의 ContactMethodList에 추가
-            club.getContactMethodList().addAll(contactMethods);
 
 
+        // 3. 연락 방법 추가
+        if (dto.getContactMethod() != null) {
+            dto.getContactMethod().forEach(contactMethodDTO ->
+                    club.addContactMethod(ContactMethod.builder()
+                            .contactType(contactMethodDTO.getContactType())
+                            .contactUrl(contactMethodDTO.getContactUrl())
+                            .build())
+            );
         }
 
         // 4. 클럽 이미지 (배너, 프로필) 저장
-        if (dto.getBannerKeyName() != null) {
-            ClubImage bannerImage = ClubImage.builder()
-                    .keyName(dto.getBannerKeyName())
-                    .image_type(ImageType.BANNER)
-                    .club(club)
-                    .build();
-            club.getClubImgList().add(bannerImage);
-        }
+        if (dto.getBannerKeyName() != null) club.addClubImage(dto.getBannerKeyName(), ImageType.BANNER);
+        if (dto.getMainKeyName() != null) club.addClubImage(dto.getMainKeyName(), ImageType.MAIN);
 
-        if (dto.getMainKeyName() != null) {
-            ClubImage profileImage = ClubImage.builder()
-                    .keyName(dto.getMainKeyName())
-                    .image_type(ImageType.MAIN)
-                    .club(club)
-                    .build();
-            club.getClubImgList().add(profileImage);
-        }
 
         // 5. 멤버 조회 및 리더 추가
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        club.addMember(member, ClubMemberRole.LEADER);
 
-        ClubMember clubMember = ClubMember.builder()
-                .role(ClubMemberRole.LEADER)
-                .status(ActiveType.ACTIVE)
-                .joined_date(new Date())
-                .club(club)
-                .member(member)
-                .build();
-        club.getClubMembers().add(clubMember);
+        // 6. 동아리 활동 추가
+        if (dto.getActivity() != null) {
+            ClubActivity clubActivity = ClubConverter.toClubActivityEntity(dto.getActivity());
+            club.addActivity(clubActivity);
 
-
-        // 6. 클럽 활동 추가
-        if (dto.getActivities() != null && !dto.getActivities().isEmpty()) {
-            for (ClubActivityDTO activityDTO : dto.getActivities()) {
-                ClubActivity clubActivity = ClubActivity.builder()
-                        .intro(activityDTO.getIntro())
-                        .club(club)
-                        .build();
-
-                // 활동 이미지 추가
-                if (activityDTO.getActivityImageKeyNames() != null && !activityDTO.getActivityImageKeyNames().isEmpty()) {
-                    for (String keyName : activityDTO.getActivityImageKeyNames()) {
-                        ClubActivityImage clubActivityImage = ClubActivityImage.builder()
-                                .keyName(keyName)
-                                .clubActivity(clubActivity)
-                                .build();
-                        clubActivity.getClubActivityImageList().add(clubActivityImage);
-                    }
-                }
-
-                club.getActivities().add(clubActivity);
+            if (dto.getActivity().getActivityImageKeyNames() != null) {
+                clubActivity.addActivityImages(dto.getActivity().getActivityImageKeyNames());
             }
         }
 
-
-
-        Club savedClub = clubRepository.save(club);
+        Club savedClub=clubRepository.save(club);
         return ClubConverter.toClubRegisterResponseDTO(savedClub);
     }
 
@@ -151,44 +113,88 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public ClubUpdateResponseDTO updateClub(Long clubId, ClubUpdateRequestDTO dto, Long memberId) {
 
-        //기존 클럽 정보가져오기
+        // 1. 기존 클럽 정보 조회
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.CLUB_NOT_FOUND));
 
-        // 클럽 멤버 조회 및 리더 권한 확인
+        // 2. 리더 권한 확인
         ClubMember clubMember = clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
         if (clubMember.getRole() != ClubMemberRole.LEADER) {
             throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_AUTHORIZED);
         }
 
-        //카테고리 정보 가져오기
+        // 3. 카테고리 업데이트
         Category existingCategory = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new CategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
 
-        //Club 기본 정보 업데이트
-        existingClub.update(dto.getName(), dto.getIntro(),existingCategory);
+        existingClub.update(dto.getName(), dto.getIntro(), existingCategory);
 
-        //Contact Method 업데이트
-
-        if(dto.getContactMethod() != null && !dto.getContactMethod().isEmpty()) {
-            List<ContactMethod> contactMethodList = dto.getContactMethod().stream()
-                    .map( contactMethodDTO -> ContactMethod.builder()
-                            .contactType(contactMethodDTO.getContactType())
-                            .contactUrl(contactMethodDTO.getContactUrl())
-                            .build())
-                    .collect(Collectors.toList());
-
-            existingClub.updateContactMethods(contactMethodList);
-
+        // 4. 연락 방법 업데이트 (기존 삭제 후 추가)
+        if (dto.getContactMethod() != null) {
+            existingClub.getContactMethodList().clear();
+            dto.getContactMethod().forEach(contactMethodDTO ->
+                    existingClub.addContactMethod(
+                            ContactMethod.builder()
+                                    .contactType(contactMethodDTO.getContactType())
+                                    .contactUrl(contactMethodDTO.getContactUrl())
+                                    .build())
+            );
         }
 
-        // 5. 변경된 클럽 저장
-        Club updatedClub = clubRepository.save(existingClub);
+        // 5. 배너 및 프로필 이미지 업데이트 (기존 삭제 후 새 리스트 추가)
+        existingClub.getClubImgList().clear(); // 🔥 기존 이미지 모두 삭제
 
+        if (dto.getBannerKeyName() != null) {
+            existingClub.getClubImgList().add(
+                    ClubImage.builder()
+                            .keyName(dto.getBannerKeyName())
+                            .image_type(ImageType.BANNER)
+                            .club(existingClub)
+                            .build()
+            );
+        }
 
-        return ClubConverter.toClubUpdateResponseDTO(updatedClub);
+        if (dto.getMainKeyName() != null) {
+            existingClub.getClubImgList().add(
+                    ClubImage.builder()
+                            .keyName(dto.getMainKeyName())
+                            .image_type(ImageType.MAIN)
+                            .club(existingClub)
+                            .build()
+            );
+        }
+
+        // 6. 활동(ClubActivity) 업데이트
+        if (dto.getActivity() != null) {
+            ClubActivity existingActivity = existingClub.getActivity();
+
+            if (existingActivity == null) {
+                // 기존 활동이 없으면 새로 생성
+                existingActivity = ClubConverter.toClubActivityEntity(dto.getActivity());
+                existingClub.addActivity(existingActivity);
+            } else {
+                // 기존 활동 intro 업데이트
+                if (!existingActivity.getIntro().equals(dto.getActivity().getIntro())) {
+                    existingActivity.updateActivity(dto.getActivity().getIntro());
+                }
+                // 기존 활동 이미지 삭제 후 다시 추가
+                existingActivity.clearActivityImages();
+            }
+
+            // 7. 활동 이미지(ClubActivityImage) 업데이트 (새 리스트 추가)
+            if (dto.getActivity().getActivityImageKeyNames() != null) {
+                existingActivity.addActivityImages(dto.getActivity().getActivityImageKeyNames());
+            }
+        }
+
+        // 변경 사항 저장
+        clubRepository.save(existingClub);
+
+        return ClubConverter.toClubUpdateResponseDTO(existingClub);
     }
+
 
     @Override
     public List<ClubDTO> getClubs(Integer page, String sort, Long categoryID){

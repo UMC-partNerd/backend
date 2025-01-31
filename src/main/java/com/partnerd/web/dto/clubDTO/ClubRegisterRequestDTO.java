@@ -41,7 +41,7 @@ public class ClubRegisterRequestDTO {
     @Schema(description = "메인 이미지 keyName")
     private String mainKeyName;
 
-    @Schema(description = "활동 목록")
-    private List<ClubActivityDTO> activities;
+    @Schema(description = "동아리 활동")
+    private ClubActivityDTO activity;
 }
 

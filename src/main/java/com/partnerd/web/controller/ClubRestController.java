@@ -34,7 +34,7 @@ public class ClubRestController {
     })
     public ApiResponse<ClubRegisterResponseDTO> registerClub(
             @RequestHeader("Authorization") String authorizationHeader,
-            @ModelAttribute ClubRegisterRequestDTO requestDTO) {
+            @RequestBody ClubRegisterRequestDTO requestDTO) {
 
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
@@ -80,7 +80,7 @@ public class ClubRestController {
     public ApiResponse<ClubUpdateResponseDTO> updateClub(
             @RequestHeader("Authorization") String authorizationHeader,
             @PathVariable Long clubId,
-            @ModelAttribute ClubUpdateRequestDTO requestDTO) {
+            @RequestBody ClubUpdateRequestDTO requestDTO) {
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
 

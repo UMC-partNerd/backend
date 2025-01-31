@@ -27,6 +27,11 @@ public class ClubActivityImage extends BaseEntity {
     @Column(name = "key_name", nullable = false)
     private String keyName;
 
+    // 연관관계 편의 메서드 추가
+    public void setClubActivity(ClubActivity clubActivity) {
+        this.clubActivity = clubActivity;
+    }
+
 
 
 }
