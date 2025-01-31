@@ -1,4 +1,3 @@
-/*
 package com.partnerd.config;
 
 import com.partnerd.domain.Notification;
@@ -13,14 +12,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.List;
 
-
 @Configuration
 public class RedisConfig {
 
-    @Value("${redis.host}")
+    @Value("${spring.data.redis.host}") // ✅ 변경
     private String host;
 
-    @Value("${redis.port}")
+    @Value("${spring.data.redis.port}") // ✅ 변경
     private int port;
 
     @Bean
@@ -41,16 +39,8 @@ public class RedisConfig {
     public RedisTemplate<String, List<Notification>> redisTemplateForNotification() {
         RedisTemplate<String, List<Notification>> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        GenericJackson2JsonRedisSerializer listSerializer = new GenericJackson2JsonRedisSerializer();
-        redisTemplate.setValueSerializer(listSerializer);
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
-
-
-
-
-
 }
-
-*/
