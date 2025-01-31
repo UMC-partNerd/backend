@@ -1,4 +1,4 @@
-package com.partnerd.converter;
+package com.partnerd.converter.clubConverter;
 
 import com.partnerd.domain.Category;
 import com.partnerd.domain.Club;

@@ -26,6 +26,8 @@ public class ProjectRequestDTO {
         private String design_stack;    // 디자인 기술 스택
         private Date startDate; // 시작 날짜
         private Date endDate; // 종료 날짜
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private List<Long> projectMember;   // 함께한 팀원
         private List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
         private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
@@ -47,6 +49,8 @@ public class ProjectRequestDTO {
         private String design_stack;    // 디자인 기술 스택
         private Date startDate; // 시작 날짜
         private Date endDate; // 종료 날짜
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private List<Long> projectMember;   // 함께한 팀원
         private List<Long> projectCategoryPrefer;  // 프로젝트 카테고리
         private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법

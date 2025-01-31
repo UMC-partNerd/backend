@@ -9,10 +9,12 @@ import lombok.Setter;
 public class PromotionProjectMemberDTO {
     private Long id;
     private String name;
+    private String profileImg;
 
     public PromotionProjectMemberDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+        this.profileImg = null;
     }
 
     public static PromotionProjectMemberDTO toPromotionProjectMemberDTO(PromotionProjectMember promotionProjectMember) {
