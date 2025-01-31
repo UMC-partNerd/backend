@@ -63,7 +63,8 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             docker pull $DOCKER_USERNAME/partner-backend:latest
-            docker-compose -f docker/docker-compose.yml down
-            docker-compose -f dokcer/docker-compose.yml up -d
+            cd /home/ubuntu/docker
+            docker-compose -f down
+            docker-compose -f up -d
           "
           rm -f private_key.pem  # 민감한 정보 삭제
