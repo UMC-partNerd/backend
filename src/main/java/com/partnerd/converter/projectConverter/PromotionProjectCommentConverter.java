@@ -19,7 +19,7 @@ public class PromotionProjectCommentConverter {
                 .promotionProjectCommentId(promotionProjectComment.getId())
                 .contents(promotionProjectComment.getContents())
                 .nickname(promotionProjectComment.getMember().getNickname())
-                .profile_url(promotionProjectComment.getMember().getProfile_url())
+                .profile_url(null)  // 임시 이미지 (추후 리팩)
                 .build();
     }
 
@@ -29,7 +29,7 @@ public class PromotionProjectCommentConverter {
                 .promotionProjectCommentId(promotionProjectComment.getId())
                 .isDeleted(promotionProjectComment.getIsDeleted())
                 .nickname(promotionProjectComment.getMember().getNickname())
-                .profile_url(promotionProjectComment.getMember().getProfile_url())
+                .profile_url(null)  // 임시 이미지 (추후 리팩)
                 .contents(promotionProjectComment.getContents())
                 .likes(promotionProjectComment.getLikes())
                 .createdAt(promotionProjectComment.getCreatedAt())

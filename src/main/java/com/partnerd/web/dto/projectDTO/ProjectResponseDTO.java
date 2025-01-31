@@ -1,5 +1,6 @@
 package com.partnerd.web.dto.projectDTO;
 
+import com.partnerd.domain.ProjectImage;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import lombok.AllArgsConstructor;
@@ -44,6 +45,7 @@ public class ProjectResponseDTO {
         private String projectStatus;
         private String title;
         private String intro;
+        private String thumbnailKeyName;
         private List<ProjectCategoryDTO> categoryDTOList;
     }
 
@@ -79,6 +81,8 @@ public class ProjectResponseDTO {
         private String skill;   // 필요한 역량
         private Date startDate; // 모집 시작일
         private Date endDate;   // 모집 마감일
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private MemberResponseDTO.MemberForProjectDetailDTO leaderInfo; // 리더(작성자) 정보
         private Set<ProjectCategoryDTO> projectCategories; // 개발 카테고리
         private Set<ProjectMemberDTO> projectMembers;  // 함께한 팀원

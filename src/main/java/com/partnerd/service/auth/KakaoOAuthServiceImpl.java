@@ -29,7 +29,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final AgreementsRepository agreementsRepository;
-    private final TokenService tokenService; // TokenService 추가 (Redis 관련 로직 처리)
+    //private final TokenService tokenService; // TokenService 추가 (Redis 관련 로직 처리)
 
     @Value("${security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
@@ -65,7 +65,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
                 .orElseGet(() -> createNewMember(socialId, email));
 
         // Refresh Token을 Redis에 저장
-        tokenService.saveRefreshToken(refreshToken, member.getId());
+        //tokenService.saveRefreshToken(refreshToken, member.getId());
 
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
