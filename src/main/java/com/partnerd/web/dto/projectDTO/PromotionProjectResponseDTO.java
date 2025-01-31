@@ -42,6 +42,7 @@ public class PromotionProjectResponseDTO {
         private Long promotionProjectId;
         private String title;
         private String intro;
+        private String thumbnailKeyName;
     }
 
     // 프로젝트 홍보글 모아보기 (전체 리스트)

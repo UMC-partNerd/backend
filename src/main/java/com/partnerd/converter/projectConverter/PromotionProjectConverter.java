@@ -1,6 +1,8 @@
 package com.partnerd.converter.projectConverter;
 
 import com.partnerd.domain.PromotionProject;
+import com.partnerd.domain.PromotionProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectMemberDTO;
@@ -45,10 +47,18 @@ public class PromotionProjectConverter {
 
     // 프로젝트 홍보글 모아보기 (한칸씩)
     public static PromotionProjectResponseDTO.PromotionProjectPreviewDTO promotionProjectPreviewDTO(PromotionProject promotionProject){
-         return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
+
+        String thumbnailKeyName = promotionProject.getPromotionProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(PromotionProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
+        return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
                 .promotionProjectId(promotionProject.getId())
                 .title(promotionProject.getTitle())
                 .intro(promotionProject.getIntro())
+                .thumbnailKeyName(thumbnailKeyName)
                 .build();
     }
 
