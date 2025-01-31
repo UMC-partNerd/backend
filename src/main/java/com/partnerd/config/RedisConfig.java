@@ -1,4 +1,3 @@
-/*
 package com.partnerd.config;
 
 import com.partnerd.domain.Notification;
@@ -52,4 +51,4 @@ public class RedisConfig {
 
 
 }
-*/
+
