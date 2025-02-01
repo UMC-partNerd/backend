@@ -9,7 +9,7 @@ public class MemberConverter {
     // 내프로필 조회
     public static MemberResponseDTO.ReadMemberResultDTO toReadMemberResultDTO(Member member){
         return MemberResponseDTO.ReadMemberResultDTO.builder()
-                .profile_url(member.getProfile_url())
+                .profileKeyName(member.getProfile_url())
                 .name(member.getName())
                 .nickname(member.getNickname())
                 .birth(member.getBirth())
