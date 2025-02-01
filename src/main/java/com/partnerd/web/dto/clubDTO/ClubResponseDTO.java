@@ -43,4 +43,17 @@ public class ClubResponseDTO {
         private String status;      // 가입 요청 승인/거절 결과(상태)
         private LocalDateTime updatedAt;   // 가입 요청 상태 변경 날짜
     }
+
+    // 파트너드(동아리) 가입 요청
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClubJoinRequestResultDTO {
+        private Long memberId;      // 동아리 가입 요청한 사용자 ID
+        private Long clubId;        // 가입 요청된 동아리 ID
+        private Long requestId;     // 요청 ID
+        private String status;      // 가입 요청 상태
+        private LocalDateTime createdAt;   // 가입 요청 날짜
+    }
 }

@@ -89,7 +89,7 @@ public class Project extends BaseEntity {
     private Set<ProjectMember> projectMemberList = new HashSet<>();
 
     // 프로젝트 사진
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectImage> projectImageList = new HashSet<>();
 
     // 프로젝트 카테고리

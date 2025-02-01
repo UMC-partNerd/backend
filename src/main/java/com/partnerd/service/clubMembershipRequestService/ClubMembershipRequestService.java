@@ -9,4 +9,7 @@ public interface ClubMembershipRequestService {
 
     // 파트너드(동아리) 가입 요청 거절
     ClubMembershipRequest putClubJoinReject(Long leaderId, ClubRequestDTO.ClubJoinDTO request);
+
+    // 파트너드(동아리) 가입 요청
+    ClubMembershipRequest addClubMembershipRequest(Long memberId, Long clubId);
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @AllArgsConstructor
 public class ClubDTO {
-    private String profile;
+    private String profileImage;
     private String name;
     private String intro;
 

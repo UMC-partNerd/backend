@@ -1,8 +1,10 @@
 package com.partnerd.service.clubMembershipRequestService;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMembershipRequestHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
+import com.partnerd.domain.Club;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
@@ -13,12 +15,15 @@ import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepositoryCustom;
 import com.partnerd.repository.clubMembershipRequestRepository.ClubMembershipRequestRepository;
 import com.partnerd.repository.clubMembershipRequestRepository.ClubMembershipRequestRepositoryCustom;
+import com.partnerd.repository.clubRepository.ClubRepository;
+import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.web.dto.clubDTO.ClubRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,8 @@ public class ClubMembershipRequestServiceImpl implements ClubMembershipRequestSe
     private final ClubMembershipRequestRepositoryCustom clubMembershipRequestRepositoryCustom;
     private final ClubMemberRepositoryCustom clubMemberRepositoryCustom;
     private final ClubMemberRepository clubMemberRepository;
+    private final ClubRepository clubRepository;
+    private final MemberRepository memberRepository;
 
     // 파트너드(동아리) 가입 요청 승인
     @Override
@@ -111,5 +118,51 @@ public class ClubMembershipRequestServiceImpl implements ClubMembershipRequestSe
         newClubMembershipRequest.changeStatus(RequestStatus.REJECTED);
 
         return clubMembershipRequestRepository.save(newClubMembershipRequest);
+    }
+
+    //파트너드(동아리) 가입 요청
+    @Override
+    @Transactional
+    public ClubMembershipRequest addClubMembershipRequest(Long memberId, Long clubId){
+        // clubId에 해당하는 클럽이 있는지 확인
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> {
+            throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
+        });
+
+        // memberId로 Member 데이터 가져오기
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> {
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        });
+
+        // 동아리 가입 요청자가 이미 동아리 회원인 경우 요청 거부
+        clubMemberRepositoryCustom.findByClubIdAndMemberId(clubId, memberId).ifPresent((checkClubMember) -> {
+            throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBER_ALREADY_EXISTS);
+        });
+
+        // 사용자가 해당 클럽에 가입을 요청한 적 있는지 확인
+        Optional<ClubMembershipRequest> request = clubMembershipRequestRepositoryCustom.findByMemberIdAndClubId(memberId, clubId);
+
+        if (request.isEmpty()) {
+            // 가입 요청이 없을 경우, 새 요청 데이터 생성
+            ClubMembershipRequest newRequest = ClubMembershipRequest.builder()
+                    .status(RequestStatus.PENDING)
+                    .member(member)
+                    .club(club)
+                    .build();
+            return clubMembershipRequestRepository.save(newRequest);
+        }
+
+        // 기존 요청이 있는 경우 상태 확인 및 처리
+        ClubMembershipRequest existingRequest = request.get();
+
+        switch (existingRequest.getStatus()) {
+            case PENDING:
+                throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBERSHIP_ALREADY_REQUESTED);
+            case APPROVED:
+                throw new ClubMembershipRequestHandler(ErrorStatus.CLUB_MEMBERSHIP_ALREADY_APPROVED);
+            default:
+                existingRequest.setStatus(RequestStatus.PENDING);
+                return existingRequest;
+        }
     }
 }

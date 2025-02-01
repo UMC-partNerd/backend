@@ -1,8 +1,11 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.enums.ImageType;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 
 @Entity
 @Getter
@@ -16,12 +19,29 @@ public class ProjectImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 이미지 url
-    @Column(nullable = false)
-    private String image_url;
+    @Column(name = "key_name", nullable = false)
+    private String keyName;
+
+    @Column(name = "image_type", nullable = false)
+    private ImageType imageType;
 
     // 프로젝트 ID (FK)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    public void setProject(Project project){
+        if(this.project != null){
+            if (this.project.getProjectImageList() != null) {
+                this.project.getProjectImageList().remove(this);
+            }
+        }
+        this.project = project;
+        if (this.project != null){
+            if (this.project.getProjectImageList() == null){
+                this.project.setProjectImageList(new HashSet<>());
+            }
+            this.project.getProjectImageList().add(this);
+        }
+    }
 }
