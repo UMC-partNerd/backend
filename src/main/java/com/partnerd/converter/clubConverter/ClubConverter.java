@@ -67,8 +67,13 @@ public class ClubConverter {
     public static ClubResponseDTO.ReadClubPreviewListDTO clubPreviewListDTO(List<Club> clubs) {
         List<ClubResponseDTO.ClubPreviewDTO> clubPreviewDTOList = clubs.stream()
                 .map(club -> ClubResponseDTO.ClubPreviewDTO.builder()
-                        .profile(club.getProfile())
-                        .category(club.getCategory().getName()) // 카테고리 이름
+                        .clubId(club.getId())
+                        .profileKeyName(club.getClubImgList().stream()
+                                .filter(img -> img.getImage_type() == ImageType.MAIN)
+                                .map(ClubImage::getKeyName)
+                                .findFirst()
+                                .orElse(null))
+                        .category(club.getCategory().getName())
                         .name(club.getName())
                         .intro(club.getIntro())
                         .build())

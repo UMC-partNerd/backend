@@ -15,7 +15,8 @@ public class ClubResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ClubPreviewDTO {
-        private String profile;
+        private Long clubId;
+        private String profileKeyName;
         private String category;
         private String name;
         private String intro;
