@@ -54,13 +54,14 @@ public class ContactMethod {
         this.collabPost.getContactMethodList().add(this);
     }
 
-    public void setClub(Club club) { //양방향연관관계설정
+    public void setClub(Club club) {
         if (this.club != null) {
             this.club.getContactMethodList().remove(this);
         }
         this.club = club;
-        if (club != null) {
-            this.club.getContactMethodList().add(this);
+
+        if (club != null && !club.getContactMethodList().contains(this)) {
+            club.getContactMethodList().add(this);
         }
     }
 

@@ -2,9 +2,13 @@ package com.partnerd.converter.clubConverter;
 
 import com.partnerd.domain.Category;
 import com.partnerd.domain.Club;
+import com.partnerd.domain.ClubActivity;
+import com.partnerd.domain.ClubImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.clubDTO.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class ClubConverter {
@@ -13,25 +17,24 @@ public class ClubConverter {
         return Club.builder()
                 .name(dto.getName())
                 .intro(dto.getIntro())
-                .category(category) // category 필드 매핑
-                .profile(null) // 이미지 처리 미구현
+                .category(category) // 카테고리 필드 매핑
                 .views(0L)
-                .contactMethodList(new ArrayList<>())
-                .clubMembers(new ArrayList<>())
+                .contactMethodList(new ArrayList<>()) // 초기화
+                .clubImgList(new LinkedHashSet<>()) // 초기화
+                .clubMembers(new ArrayList<>()) // 초기화
                 .build();
 
     }
 
- /*   public static Club toClubEntity(ClubUpdateRequestDTO dto) {
-        return Club.builder()
-                .name(dto.getName())
+    //클럽액티비티 생성
+    public static ClubActivity toClubActivityEntity(ClubActivityDTO dto) {
+        return ClubActivity.builder()
                 .intro(dto.getIntro())
-
-                .category(dto.getCategory())
-                .profile(null) // 이미지 처리 미구현
-                .views(0L)
+                .clubActivityImageList(new LinkedHashSet<>()) //  활동 이미지 리스트 초기화
                 .build();
-    }*/
+    }
+
+
 
     public static ClubRegisterResponseDTO toClubRegisterResponseDTO(Club club) {
         return new ClubRegisterResponseDTO(club.getId(), club.getName(), club.getCategory().getId(),
@@ -46,9 +49,15 @@ public class ClubConverter {
                 club.getCategory().getName());
     }
 
-    public static ClubDTO toClubDTO(Club club){
+    public static ClubDTO toClubDTO(Club club) {
+        String profileImage = club.getClubImgList().stream()
+                .filter(img -> img.getImage_type() == ImageType.MAIN) // MAIN 타입 찾기
+                .map(ClubImage::getKeyName)
+                .findFirst()
+                .orElse(null); // 없으면 null 반환
+
         return new ClubDTO(
-                club.getProfile(),
+                profileImage,
                 club.getName(),
                 club.getIntro()
         );

@@ -21,7 +21,12 @@ public class ClubImage extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ImageType image_type;
 
-    // 이미지 url
-    @Column(nullable = false)
-    private String image_url;
+
+    //이미지 키네임
+    @Column(name = "key_name", nullable = false)
+    private String keyName;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
 }

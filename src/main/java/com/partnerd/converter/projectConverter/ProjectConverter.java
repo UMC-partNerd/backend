@@ -1,6 +1,7 @@
 package com.partnerd.converter.projectConverter;
 
 
+import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.domain.ProjectImage;
 import com.partnerd.domain.enums.ImageType;
@@ -20,7 +21,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectConverter {
-
+    
+    // 프로젝트 팀원 검색
+    public static List<MemberResponseDTO.MemberForProjectFindDTO> toMemberForProjectFindDTOList(List<Member> members) {
+        return members.stream()
+                .map(member -> MemberResponseDTO.MemberForProjectFindDTO.builder()
+                        .id(member.getId())
+                        .nickname(member.getNickname())
+                        .profileImg(null) // 이미지 리팩 예정
+                        .build())
+                .collect(Collectors.toList());
+    }
+    
     // 프로젝트 모집글 생성
     public static Project toProject(ProjectRequestDTO.CreateProjectDTO request){
 
@@ -149,7 +161,7 @@ public class ProjectConverter {
                         .collect(Collectors.toSet()))
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(project.getMember().getId())
-                        .name(project.getMember().getName())
+                        .nickname(project.getMember().getNickname())
                         .profileImg(null)  // 임시 이미지 (추후 리팩)
                         .occupation_of_interest(project.getMember().getOccupation_of_interest())
                         .belong_to_club(project.getMember().getBelong_to_club())

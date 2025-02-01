@@ -60,9 +60,15 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         String socialId = String.valueOf(kakaoResponse.getId());
         String email = kakaoResponse.getKakaoAccount().getEmail();
 
-        // 소셜 ID로 사용자 조회 또는 생성
-        Member member = memberRepository.findBySocialId(socialId)
-                .orElseGet(() -> createNewMember(socialId, email));
+        // 소셜 ID로 기존 사용자 조회
+        Member member = memberRepository.findBySocialId(socialId).orElse(null);
+        boolean isNewUser = false; // 기본값: 기존 회원
+
+        if (member == null) {
+            // 신규 회원 생성
+            member = createNewMember(socialId, email);
+            isNewUser = true; // 신규 가입자로 설정
+        }
 
         // Refresh Token을 Redis에 저장
         tokenService.saveRefreshToken(refreshToken, member.getId());
@@ -70,12 +76,14 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
 
-        System.out.println(member.getEmail());
+
         // 응답 DTO 생성
+        // 로그인 응답 반환
         return LoginResponseDTO.builder()
                 .jwtToken(jwtToken)
                 .id(member.getId())
                 .email(member.getEmail())
+                .isNewUser(isNewUser) // 신규 가입 여부 추가
                 .build();
     }
 

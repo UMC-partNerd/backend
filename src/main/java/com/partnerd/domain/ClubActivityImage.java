@@ -4,6 +4,9 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Builder
@@ -16,7 +19,19 @@ public class ClubActivityImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 이미지 url
-    @Column(nullable = false)
-    private String image_url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_activity_id", nullable = false)
+    private ClubActivity clubActivity;
+
+    @Column(name = "key_name", nullable = false)
+    private String keyName;
+
+    // 연관관계 편의 메서드 추가
+    public void setClubActivity(ClubActivity clubActivity) {
+        this.clubActivity = clubActivity;
+    }
+
+
+
 }
