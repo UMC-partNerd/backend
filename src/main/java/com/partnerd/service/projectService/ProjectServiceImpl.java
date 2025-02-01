@@ -40,6 +40,13 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectCategoryPreferRepository projectCategoryPreferRepository;
 
+    // 프로젝트 팀원 검색
+    @Override
+    @Transactional(readOnly = true)
+    public List<Member> getMemberForProject(ProjectRequestDTO.FindProjectMemberDTO request){
+        return projectRepository.getMemberForProject(request);
+    }
+
     // 프로젝트 모집글 생성
     @Override
     @Transactional
