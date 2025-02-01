@@ -9,5 +9,6 @@ public class HomeClubDTO {
     private String profileImage;
     private String name;
     private String intro;
+    private String categoryName;
 
 }

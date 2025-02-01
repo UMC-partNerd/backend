@@ -1,9 +1,17 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.domain.*;
+
+import com.partnerd.domain.Project;
+import com.partnerd.domain.QContactMethod;
+import com.partnerd.domain.QProject;
+import com.partnerd.domain.QProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QProjectCategoryPrefer;
 import com.partnerd.domain.mapping.QProjectMember;
+import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
+import com.querydsl.core.types.Projections;
+import com.partnerd.domain.*;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -102,6 +110,25 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
                 .leftJoin(qProject.projectMemberList, qProjectMember).fetchJoin()
                 .where(qProjectMember.member.id.eq(memberId))
                 .distinct()
+                .fetch();
+    }
+
+    // 홈화면 - 최신 프로젝트 조회
+    @Override
+    public List<HomeProjectDTO> findTopProjects(Pageable pageable) {
+        QProject project = QProject.project;
+        QProjectImage projectImage = QProjectImage.projectImage;
+
+        return queryFactory
+                .select(Projections.constructor(HomeProjectDTO.class,
+                        projectImage.keyName,
+                        project.title,
+                        project.intro))
+                .from(project)
+                .leftJoin(project.projectImageList, projectImage)
+                .on(projectImage.imageType.eq(ImageType.THUMBNAIL))
+                .orderBy(project.createdAt.desc())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 }
