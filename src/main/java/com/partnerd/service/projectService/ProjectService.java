@@ -1,6 +1,7 @@
 package com.partnerd.service.projectService;
 
 
+import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProjectService {
+    // 프로젝트 팀원 검색
+    List<Member> getMemberForProject(ProjectRequestDTO.FindProjectMemberDTO request);
 
     // 프로젝트 모집글 생성
     Project addProject(Long memberId, ProjectRequestDTO.CreateProjectDTO request);

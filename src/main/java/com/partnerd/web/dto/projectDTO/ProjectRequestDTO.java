@@ -10,6 +10,13 @@ import java.util.Set;
 
 public class ProjectRequestDTO {
 
+    // 프로젝트 팀원 검색
+    @Getter
+    @Setter
+    public static class FindProjectMemberDTO {
+        private String keyword;
+    }
+
     // 프로젝트 모집글 생성
     @Getter
     @Setter

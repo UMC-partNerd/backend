@@ -5,8 +5,10 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.ProjectConverter;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
 import com.partnerd.service.projectService.ProjectService;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
 import io.jsonwebtoken.Claims;
@@ -30,6 +32,19 @@ public class ProjectRestController {
 
     private final ProjectService projectService;
     private final JwtTokenProvider jwtTokenProvider;
+
+    // 프로젝트 팀원 검색
+    @PostMapping("/member")
+    @Operation(summary = "프로젝트 모집글/홍보글 멤버 검색 API",description = "프로젝트 모집글/홍보글 작성을 위한 팀원 검색 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<MemberResponseDTO.MemberForProjectFindDTO>> addProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                          @RequestBody @Valid ProjectRequestDTO.FindProjectMemberDTO request){
+
+        List<Member> memberList = projectService.getMemberForProject(request);
+        return ApiResponse.onSuccess(ProjectConverter.toMemberForProjectFindDTOList(memberList));
+    }
 
     // 프로젝트 모집글 생성
     @PostMapping("/recruit")
