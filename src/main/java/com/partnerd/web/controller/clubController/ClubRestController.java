@@ -33,7 +33,7 @@ public class ClubRestController {
     })
     public ApiResponse<ClubRegisterResponseDTO> registerClub(
             @RequestHeader("Authorization") String authorizationHeader,
-            @ModelAttribute ClubRegisterRequestDTO requestDTO) {
+            @RequestBody ClubRegisterRequestDTO requestDTO) {
 
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
@@ -42,7 +42,7 @@ public class ClubRestController {
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         // 3. 서비스 호출
-        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO);
+        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO,memberId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 
@@ -79,7 +79,7 @@ public class ClubRestController {
     public ApiResponse<ClubUpdateResponseDTO> updateClub(
             @RequestHeader("Authorization") String authorizationHeader,
             @PathVariable Long clubId,
-            @ModelAttribute ClubUpdateRequestDTO requestDTO) {
+            @RequestBody ClubUpdateRequestDTO requestDTO) {
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
 
