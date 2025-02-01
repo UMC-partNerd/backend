@@ -76,6 +76,8 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
 
+
+        // 응답 DTO 생성
         // 로그인 응답 반환
         return LoginResponseDTO.builder()
                 .jwtToken(jwtToken)
