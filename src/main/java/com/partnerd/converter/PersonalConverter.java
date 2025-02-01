@@ -59,7 +59,7 @@ public class PersonalConverter {
         return PersonalResponseDTO.ReadPersonalResultDTO.builder()
                 .personalId(personal.getId())
                 .nickname(personal.getMember().getNickname())
-                .profile_url(personal.getMember().getProfile_url())
+                .profileKeyName(personal.getMember().getProfile_url())
                 .occupation_of_interest(personal.getMember().getOccupation_of_interest())
                 .belong_to_club(personal.getMember().getBelong_to_club())
                 .intro(personal.getIntro())
