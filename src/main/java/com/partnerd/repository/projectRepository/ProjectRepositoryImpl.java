@@ -1,11 +1,10 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.domain.Project;
-import com.partnerd.domain.QContactMethod;
-import com.partnerd.domain.QProject;
+import com.partnerd.domain.*;
 import com.partnerd.domain.mapping.QProjectCategoryPrefer;
 import com.partnerd.domain.mapping.QProjectMember;
+import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,19 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
     private final QContactMethod qContactMethod = QContactMethod.contactMethod;
     private final QProjectMember qProjectMember = QProjectMember.projectMember;
     private final QProjectCategoryPrefer qProjectCategoryPrefer = QProjectCategoryPrefer.projectCategoryPrefer;
+
+    private final QMember qMember = QMember.member;
+
+    // 프로젝트 팀원 검색
+    @Override
+    public List<Member> getMemberForProject(ProjectRequestDTO.FindProjectMemberDTO request) {
+        String keyword = request.getKeyword();
+
+        return queryFactory
+                .selectFrom(qMember)
+                .where(qMember.nickname.contains(keyword))
+                .fetch();
+    }
 
     // 프로젝트 모집글 상세페이지 조회
     @Override

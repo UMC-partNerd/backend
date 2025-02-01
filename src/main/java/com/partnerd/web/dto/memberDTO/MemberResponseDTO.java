@@ -43,9 +43,20 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class MemberForProjectDetailDTO {
         private Long id; // 사용자 ID
-        private String name; // 이름
+        private String nickname; // 닉네임
         private String profileImg;  // 프로필 사진
         private String occupation_of_interest; // 관심 직군
         private String belong_to_club; // 소속
+    }
+
+    // 프로젝트 멤버 검색
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberForProjectFindDTO {
+        private Long id; // 사용자 ID
+        private String nickname; // 이름
+        private String profileImg;  // 프로필 사진
     }
 }
