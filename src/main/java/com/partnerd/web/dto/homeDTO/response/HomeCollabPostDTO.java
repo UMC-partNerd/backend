@@ -9,4 +9,6 @@ public class HomeCollabPostDTO {
     private String title;
     private String intro;
     private String clubName;
+    private String clubProfileImage;
+
 }

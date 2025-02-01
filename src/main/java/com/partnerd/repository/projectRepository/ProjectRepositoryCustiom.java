@@ -2,7 +2,9 @@ package com.partnerd.repository.projectRepository;
 
 
 import com.partnerd.domain.Project;
+import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,4 +18,7 @@ public interface ProjectRepositoryCustiom {
 
     // 마이페이지 - 내가 쓴 프로젝트 모집글 모아보기
     List<Project> findProjectsByMemberId(Long memberId);
+
+    //홈화면 - 최신 프로젝트 6개 조회
+    List<HomeProjectDTO> findTopProjects(Pageable pageable);
 }
