@@ -16,7 +16,7 @@ public class MemberResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReadMemberResultDTO {
-        String profile_url;           // 프로필 사진
+        String profileKeyName;           // 프로필 사진 키네임
         String name;                 // 이름
         String nickname;             // 닉네임
         Date birth;                // 생년월일
