@@ -24,6 +24,9 @@ public class RegisterServiceImpl implements RegisterService {
     private final AgreementsRepository agreementsRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
+    // 기본 프로필 이미지 경로
+    private static final String DEFAULT_PROFILE_IMAGE = "myProfileImage/기본프로필.jpg";
+
     @Override
     public RegisterResponseDTO registerUser(RegisterRequestDTO request, String token) {
         log.debug("Register request received: {}", request);
@@ -66,9 +69,12 @@ public class RegisterServiceImpl implements RegisterService {
             agreementsRepository.save(agreements);
             log.debug("Updated Agreements: {}", agreements);
 
-            // Member 정보 수정
+            // Member 정보 업데이트 (기본 프로필 이미지 포함)
             member = AuthMemberConverter.toMemberEntity(request, member);
-            log.debug("Member after update (before save): {}", member);
+            if (member.getProfile_url() == null || member.getProfile_url().isEmpty()) {
+                member.setProfile_url(DEFAULT_PROFILE_IMAGE);
+            }
+
             memberRepository.save(member);
             log.debug("Updated Member saved: {}", member);
 

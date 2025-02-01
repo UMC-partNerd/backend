@@ -4,7 +4,11 @@ package com.partnerd.repository.projectRepository;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.QContactMethod;
 import com.partnerd.domain.QPromotionProject;
+import com.partnerd.domain.QPromotionProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QPromotionProjectMember;
+import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -120,6 +124,25 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
                 .leftJoin(qPromotionProject.promotionProjectMemberList, qPromotionProjectMember).fetchJoin()
                 .where(qPromotionProjectMember.member.id.eq(memberId))
                 .distinct()
+                .fetch();
+    }
+
+    // 홈화면 - 최신 프로젝트 홍보글 조회
+    @Override
+    public List<HomePromotionProjectDTO> findTopPromotionProjects(Pageable pageable) {
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+        QPromotionProjectImage promotionProjectImage = QPromotionProjectImage.promotionProjectImage;
+
+        return queryFactory
+                .select(Projections.constructor(HomePromotionProjectDTO.class,
+                        promotionProjectImage.keyName,
+                        promotionProject.title,
+                        promotionProject.intro))
+                .from(promotionProject)
+                .leftJoin(promotionProject.promotionProjectImageList, promotionProjectImage)
+                .on(promotionProjectImage.imageType.eq(ImageType.THUMBNAIL))
+                .orderBy(promotionProject.views.desc())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 }
