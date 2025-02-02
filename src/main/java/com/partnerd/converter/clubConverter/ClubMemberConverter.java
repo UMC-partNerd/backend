@@ -13,4 +13,14 @@ public class ClubMemberConverter {
                 .updatedAt(newLeader.getUpdatedAt())
                 .build();
     }
+
+    // 파트너드(동아리) 리더 권한 위임
+    public static ClubMemberResponseDTO.ClubChangeActiveDTO changeMemberActviceDTO(ClubMember clubMember) {
+        return ClubMemberResponseDTO.ClubChangeActiveDTO.builder()
+                .memberId(clubMember.getMember().getId())
+                .clubId(clubMember.getClub().getId())
+                .status(clubMember.getStatus())
+                .updatedAt(clubMember.getUpdatedAt())
+                .build();
+    }
 }
