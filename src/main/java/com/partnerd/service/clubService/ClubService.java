@@ -13,6 +13,9 @@ public interface ClubService {
 
     List<ClubDTO> getClubs(Integer page, String sort, Long categoryId);
 
+    // 파트너드 상세조회 (팀페이지)
+    ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId);
+
     // 파트너드 목록 조회(마이페이지)
     List<Club> getClubsByRole(Long memberId);
 }
