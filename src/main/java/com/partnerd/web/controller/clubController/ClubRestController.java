@@ -105,11 +105,12 @@ public class ClubRestController {
             Integer page,
 
             @RequestParam(defaultValue = "popular")
-            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순)", example = "popular", required = false)
+            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순, 기본은 인기순입니다.)",
+                    example = "popular", required = false)
             String sort,
 
-            @RequestParam(name = "categoryID")
-            @Parameter(description = "카테고리 ID (필터링에 사용)", example = "5", required = true)
+            @RequestParam(name = "categoryID", required = false) //
+            @Parameter(description = "카테고리 ID (필터링에 사용, null이면 전체 조회)", example = "5", required = false)
             Long categoryID
     ){
         // 1. JWT 토큰 추출

@@ -57,6 +57,7 @@ public class ClubConverter {
                 .orElse(null); // 없으면 null 반환
 
         return new ClubDTO(
+                club.getId(),
                 profileImage,
                 club.getName(),
                 club.getIntro()
