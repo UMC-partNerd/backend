@@ -3,7 +3,6 @@ package com.partnerd.web.dto.projectDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class ProjectCommentResponseDTO {
@@ -16,7 +15,7 @@ public class ProjectCommentResponseDTO {
     public static class AddProjectCommentResultDTO {
         private Long projectCommentId;     // 프로젝트 댓글 id
         private String nickname;    // 작성자 닉네임
-        private String profile_url; // 프로필 사진
+        private String profileKeyName; // 프로필 사진
         private String contents;    // 내용
     }
     
@@ -29,7 +28,7 @@ public class ProjectCommentResponseDTO {
         private Long projectCommentId;    // 댓글 ID
         private Boolean isDeleted;      // 삭제됨 여부
         private String nickname;          // 작성자 닉네임
-        private String profile_url;       // 프로필 사진
+        private String profileKeyName;       // 프로필 사진
         private String contents;          // 내용
         private int likes;                // 좋아요 수
         private LocalDateTime createdAt; // 작성일

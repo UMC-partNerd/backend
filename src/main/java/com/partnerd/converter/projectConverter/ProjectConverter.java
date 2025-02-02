@@ -14,7 +14,6 @@ import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ProjectConverter {
                 .map(member -> MemberResponseDTO.MemberForProjectFindDTO.builder()
                         .id(member.getId())
                         .nickname(member.getNickname())
-                        .profileImg(null) // 이미지 리팩 예정
+                        .profileKeyName(member.getProfile_url())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -162,7 +161,7 @@ public class ProjectConverter {
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(project.getMember().getId())
                         .nickname(project.getMember().getNickname())
-                        .profileImg(null)  // 임시 이미지 (추후 리팩)
+                        .profileKeyName(project.getMember().getProfile_url())
                         .occupation_of_interest(project.getMember().getOccupation_of_interest())
                         .belong_to_club(project.getMember().getBelong_to_club())
                         .build())

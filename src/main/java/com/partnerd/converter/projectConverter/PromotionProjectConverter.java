@@ -11,7 +11,6 @@ import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,7 +113,7 @@ public class PromotionProjectConverter {
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(promotionProject.getMember().getId())
                         .nickname(promotionProject.getMember().getNickname())
-                        .profileImg(null)  // 임시 이미지 (추후 리팩)
+                        .profileKeyName(promotionProject.getMember().getProfile_url())
                         .occupation_of_interest(promotionProject.getMember().getOccupation_of_interest())
                         .belong_to_club(promotionProject.getMember().getBelong_to_club())
                         .build())
