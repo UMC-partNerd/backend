@@ -23,4 +23,9 @@ public class ContactMethodDTO {
     public static ContactMethodDTO toContactMethodDTO(ContactMethod contactMethod) {
         return new ContactMethodDTO(contactMethod);
     }
+
+    public ContactMethodDTO(String contactType, String contactUrl) {
+        this.contactType = contactType;
+        this.contactUrl = contactUrl;
+    }
 }

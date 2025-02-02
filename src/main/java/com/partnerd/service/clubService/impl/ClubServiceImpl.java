@@ -6,7 +6,6 @@ import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
 import com.partnerd.converter.clubConverter.ClubConverter;
 import com.partnerd.domain.*;
-import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
@@ -19,17 +18,10 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -200,6 +192,12 @@ public class ClubServiceImpl implements ClubService {
 
         return clubRepository.findClubsByFilters(page, sort, categoryID);
 
+    }
+
+    // 파트너드 상세조회 (팀페이지)
+    @Override
+    public ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId) {
+        return clubRepository.findClubDetails(clubId, memberId);
     }
 
     // 파트너드 목록 조회(마이페이지)

@@ -123,6 +123,32 @@ public class ClubRestController {
         return ApiResponse.of(SuccessStatus._OK,clubs);
     }
 
+    @GetMapping("/{clubId}")
+    @Operation(summary = "동아리 상세 조회 API", description = "특정 동아리의 상세 정보를 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 동아리입니다.")
+    })
+    @Parameters({
+            @Parameter(name = "clubId", description = "조회할 동아리의 ID, path variable 입니다!")
+    })
+    public ApiResponse<ClubDetailResponseDTO> getClubDetails(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long clubId) {
+
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        ClubDetailResponseDTO response = clubService.findClubDetails(clubId, memberId);
+
+        return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
+
 
     // 파트너드 목록 조회(마이페이지)
     @GetMapping("/myPartnerdPosts")
