@@ -3,6 +3,7 @@ package com.partnerd.service.clubMemberService;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
+import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepositoryCustom;
@@ -54,4 +55,40 @@ public class ClubMemberServiceImpl implements ClubMemberService {
 
         return newLeader;
     }
+
+    // 파트너드(동아리) 멤버 비활성화
+    @Override
+    @Transactional
+    public ClubMember putChangeMemberActvice(Long clubId, Long memberId, Long leaderId){
+        // clubId에 해당하는 클럽이 있는지 확인
+        clubRepository.findById(clubId).orElseThrow(() -> {
+            throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
+        });
+
+        // leaderId의 소유자가 클럽 멤버인지 확인
+        ClubMember oldLeader = clubMemberRepositoryCustom.findByClubIdAndMemberId(clubId, leaderId).orElseThrow(() -> {
+            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND);
+        });
+
+        // leaderId의 소유자가 클럽의 리더가 아닐 경우 동아리 멤버 활동 상태 변경 권한 제한
+        if (!oldLeader.getRole().equals(ClubMemberRole.LEADER)) {
+            throw new ClubMemberHandler(ErrorStatus.CLUB_NOT_AUTHORIZED);
+        }
+
+        // memberId의 소유자가 클럽 멤버인지 확인
+        ClubMember clubMember = clubMemberRepositoryCustom.findByClubIdAndMemberId(clubId, memberId).orElseThrow(() -> {
+            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND);
+        });
+
+        // 멤버의 활동 상태가 비활성화인지 확인
+        if(clubMember.getStatus().equals(ActiveType.INACTIVE)){
+            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_ALREADY_INACTIVE);
+        }
+
+        // 비활성화 처리
+        clubMember.setStatus(ActiveType.INACTIVE);
+
+        return clubMember;
+    }
+
 }
