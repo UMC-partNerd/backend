@@ -31,7 +31,7 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("https://api.partnerd.site"))
+                .addServersItem(new Server().url("/"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
