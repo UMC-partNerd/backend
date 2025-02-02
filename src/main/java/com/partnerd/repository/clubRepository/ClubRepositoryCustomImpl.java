@@ -87,7 +87,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
         QClubActivityImage clubActivityImage = QClubActivityImage.clubActivityImage;
         QCollabPost collabPost = QCollabPost.collabPost;
 
-        // 🔥 1. 클럽 기본 정보 + 리더 여부 조회
+        // 1. 클럽 기본 정보 + 리더 여부 조회
         Tuple result = queryFactory
                 .select(
                         club.id,
@@ -113,7 +113,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
         String intro = result.get(club.intro);
         boolean isLeader = result.get(clubMember.role) == ClubMemberRole.LEADER || result.get(clubMember.role) == ClubMemberRole.OFFICER;
 
-        // 🔥 2. 프로필 이미지 & 배너 이미지 조회
+        // 2. 프로필 이미지 & 배너 이미지 조회
         String profileImage = queryFactory
                 .select(clubImage.keyName)
                 .from(clubImage)
@@ -130,7 +130,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .orderBy(clubImage.createdAt.desc()) // 최신 이미지 선택
                 .fetchOne();
 
-        // 🔥 3. 연락 방법 조회
+        // 3. 연락 방법 조회
         List<ContactMethodDTO> contactMethods = queryFactory
                 .select(Projections.constructor(ContactMethodDTO.class,
                         contactMethod.contactType,
@@ -139,7 +139,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .where(contactMethod.club.id.eq(clubId))
                 .fetch();
 
-        // 🔥 4. 활동 정보 조회
+        // 4. 활동 정보 조회
         String activityIntro = queryFactory
                 .select(clubActivity.intro)
                 .from(clubActivity)
@@ -155,7 +155,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
 
         ClubActivityDTO activityDTO = new ClubActivityDTO(activityIntro, activityImageKeyNames);
 
-        // 🔥 5. 멤버 리스트 조회 (최대 5명)
+        // 5. 멤버 리스트 조회 (최대 5명)
         List<ClubDetailMemberDTO> leaderMembers = queryFactory
                 .select(Projections.constructor(ClubDetailMemberDTO.class,
                         member.name,
@@ -182,7 +182,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .limit(5)
                 .fetch();
 
-        // 🔥 6. 콜라보 리스트 조회 (최대 5개, 최신순 정렬)
+        // 6. 콜라보 리스트 조회 (최대 5개, 최신순 정렬)
         List<ClubDetailCollabDTO> collabPosts = queryFactory
                 .select(Projections.constructor(ClubDetailCollabDTO.class,
                         collabPost.title,
@@ -195,7 +195,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .limit(5)
                 .fetch();
 
-        // 🔥 7. DTO 변환 후 반환
+        // 7. DTO 변환 후 반환
         return new ClubDetailResponseDTO(
                 clubIdResult,
                 clubName,
@@ -210,6 +210,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 collabPosts,
                 isLeader
         );
+
     }
 
 
