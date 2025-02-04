@@ -106,7 +106,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST, "CLUBMEMBER4007", "이미 비활성화된 클럽 멤버입니다."),
 
     // 동아리 가입 요청 관련
-    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리 리더만 가입 요청을 승인/거절할 수 있습니다."),
+    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리의 리더가 아닙니다."),
     CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
     CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다."),
     CLUB_MEMBERSHIP_ALREADY_APPROVED(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4004", "이미 가입한 동아리입니다."),

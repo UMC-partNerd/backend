@@ -56,4 +56,29 @@ public class ClubResponseDTO {
         private String status;      // 가입 요청 상태
         private LocalDateTime createdAt;   // 가입 요청 날짜
     }
+
+    // 파트너드(동아리) 가입 요청 목록 조회(한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClubJoinRequestDTO {
+        private Long memberId;      // 동아리 가입 요청한 사용자 ID
+        private Long requestId;     // 요청 ID
+        private String status;      // 가입 요청 상태
+        private String profileKeyName; // 사용자 프로필 키네임
+        private String nickname; // 사용자 닉네임
+        private String occupationOfInterest;  // 관심직군
+        private String belongToClub;    // 소속
+    }
+
+    // 파트너드(동아리) 가입 요청 목록 조회
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClubJoinRequestListDTO {
+        private Long clubId;        // 가입 요청된 동아리 ID
+        private List<ClubJoinRequestDTO> clubJoinRequestDTOList;
+    }
 }
