@@ -196,4 +196,11 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     public List<PromotionProject> getMyPromotionProjects(Long memberId) {
         return promotionProjectRepository.findPromotionProjectsByMemberId(memberId);
     }
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PromotionProject> getPersonalPromotionProjectList(Integer page, Long memberId){
+        return promotionProjectRepository.getPersonalPromotionProjectList(page, memberId);
+    }
 }

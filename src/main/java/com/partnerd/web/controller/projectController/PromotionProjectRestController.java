@@ -194,4 +194,26 @@ public class PromotionProjectRestController {
 
         return ApiResponse.onSuccess(PromotionProjectConverter.toMyPromotionProjectsDTO(memberId, promotionProjects));
     }
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    @GetMapping("/promotion/personal")
+    @Operation(summary = "퍼스널페이지 내가 쓴 프로젝트 홍보글 모아보기 API",description = "퍼스널페이지에서 내가 쓴 프로젝트 홍보글을 모아보는 API입니다. page는 1부터 시작합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true)
+    })
+    public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPersonalPromotionProjectList(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                                                   @RequestParam(name = "page") Integer page){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        Page<PromotionProject> promotionProjectPage = promotionProjectService.getPersonalPromotionProjectList(page - 1, memberId);
+        return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
+    }
 }
