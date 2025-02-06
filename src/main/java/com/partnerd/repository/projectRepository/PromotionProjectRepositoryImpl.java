@@ -121,8 +121,7 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
     public List<PromotionProject> findPromotionProjectsByMemberId(Long memberId){
         return queryFactory
                 .selectFrom(qPromotionProject)
-                .leftJoin(qPromotionProject.promotionProjectMemberList, qPromotionProjectMember).fetchJoin()
-                .where(qPromotionProjectMember.member.id.eq(memberId))
+                .where(qPromotionProject.member.id.eq(memberId))
                 .distinct()
                 .fetch();
     }
