@@ -31,4 +31,7 @@ public interface PromotionProjectService {
 
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     List<PromotionProject> getMyPromotionProjects(Long memberId);
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    Page<PromotionProject> getPersonalPromotionProjectList(Integer page, Long memberId);
 }

@@ -27,4 +27,7 @@ public interface PromotionProjectRepositoryCustiom {
 
     // 홈화면 - 최신 프로젝트 홍보글 조회
     List<HomePromotionProjectDTO> findTopPromotionProjects(Pageable pageable);
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    Page<PromotionProject> getPersonalPromotionProjectList(Integer page, Long memberId);
 }
