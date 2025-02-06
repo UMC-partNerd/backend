@@ -3,29 +3,37 @@ package com.partnerd.service.clubMemberService;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
+import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
+import com.partnerd.domain.Club;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepositoryCustom;
 import com.partnerd.repository.clubRepository.ClubRepository;
+import com.partnerd.repository.memberRepository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class ClubMemberServiceImpl implements ClubMemberService {
     private final ClubMemberRepositoryCustom clubMemberRepositoryCustom;
+    private final ClubMemberRepository clubMemberRepository;
     private final ClubRepository clubRepository;
+    private final MemberRepository memberRepository;
 
     // 파트너드(동아리) 리더 권한 위임
     @Override
     @Transactional
     public ClubMember putChangeClubLeader(Long clubId, Long newLeaderId, Long leaderId){
         // clubId에 해당하는 클럽이 있는지 확인
-        clubRepository.findById(clubId).orElseThrow(() -> {
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> {
             throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
         });
 
@@ -45,9 +53,23 @@ public class ClubMemberServiceImpl implements ClubMemberService {
         }
 
         // newLeaderId의 소유자가 클럽 멤버인지 확인
-        ClubMember newLeader = clubMemberRepositoryCustom.findByClubIdAndMemberId(clubId, newLeaderId).orElseThrow(() -> {
-            throw new ClubMemberHandler(ErrorStatus.CLUB_MEMBER_NOT_FOUND);
-        });
+        ClubMember newLeader = clubMemberRepositoryCustom.findByClubIdAndMemberId(clubId, newLeaderId)
+                .orElseGet(() -> {
+                    // 존재하지 않으면 새로운 클럽 멤버 생성
+                    Member member = memberRepository.findById(newLeaderId).orElseThrow(() -> {
+                        throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+                    });
+
+                    ClubMember newClubMember = ClubMember.builder()
+                            .role(ClubMemberRole.LEADER)  // 바로 리더로 설정
+                            .joined_date(new Date())
+                            .status(ActiveType.ACTIVE)
+                            .club(club)
+                            .member(member)
+                            .build();
+
+                    return clubMemberRepository.save(newClubMember);
+                });
 
         // 리더 변경 처리
         oldLeader.setRole(ClubMemberRole.MEMBER);
