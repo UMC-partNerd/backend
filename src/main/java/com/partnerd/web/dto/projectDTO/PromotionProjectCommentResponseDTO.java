@@ -33,7 +33,7 @@ public class PromotionProjectCommentResponseDTO {
         private String nickname;          // 작성자 닉네임
         private String profileKeyName;       // 프로필 사진
         private String contents;          // 내용
-        private int likes;                // 좋아요 수
+        private Long likes;                // 좋아요 수
         private LocalDateTime createdAt; // 작성일
         private LocalDateTime updatedAt; // 수정일
         private List<GetPromotionProjectCommentListResultDTO> children; // 대댓글 리스트
