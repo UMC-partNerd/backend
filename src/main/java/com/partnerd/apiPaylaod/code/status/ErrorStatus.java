@@ -54,6 +54,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4004", "댓글달 댓글이 없습니다."),
     PROMOTION_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4005", "해당 프로젝트 홍보글의 작성자가 아닙니다."),
     PROMOTION_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4006", "해당 프로젝트 홍보글 댓글의 작성자가 아닙니다."),
+    PROMOTION_PROJECT_ALREADY_VOTE(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4007", "이미 해당 프로젝트 홍보글에 투표를 진행했습니다."),
 
 
     // 프로젝트 모집 관련

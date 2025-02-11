@@ -176,6 +176,31 @@ public class PromotionProjectRestController {
     }
 
 
+    // 프로젝트 홍보 투표하기
+    @PatchMapping("/promotion/{promotionProjectId}/votes")
+    @Operation(summary = "프로젝트 홍보글 투표하기 API",description = "프로젝트 홍보글의 투표 개수 증가하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<Void> getProjectCommentVote(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
+                                                    @PathVariable(name = "promotionProjectId") Long promotionProjectId){
+
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        promotionProjectService.projectVotes(memberId, promotionProjectId);
+        return ApiResponse.onSuccess(null);
+    }
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     @GetMapping("/promotion/mypage")
     @Operation(summary = "마이페이지 내가 쓴 프로젝트 홍보글 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 프로젝트 홍보글 목록을 조회하는 API입니다.")

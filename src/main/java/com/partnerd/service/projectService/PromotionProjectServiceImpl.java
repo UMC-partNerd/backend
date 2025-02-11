@@ -6,7 +6,9 @@ import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.*;
 import com.partnerd.domain.enums.ImageType;
+import com.partnerd.domain.mapping.ProjectVote;
 import com.partnerd.domain.mapping.PromotionProjectMember;
+import com.partnerd.repository.projectRepository.ProjectVoteRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
@@ -27,6 +29,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final PromotionProjectRepository promotionProjectRepository;
     private final PromotionProjectMemberRepository promotionProjectMemberRepository;
     private final MemberRepository memberRepository;
+    private final ProjectVoteRepository projectVoteRepository;
 
     // 프로젝트 홍보글 생성
     @Override
@@ -188,6 +191,29 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
             throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
         }
         return promotionProject;
+    }
+
+    // 프로젝트 홍보 투표하기
+    @Override
+    public void projectVotes(Long memberId, Long promotionProjectId){
+
+        boolean exists = projectVoteRepository.existsByMemberIdAndPromotionProjectId(memberId, promotionProjectId);
+
+        PromotionProject promotionProject = promotionProjectRepository.findById(promotionProjectId)
+                .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_COMMENT_NOT_FOUND));
+        if (exists) {
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ALREADY_VOTE);
+        } else {
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+            ProjectVote projectVote = ProjectVote.builder()
+                    .member(member)
+                    .promotionProject(promotionProject)
+                    .build();
+            projectVoteRepository.save(projectVote);
+            promotionProject.setVote(promotionProject.getVote() + 1);
+        }
+        promotionProjectRepository.save(promotionProject);
     }
 
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
