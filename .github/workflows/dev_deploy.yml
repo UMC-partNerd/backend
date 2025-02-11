@@ -63,9 +63,7 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             docker pull \$DOCKER_USERNAME/partnerd-backend:latest
-            cd /home/ubuntu/docker
-            docker-compose down
-            docker-compose up -d
+            docker stack deploy -c /home/ubuntu/docker/docker-compose.yml partnerd-stack
           "
           
           rm -f private_key.pem  # 보안 유지
