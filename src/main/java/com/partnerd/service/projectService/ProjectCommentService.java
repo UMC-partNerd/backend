@@ -22,4 +22,7 @@ public interface ProjectCommentService {
 
     // 프로젝트 모집 댓글 전체 조회
     List<ProjectCommentResponseDTO.GetProjectCommentListResultDTO> getProjectCommentList(Long projectId);
+
+    // 프로젝트 모집 댓글 좋아요
+    void projectLikes(Long memberId, Long commentId);
 }

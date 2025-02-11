@@ -37,7 +37,7 @@ public class PromotionProjectCommentRestController {
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addPromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addPromotionProjectComment(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                  @PathVariable(name = "promotionProjectId") Long promotionProjectId,
                                                                                                                  @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
         // 토큰 에러 처리
@@ -62,7 +62,7 @@ public class PromotionProjectCommentRestController {
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildPromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> addChildPromotionProjectComment(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                       @PathVariable(name = "promotionProjectId") Long promotionProjectId,
                                                                                                                       @PathVariable(name = "parentId") Long parentId,
                                                                                                                       @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
@@ -88,7 +88,7 @@ public class PromotionProjectCommentRestController {
     @Parameters({
             @Parameter(name = "commentId", description = "프로젝트 홍보글의 댓글 ID, path variable 입니다!")
     })
-    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> updatePromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<PromotionProjectCommentResponseDTO.AddPromotionProjectCommentResultDTO> updatePromotionProjectComment(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                     @PathVariable(name = "commentId") Long commentId,
                                                                                                                     @RequestBody @Valid PromotionProjectCommentRequestDTO.AddPromotionProjectCommentDTO request){
         // 토큰 에러 처리
@@ -113,7 +113,7 @@ public class PromotionProjectCommentRestController {
     @Parameters({
             @Parameter(name = "commentId", description = "프로젝트 홍보글의 댓글 ID, path variable 입니다!")
     })
-    public ApiResponse<Void> deletePromotionProjectComment(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+    public ApiResponse<Void> deletePromotionProjectComment(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
                                                                                                                              @PathVariable(name = "commentId") Long commentId){
         // 토큰 에러 처리
         if (authorizationHeader == null || authorizationHeader.isEmpty())
@@ -138,5 +138,30 @@ public class PromotionProjectCommentRestController {
 
         List<PromotionProjectCommentResponseDTO.GetPromotionProjectCommentListResultDTO> promotionProjectCommentList = promotionProjectCommentService.getPromotionProjectCommentList(promotionProjectId);
         return ApiResponse.onSuccess(promotionProjectCommentList);
+    }
+
+    // 프로젝트 홍보 댓글 좋아요
+    @PatchMapping("/promotion/comment/{commentId}/likes")
+    @Operation(summary = "프로젝트 홍보글 댓글/대댓글 좋아요/좋아요 취소 API",description = "프로젝트 홍보글의 댓글/대댓글 좋아요 개수 증가/감소하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "commentId", description = "프로젝트 홍보글 댓글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<Void> getProjectCommentLikes(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
+                                                    @PathVariable(name = "commentId") Long commentId){
+
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        promotionProjectCommentService.projectLikes(memberId, commentId);
+        return ApiResponse.onSuccess(null);
     }
 }

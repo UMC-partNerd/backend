@@ -3,6 +3,9 @@ package com.partnerd.domain;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ProjectComment extends BaseEntity {
@@ -26,7 +31,7 @@ public class ProjectComment extends BaseEntity {
 
     // 좋아요 수
     @Column(nullable = false)
-    private int likes = 0;
+    private Long likes = 0L;
 
     // 삭제 여부
     @Column(nullable = false)
