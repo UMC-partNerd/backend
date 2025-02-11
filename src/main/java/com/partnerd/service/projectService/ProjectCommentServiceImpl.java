@@ -5,8 +5,10 @@ import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.converter.projectConverter.ProjectCommentConverter;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.ProjectComment;
+import com.partnerd.domain.mapping.ProjectLikes;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.ProjectCommentRepository;
+import com.partnerd.repository.projectRepository.ProjectLikesRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
 import com.partnerd.web.dto.projectDTO.ProjectCommentRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
@@ -23,6 +25,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
     private final ProjectRepository projectRepository;
     private final ProjectCommentRepository projectCommentRepository;
     private final MemberRepository memberRepository;
+    private final ProjectLikesRepository projectLikesRepository;
 
     // 모집 프로젝트 댓글 작성
     @Override
@@ -38,6 +41,8 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         projectComment.setMember(memberRepository.findById(memberId)
                 .orElseThrow(() ->
                         new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)));
+
+        projectComment.setLikes(0L);
 
         return projectCommentRepository.save(projectComment);
     }
@@ -66,6 +71,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
             throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND);
         }
 
+        projectComment.setLikes(0L);
         return projectCommentRepository.save(projectComment);
     }
 
@@ -132,5 +138,34 @@ public class ProjectCommentServiceImpl implements ProjectCommentService {
         return projectCommentList.stream()
                 .map(ProjectCommentConverter::toGetProjectCommentListResultDTO)
                 .toList();
+    }
+
+    // 프로젝트 모집 댓글 좋아요
+    @Override
+    public void projectLikes(Long memberId, Long commentId){
+        boolean exists = projectLikesRepository.existsByMemberIdAndProjectCommentId(memberId, commentId);
+        ProjectComment comment = projectCommentRepository.findById(commentId)
+                .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_COMMENT_NOT_FOUND));
+
+
+        if (exists) {
+            // 좋아요 취소
+            projectLikesRepository.deleteByMemberIdAndProjectCommentId(memberId, commentId);
+            comment.setLikes(comment.getLikes() - 1);
+        } else {
+            // 좋아요 추가
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+            ProjectLikes projectLikes = ProjectLikes.builder()
+                    .member(member)
+                    .projectComment(comment)
+                    .build();
+
+            projectLikesRepository.save(projectLikes);
+            comment.setLikes(comment.getLikes() + 1);
+        }
+
+        projectCommentRepository.save(comment);
     }
 }
