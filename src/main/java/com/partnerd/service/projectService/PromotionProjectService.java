@@ -29,6 +29,9 @@ public interface PromotionProjectService {
     // 프로젝트 홍보글 상세페이지 조회
     PromotionProject getPromotionProject(Long promotionProjectId);
 
+    // 프로젝트 홍보 투표하기
+    void projectVotes(Long memberId, Long promotionProjectId);
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     List<PromotionProject> getMyPromotionProjects(Long memberId);
 
