@@ -2,6 +2,7 @@ package com.partnerd.service.clubService;
 
 import com.partnerd.domain.Club;
 import com.partnerd.web.dto.clubDTO.*;
+import com.partnerd.web.dto.memberDTO.MemberNickNameSearchDTO;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface ClubService {
 
     // 파트너드 상세조회 (팀페이지)
     ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId);
+
+    //멤버닉네임조회 (파트너드 등록시 필요)
+    List<MemberNickNameSearchDTO> searchMembersByNickname(String nickname);
 
     // 파트너드 목록 조회(마이페이지)
     List<Club> getClubsByRole(Long memberId);
