@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface ProjectRepositoryCustiom {
+public interface ProjectRepositoryCustom {
 
     // 프로젝트 팀원 검색
     List<Member> getMemberForProject(ProjectRequestDTO.FindProjectMemberDTO request);

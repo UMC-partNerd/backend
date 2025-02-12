@@ -23,7 +23,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class PromotionProjectRepositoryImpl implements PromotionProjectRepositoryCustiom{
+public class PromotionProjectRepositoryImpl implements PromotionProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
     private final QPromotionProject qPromotionProject = QPromotionProject.promotionProject;

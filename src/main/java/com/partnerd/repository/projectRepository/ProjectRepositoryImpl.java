@@ -27,7 +27,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
+public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
     private final QProject qProject = QProject.project;

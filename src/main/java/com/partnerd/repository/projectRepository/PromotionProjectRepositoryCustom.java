@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface PromotionProjectRepositoryCustiom {
+public interface PromotionProjectRepositoryCustom {
 
     // 프로젝트 홍보글 상세페이지 조회
     PromotionProject findPromotionProjectDetails(Long promotionProjectId);
