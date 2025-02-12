@@ -90,7 +90,8 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
                 .leftJoin(qReceiver).on(qReceiver.chatRoom.id.eq(qChatRoom.id)
                         .and(qReceiver.member.id.ne(memberId))) // 상대방 회원정보
                 .where(qMyself.member.id.eq(memberId)
-                        .and(qChatRoomMember.chatRoom.chatRoomType.eq(type)));
+                        .and(qChatRoom.chatRoomType.eq(type)));
+
 
         // 커서 페이징 적용
         if (cursorId != null) {
