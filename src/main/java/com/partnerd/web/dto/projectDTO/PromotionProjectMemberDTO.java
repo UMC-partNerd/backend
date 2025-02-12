@@ -8,17 +8,20 @@ import lombok.Setter;
 @Setter
 public class PromotionProjectMemberDTO {
     private Long id;
-    private String name;
+    private String nickname;
+    private String profileKeyName;
 
-    public PromotionProjectMemberDTO(Long id, String name) {
+    public PromotionProjectMemberDTO(Long id, String nickname, String profileKeyName) {
         this.id = id;
-        this.name = name;
+        this.nickname = nickname;
+        this.profileKeyName = profileKeyName;
     }
 
     public static PromotionProjectMemberDTO toPromotionProjectMemberDTO(PromotionProjectMember promotionProjectMember) {
         return new PromotionProjectMemberDTO(
                 promotionProjectMember.getMember().getId(),
-                promotionProjectMember.getMember().getName()
+                promotionProjectMember.getMember().getNickname(),
+                promotionProjectMember.getMember().getProfile_url()
         );
     }
 

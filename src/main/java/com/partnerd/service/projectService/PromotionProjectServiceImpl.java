@@ -5,12 +5,14 @@ import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
 import com.partnerd.converter.projectConverter.PromotionProjectMemberConverter;
 import com.partnerd.converter.projectConverter.PromotionProjectConverter;
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ImageType;
+import com.partnerd.domain.mapping.ProjectVote;
 import com.partnerd.domain.mapping.PromotionProjectMember;
+import com.partnerd.repository.projectRepository.ProjectVoteRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
     private final PromotionProjectRepository promotionProjectRepository;
     private final PromotionProjectMemberRepository promotionProjectMemberRepository;
     private final MemberRepository memberRepository;
+    private final ProjectVoteRepository projectVoteRepository;
 
     // 프로젝트 홍보글 생성
     @Override
@@ -46,6 +49,22 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         Set<PromotionProjectMember> promotionProjectMemberList = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
 
         promotionProjectMemberList.forEach(promotionProjectMember -> {promotionProjectMember.setPromotionProject(newPromotionProject);});
+
+        // 대표 이미지 저장
+        PromotionProjectImage thumbnailImg = PromotionProjectImage.builder()
+                .keyName(request.getThumbnailKeyName())
+                .imageType(ImageType.THUMBNAIL)
+                .build();
+        thumbnailImg.setPromotionProject(newPromotionProject);
+
+        // 프로젝트 이미지 등록
+        request.getProjectImgKeyNameList().forEach(keyName -> {
+            PromotionProjectImage promotionProjectImage = PromotionProjectImage.builder()
+                    .keyName(keyName)
+                    .imageType(ImageType.INTRO)
+                    .build();
+            promotionProjectImage.setPromotionProject(newPromotionProject);
+        });
 
         // 컨택트 방식
         if (request.getContactMethod() != null) {
@@ -93,6 +112,24 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         newMembers.forEach(promotionProjectMember -> {promotionProjectMember.setPromotionProject(existingPromotionProject);});
 
         existingPromotionProject.setPromotionProjectMemberList(newMembers);
+
+        existingPromotionProject.getPromotionProjectImageList().clear();
+
+        // 대표 이미지 저장
+        PromotionProjectImage thumbnailImg = PromotionProjectImage.builder()
+                .keyName(request.getThumbnailKeyName())
+                .imageType(ImageType.THUMBNAIL)
+                .build();
+        thumbnailImg.setPromotionProject(existingPromotionProject);
+
+        // 프로젝트 이미지 등록
+        request.getProjectImgKeyNameList().forEach(keyName -> {
+            PromotionProjectImage promotionProjectImage = PromotionProjectImage.builder()
+                    .keyName(keyName)
+                    .imageType(ImageType.INTRO)
+                    .build();
+            promotionProjectImage.setPromotionProject(existingPromotionProject);
+        });
 
         // 컨텍트 방식
         if (request.getContactMethod() != null) {
@@ -156,10 +193,40 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
         return promotionProject;
     }
 
+    // 프로젝트 홍보 투표하기
+    @Override
+    public void projectVotes(Long memberId, Long promotionProjectId){
+
+        boolean exists = projectVoteRepository.existsByMemberIdAndPromotionProjectId(memberId, promotionProjectId);
+
+        PromotionProject promotionProject = promotionProjectRepository.findById(promotionProjectId)
+                .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_COMMENT_NOT_FOUND));
+        if (exists) {
+            throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ALREADY_VOTE);
+        } else {
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND));
+            ProjectVote projectVote = ProjectVote.builder()
+                    .member(member)
+                    .promotionProject(promotionProject)
+                    .build();
+            projectVoteRepository.save(projectVote);
+            promotionProject.setVote(promotionProject.getVote() + 1);
+        }
+        promotionProjectRepository.save(promotionProject);
+    }
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     @Override
     @Transactional(readOnly=true)
     public List<PromotionProject> getMyPromotionProjects(Long memberId) {
         return promotionProjectRepository.findPromotionProjectsByMemberId(memberId);
+    }
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PromotionProject> getPersonalPromotionProjectList(Integer page, Long memberId){
+        return promotionProjectRepository.getPersonalPromotionProjectList(page, memberId);
     }
 }

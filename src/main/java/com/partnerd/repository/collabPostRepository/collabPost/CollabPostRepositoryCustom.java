@@ -2,6 +2,7 @@ package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.CollabPost;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
+import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,7 @@ public interface CollabPostRepositoryCustom {
 
     // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
     List<CollabPost> findCollabPostsByMemberId(Long memberId);
+
+    //홈화면 - 최신 콜라보레이션 4개반환
+    List<HomeCollabPostDTO> findTopCollabPosts(Pageable pageable);
 }

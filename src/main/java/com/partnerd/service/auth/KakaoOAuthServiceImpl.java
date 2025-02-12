@@ -11,6 +11,7 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.token.TokenService;
 import com.partnerd.web.dto.authDTO.LoginResponseDTO;
 import com.partnerd.web.dto.oauthDTO.KakaoResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 
 import java.util.Map;
 
@@ -44,12 +48,15 @@ public class KakaoOAuthServiceImpl implements OAuthService {
     private String userInfoUri;
 
     @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
-    private String redirectUri;
+    private String defaultRedirectUri; // 환경변수에서 기본 redirect-uri 사용
 
     @Override
     public LoginResponseDTO login(String code) {
+        // 요청의 Origin 헤더를 기반으로 동적 Redirect URI 설정
+        String dynamicRedirectUri = getDynamicRedirectUri();
+
         // 카카오 서버에서 Access Token 및 Refresh Token 가져오기
-        Map<String, String> tokens = getTokens(code);
+        Map<String, String> tokens = getTokens(code, dynamicRedirectUri);
         String accessToken = tokens.get("access_token");
         String refreshToken = tokens.get("refresh_token");
 
@@ -60,9 +67,15 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         String socialId = String.valueOf(kakaoResponse.getId());
         String email = kakaoResponse.getKakaoAccount().getEmail();
 
-        // 소셜 ID로 사용자 조회 또는 생성
-        Member member = memberRepository.findBySocialId(socialId)
-                .orElseGet(() -> createNewMember(socialId, email));
+        // 소셜 ID로 기존 사용자 조회
+        Member member = memberRepository.findBySocialId(socialId).orElse(null);
+        boolean isNewUser = false; // 기본값: 기존 회원
+
+        if (member == null) {
+            // 신규 회원 생성
+            member = createNewMember(socialId, email);
+            isNewUser = true; // 신규 가입자로 설정
+        }
 
         // Refresh Token을 Redis에 저장
         tokenService.saveRefreshToken(refreshToken, member.getId());
@@ -70,15 +83,16 @@ public class KakaoOAuthServiceImpl implements OAuthService {
         // JWT 토큰 생성
         String jwtToken = jwtTokenProvider.createToken(member.getId(), member.getNickname());
 
-        // 응답 DTO 생성
+        // 로그인 응답 반환
         return LoginResponseDTO.builder()
                 .jwtToken(jwtToken)
                 .id(member.getId())
                 .email(member.getEmail())
+                .isNewUser(isNewUser) // 신규 가입 여부 추가
                 .build();
     }
 
-    private Map<String, String> getTokens(String code) {
+    private Map<String, String> getTokens(String code, String redirectUri) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -127,5 +141,18 @@ public class KakaoOAuthServiceImpl implements OAuthService {
                 .email(email)
                 .agreement(agreements)
                 .build());
+    }
+
+    private String getDynamicRedirectUri() {
+        // 현재 요청의 Origin을 가져옴
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return defaultRedirectUri; // 요청이 없을 경우 기본 Redirect URI 사용
+        }
+        HttpServletRequest request = attributes.getRequest();
+        String origin = request.getHeader("Origin");
+
+        // Origin이 존재하면 동적 Redirect URI 생성, 없으면 기본값 사용
+        return (origin != null) ? origin + "/oauth/kakao/callback" : defaultRedirectUri;
     }
 }

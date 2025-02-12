@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
         Member existingMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MYPAGE_PROFILE_NOT_FOUND));
 
-        existingMember.setProfile_url(request.getProfile_url());
+        existingMember.setProfile_url(request.getProfileKeyName());
         existingMember.setName(request.getName());
         existingMember.setNickname(request.getNickname());
         existingMember.setBirth(request.getBirth());

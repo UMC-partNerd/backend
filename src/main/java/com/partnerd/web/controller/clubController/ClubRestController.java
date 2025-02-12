@@ -33,7 +33,7 @@ public class ClubRestController {
     })
     public ApiResponse<ClubRegisterResponseDTO> registerClub(
             @RequestHeader("Authorization") String authorizationHeader,
-            @ModelAttribute ClubRegisterRequestDTO requestDTO) {
+            @RequestBody ClubRegisterRequestDTO requestDTO) {
 
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
@@ -42,7 +42,7 @@ public class ClubRestController {
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         // 3. 서비스 호출
-        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO);
+        ClubRegisterResponseDTO response = clubService.registerClub(requestDTO,memberId);
         return ApiResponse.of(SuccessStatus._OK, response);
     }
 
@@ -79,7 +79,7 @@ public class ClubRestController {
     public ApiResponse<ClubUpdateResponseDTO> updateClub(
             @RequestHeader("Authorization") String authorizationHeader,
             @PathVariable Long clubId,
-            @ModelAttribute ClubUpdateRequestDTO requestDTO) {
+            @RequestBody ClubUpdateRequestDTO requestDTO) {
         // 1. JWT 토큰 추출
         String token = authorizationHeader.replace("Bearer ", "");
 
@@ -105,11 +105,12 @@ public class ClubRestController {
             Integer page,
 
             @RequestParam(defaultValue = "popular")
-            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순)", example = "popular", required = false)
+            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순, 기본은 인기순입니다.)",
+                    example = "popular", required = false)
             String sort,
 
-            @RequestParam(name = "categoryID")
-            @Parameter(description = "카테고리 ID (필터링에 사용)", example = "5", required = true)
+            @RequestParam(name = "categoryID", required = false) //
+            @Parameter(description = "카테고리 ID (필터링에 사용, null이면 전체 조회)", example = "5", required = false)
             Long categoryID
     ){
         // 1. JWT 토큰 추출
@@ -121,6 +122,32 @@ public class ClubRestController {
         List<ClubDTO> clubs = clubService.getClubs(page -1 ,sort,categoryID);
         return ApiResponse.of(SuccessStatus._OK,clubs);
     }
+
+    @GetMapping("/{clubId}")
+    @Operation(summary = "동아리 상세 조회 API", description = "특정 동아리의 상세 정보를 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 동아리입니다.")
+    })
+    @Parameters({
+            @Parameter(name = "clubId", description = "조회할 동아리의 ID, path variable 입니다!")
+    })
+    public ApiResponse<ClubDetailResponseDTO> getClubDetails(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long clubId) {
+
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        ClubDetailResponseDTO response = clubService.findClubDetails(clubId, memberId);
+
+        return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
 
 
     // 파트너드 목록 조회(마이페이지)

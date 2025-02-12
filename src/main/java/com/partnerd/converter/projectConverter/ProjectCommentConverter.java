@@ -20,7 +20,7 @@ public class ProjectCommentConverter {
                 .projectCommentId(projectComment.getId())
                 .contents(projectComment.getContents())
                 .nickname(projectComment.getMember().getNickname())
-                .profile_url(projectComment.getMember().getProfile_url())
+                .profileKeyName(projectComment.getMember().getProfile_url())
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class ProjectCommentConverter {
                 .projectCommentId(projectComment.getId())
                 .isDeleted(projectComment.getIsDeleted())
                 .nickname(projectComment.getMember().getNickname())
-                .profile_url(projectComment.getMember().getProfile_url())
+                .profileKeyName(projectComment.getMember().getProfile_url())
                 .contents(projectComment.getContents())
                 .likes(projectComment.getLikes())
                 .createdAt(projectComment.getCreatedAt())

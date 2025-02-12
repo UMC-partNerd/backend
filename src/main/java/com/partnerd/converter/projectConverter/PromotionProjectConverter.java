@@ -1,6 +1,8 @@
 package com.partnerd.converter.projectConverter;
 
 import com.partnerd.domain.PromotionProject;
+import com.partnerd.domain.PromotionProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectMemberDTO;
@@ -9,7 +11,6 @@ import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,10 +46,18 @@ public class PromotionProjectConverter {
 
     // 프로젝트 홍보글 모아보기 (한칸씩)
     public static PromotionProjectResponseDTO.PromotionProjectPreviewDTO promotionProjectPreviewDTO(PromotionProject promotionProject){
-         return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
+
+        String thumbnailKeyName = promotionProject.getPromotionProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(PromotionProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
+        return PromotionProjectResponseDTO.PromotionProjectPreviewDTO.builder()
                 .promotionProjectId(promotionProject.getId())
                 .title(promotionProject.getTitle())
                 .intro(promotionProject.getIntro())
+                .thumbnailKeyName(thumbnailKeyName)
                 .build();
     }
 
@@ -77,11 +86,24 @@ public class PromotionProjectConverter {
 
     // 프로젝트 홍보글 상세페이지 조회
     public static PromotionProjectResponseDTO.PromotionProjectDetailDTO toPromotionProjectDetailDTO(PromotionProject promotionProject) {
+
+        String thumbnailKeyName = promotionProject.getPromotionProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(PromotionProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+        List<String> projectImgKeyNameList = promotionProject.getPromotionProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.INTRO)
+                .map(PromotionProjectImage::getKeyName)
+                .collect(Collectors.toList());
+
         return PromotionProjectResponseDTO.PromotionProjectDetailDTO.builder()
                 .title(promotionProject.getTitle())
                 .intro(promotionProject.getIntro())
                 .description(promotionProject.getDescription())
                 .vote(promotionProject.getVote())
+                .thumbnailKeyName(thumbnailKeyName)
+                .projectImgKeyNameList(projectImgKeyNameList)
                 .contactMethods(promotionProject.getContactMethodList().stream()
                         .map(ContactMethodDTO::toContactMethodDTO)
                         .collect(Collectors.toSet()))
@@ -90,7 +112,8 @@ public class PromotionProjectConverter {
                         .collect(Collectors.toSet()))
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(promotionProject.getMember().getId())
-                        .name(promotionProject.getMember().getName())
+                        .nickname(promotionProject.getMember().getNickname())
+                        .profileKeyName(promotionProject.getMember().getProfile_url())
                         .occupation_of_interest(promotionProject.getMember().getOccupation_of_interest())
                         .belong_to_club(promotionProject.getMember().getBelong_to_club())
                         .build())

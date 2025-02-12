@@ -61,7 +61,7 @@ public class PromotionProject extends BaseEntity {
     private Set<PromotionProjectMember> promotionProjectMemberList = new HashSet<>();
 
     // 홍보 프로젝트 사진
-    @OneToMany(mappedBy = "promotionProject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "promotionProject", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PromotionProjectImage> promotionProjectImageList = new HashSet<>();
 
     // 홍보 프로젝트 댓글

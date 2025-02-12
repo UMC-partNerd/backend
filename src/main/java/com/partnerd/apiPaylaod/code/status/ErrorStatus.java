@@ -47,15 +47,18 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     // 프로젝트 홍보 관련
+    PROMOTION_PROJECT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"PROMOTIONPROJECT4000","잘못된 요청입니다. 필수 항목을 모두 입력해주세요."),
     PROMOTION_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4001", "존재하지 않는 홍보 프로젝트id입니다."),
     PROMOTION_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4002", "프로젝트 홍보글이 없습니다."),
     PROMOTION_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4003", "존재하지 않는 댓글입니다."),
     PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4004", "댓글달 댓글이 없습니다."),
     PROMOTION_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4005", "해당 프로젝트 홍보글의 작성자가 아닙니다."),
     PROMOTION_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4006", "해당 프로젝트 홍보글 댓글의 작성자가 아닙니다."),
+    PROMOTION_PROJECT_ALREADY_VOTE(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4007", "이미 해당 프로젝트 홍보글에 투표를 진행했습니다."),
 
 
     // 프로젝트 모집 관련
+    RECRUIT_PROJECT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"RECRUITPROJECT4000","잘못된 요청입니다. 필수 항목을 모두 입력해주세요."),
     RECRUIT_PROJECT_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4001", "존재하지 않는 모집 프로젝트id입니다."),
     RECRUIT_PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4002", "프로젝트 모집글이 없습니다."),
     RECRUIT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4003", "존재하지 않는 댓글입니다."),
@@ -106,9 +109,10 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다."),
     CLUB_MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CLUBMEMBER4005", "이미 가입된 클럽 멤버입니다."),
     CANNOT_ASSIGN_ROLE_TO_SELF(HttpStatus.BAD_REQUEST, "CLUBMEMBER4006", "리더는 자기 자신에게 리더 권한을 위임할 수 없습니다."),
+    CLUB_MEMBER_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST, "CLUBMEMBER4007", "이미 비활성화된 클럽 멤버입니다."),
 
     // 동아리 가입 요청 관련
-    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리 리더만 가입 요청을 승인/거절할 수 있습니다."),
+    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리의 리더가 아닙니다."),
     CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
     CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다."),
     CLUB_MEMBERSHIP_ALREADY_APPROVED(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4004", "이미 가입한 동아리입니다."),

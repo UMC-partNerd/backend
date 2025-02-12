@@ -4,7 +4,11 @@ package com.partnerd.repository.projectRepository;
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.QContactMethod;
 import com.partnerd.domain.QPromotionProject;
+import com.partnerd.domain.QPromotionProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QPromotionProjectMember;
+import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -117,9 +121,45 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
     public List<PromotionProject> findPromotionProjectsByMemberId(Long memberId){
         return queryFactory
                 .selectFrom(qPromotionProject)
-                .leftJoin(qPromotionProject.promotionProjectMemberList, qPromotionProjectMember).fetchJoin()
-                .where(qPromotionProjectMember.member.id.eq(memberId))
+                .where(qPromotionProject.member.id.eq(memberId))
                 .distinct()
                 .fetch();
+    }
+
+    // 홈화면 - 최신 프로젝트 홍보글 조회
+    @Override
+    public List<HomePromotionProjectDTO> findTopPromotionProjects(Pageable pageable) {
+        QPromotionProject promotionProject = QPromotionProject.promotionProject;
+        QPromotionProjectImage promotionProjectImage = QPromotionProjectImage.promotionProjectImage;
+
+        return queryFactory
+                .select(Projections.constructor(HomePromotionProjectDTO.class,
+                        promotionProjectImage.keyName,
+                        promotionProject.title,
+                        promotionProject.intro))
+                .from(promotionProject)
+                .leftJoin(promotionProject.promotionProjectImageList, promotionProjectImage)
+                .on(promotionProjectImage.imageType.eq(ImageType.THUMBNAIL))
+                .orderBy(promotionProject.views.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    @Override
+    public Page<PromotionProject> getPersonalPromotionProjectList(Integer page, Long memberId){
+        Pageable pageable = PageRequest.of(page, 4); // 한 페이지당 4개씩 조회
+
+        JPQLQuery<PromotionProject> query = queryFactory.selectFrom(qPromotionProject)
+                .where(qPromotionProject.member.id.eq(memberId))
+                .orderBy(qPromotionProject.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<PromotionProject> content = query.fetch();
+
+        long total = query.fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
     }
 }

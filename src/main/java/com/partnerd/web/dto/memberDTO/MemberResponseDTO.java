@@ -16,7 +16,7 @@ public class MemberResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReadMemberResultDTO {
-        String profile_url;           // 프로필 사진
+        String profileKeyName;           // 프로필 사진 키네임
         String name;                 // 이름
         String nickname;             // 닉네임
         Date birth;                // 생년월일
@@ -43,18 +43,20 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class MemberForProjectDetailDTO {
         private Long id; // 사용자 ID
-        private String name; // 이름
+        private String nickname; // 닉네임
+        private String profileKeyName;  // 프로필 사진
         private String occupation_of_interest; // 관심 직군
         private String belong_to_club; // 소속
     }
 
+    // 프로젝트 멤버 검색
     @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MemberForChatRoomDTO {
+    public static class MemberForProjectFindDTO {
         private Long id; // 사용자 ID
-        private String nickName; // 이름
+        private String nickname; // 이름
+        private String profileKeyName;  // 프로필 사진
     }
-
 }

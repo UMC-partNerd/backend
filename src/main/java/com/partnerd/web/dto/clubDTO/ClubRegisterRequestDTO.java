@@ -30,26 +30,18 @@ public class ClubRegisterRequestDTO {
     @Schema(description = "연락 방법 목록")
     private List<ContactMethodDTO> contactMethod;
 
-    @NotNull(message = "회원ID는 비어있을 수 없습니다!")
-    @Min(value = 1, message = "회원ID는 1 이상이어야 합니다! ")
-    @Schema(description = "회원 ID", example = "1")
-    private Long memberId;
-
     @NotNull(message = "카테고리ID는 비어있을 수 없습니다!")
     @Min(value = 1, message = "카테고리 ID는 1 이상이어야 합니다!")
     @Schema(description = "카테고리 ID", example = "2")
     private Long categoryId;
 
-    @Schema(description = "활동 내용", example = "Weekly coding sessions and hackathons.")
-    private String activities;
+    @Schema(description = "배너 이미지 keyName")
+    private String bannerKeyName;
 
-    @Schema(description = "배너 이미지")
-    private MultipartFile bannerImage;  // 이미지 처리 미구현
+    @Schema(description = "메인 이미지 keyName")
+    private String mainKeyName;
 
-    @Schema(description = "프로필 이미지")
-    private MultipartFile profileImage;
-
-    @Schema(description = "활동 이미지 목록")
-    private List<MultipartFile> activityImages;
+    @Schema(description = "동아리 활동")
+    private ClubActivityDTO activity;
 }
 

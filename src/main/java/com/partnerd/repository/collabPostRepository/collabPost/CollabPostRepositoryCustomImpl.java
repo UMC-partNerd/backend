@@ -1,8 +1,11 @@
 package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
+import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Builder;
@@ -147,6 +150,30 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPost.clubMember, qClubMember).fetchJoin()
                 .where(qClubMember.member.id.eq(memberId))
                 .distinct()
+                .fetch();
+    }
+
+    // 홈화면 - 최신등록 콜라보 조회하기
+    @Override
+    public List<HomeCollabPostDTO> findTopCollabPosts(Pageable pageable) {
+        QCollabPost collabPost = QCollabPost.collabPost;
+        QClubMember clubMember = QClubMember.clubMember;
+        QClub club = QClub.club;
+        QClubImage clubImage = QClubImage.clubImage;
+
+        return queryFactory
+                .select(Projections.constructor(HomeCollabPostDTO.class,
+                        collabPost.title,
+                        collabPost.intro,
+                        club.name,
+                        clubImage.keyName))
+                .from(collabPost)
+                .join(collabPost.clubMember, clubMember)
+                .join(clubMember.club, club)
+                .leftJoin(club.clubImgList, clubImage)
+                .on(clubImage.image_type.eq(ImageType.MAIN))
+                .orderBy(collabPost.createdAt.desc())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 

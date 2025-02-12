@@ -15,6 +15,8 @@ public class PromotionProjectRequestDTO {
         private String title;   // 제목
         private String info;    // 한 줄 소개
         private String description; // 설명
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private List<Long> promotionProjectMember;   // 함께한 팀원
         private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }
@@ -26,6 +28,8 @@ public class PromotionProjectRequestDTO {
         private String title;   // 제목
         private String info;    // 한 줄 소개
         private String description; // 설명
+        private String thumbnailKeyName;  // 프로젝트 대표 사진
+        private List<String> projectImgKeyNameList; // 프로젝트 사진들
         private List<Long> promotionProjectMember;   // 함께한 팀원
         private Set<ContactMethodDTO> contactMethod;   // 컨택트 방법
     }

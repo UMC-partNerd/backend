@@ -2,7 +2,7 @@ name: Partnerd CI/CD # 알맞은 이름으로 변경
 
 on:
   push:
-    branches: [ develop ]  # main 브랜치에 push가 일어날 때 실행
+    branches: [ develop ]  # develop 브랜치에 push가 일어날 때 실행
 
 jobs:
   build:
@@ -62,9 +62,8 @@ jobs:
           # 최신 Docker 이미지 pull
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
             export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            docker pull $DOCKER_USERNAME/partner-backend:latest
-            cd /home/ubuntu/docker
-            docker-compose down
-            docker-compose up -d
+            docker pull \$DOCKER_USERNAME/partnerd-backend:latest
+            docker stack deploy -c /home/ubuntu/docker/docker-compose.yml partnerd-stack
           "
-          rm -f private_key.pem  # 민감한 정보 삭제
+          
+          rm -f private_key.pem  # 보안 유지

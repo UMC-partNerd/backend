@@ -1,7 +1,10 @@
 package com.partnerd.converter.projectConverter;
 
 
+import com.partnerd.domain.Member;
 import com.partnerd.domain.Project;
+import com.partnerd.domain.ProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;
@@ -11,14 +14,24 @@ import com.partnerd.web.dto.projectDTO.ProjectResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectConverter {
-
+    
+    // 프로젝트 팀원 검색
+    public static List<MemberResponseDTO.MemberForProjectFindDTO> toMemberForProjectFindDTOList(List<Member> members) {
+        return members.stream()
+                .map(member -> MemberResponseDTO.MemberForProjectFindDTO.builder()
+                        .id(member.getId())
+                        .nickname(member.getNickname())
+                        .profileKeyName(member.getProfile_url())
+                        .build())
+                .collect(Collectors.toList());
+    }
+    
     // 프로젝트 모집글 생성
     public static Project toProject(ProjectRequestDTO.CreateProjectDTO request){
 
@@ -73,11 +86,18 @@ public class ProjectConverter {
                 ? "모집완료"
                 : "모집중";
 
+        String thumbnailKeyName = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(ProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
         return ProjectResponseDTO.ProjectPreviewDTO.builder()
                 .projectId(project.getId())
                 .projectStatus(status)
                 .title(project.getTitle())
                 .intro(project.getIntro())
+                .thumbnailKeyName(thumbnailKeyName)
                 .categoryDTOList(projectCategoryDTOS)
                 .build();
     }
@@ -99,6 +119,18 @@ public class ProjectConverter {
 
     // 프로젝트 모집글 상세페이지 조회
     public static ProjectResponseDTO.ProjectDetailDTO toProjectDetailDTO(Project project) {
+
+        String thumbnailKeyName = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
+                .map(ProjectImage::getKeyName)
+                .findFirst()
+                .orElse(null);
+
+        List<String> projectImgKeyNameList = project.getProjectImageList().stream()
+                .filter(image -> image.getImageType() == ImageType.INTRO)
+                .map(ProjectImage::getKeyName)
+                .collect(Collectors.toList());
+
         return ProjectResponseDTO.ProjectDetailDTO.builder()
                 .title(project.getTitle())
                 .intro(project.getIntro())
@@ -112,6 +144,8 @@ public class ProjectConverter {
                 .skill(project.getSkill())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
+                .thumbnailKeyName(thumbnailKeyName)
+                .projectImgKeyNameList(projectImgKeyNameList)
                 .contactMethods(project.getContactMethodList().stream()
                         .map(ContactMethodDTO::toContactMethodDTO)
                         .collect(Collectors.toSet()))
@@ -126,7 +160,8 @@ public class ProjectConverter {
                         .collect(Collectors.toSet()))
                 .leaderInfo(MemberResponseDTO.MemberForProjectDetailDTO.builder()
                         .id(project.getMember().getId())
-                        .name(project.getMember().getName())
+                        .nickname(project.getMember().getNickname())
+                        .profileKeyName(project.getMember().getProfile_url())
                         .occupation_of_interest(project.getMember().getOccupation_of_interest())
                         .belong_to_club(project.getMember().getBelong_to_club())
                         .build())

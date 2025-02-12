@@ -50,6 +50,10 @@ public class PromotionProjectRestController {
         Claims claims = jwtTokenProvider.getClaims(token);
         Long memberId = Long.valueOf(claims.getSubject());
 
+        if (request.getThumbnailKeyName() == null){
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_BAD_REQUEST);
+        }
+
         PromotionProject promotionProject = promotionProjectService.addPromotionProject(memberId, request);
         return ApiResponse.onSuccess(PromotionProjectConverter.toCreatePromotionProjectResultDTO(promotionProject));
     }
@@ -76,6 +80,10 @@ public class PromotionProjectRestController {
         String token = authorizationHeader.substring(7);
         Claims claims = jwtTokenProvider.getClaims(token);
         Long memberId = Long.valueOf(claims.getSubject());
+
+        if (request.getThumbnailKeyName() == null){
+            throw new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_BAD_REQUEST);
+        }
 
         PromotionProject promotionProject = promotionProjectService.updatePromotionProject(memberId, request, promotionProjectId);
         return ApiResponse.onSuccess(PromotionProjectConverter.toUpdatePromotionProjectResultDTO(promotionProject));
@@ -168,6 +176,31 @@ public class PromotionProjectRestController {
     }
 
 
+    // 프로젝트 홍보 투표하기
+    @PatchMapping("/promotion/{promotionProjectId}/votes")
+    @Operation(summary = "프로젝트 홍보글 투표하기 API",description = "프로젝트 홍보글의 투표 개수 증가하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<Void> getProjectCommentVote(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
+                                                    @PathVariable(name = "promotionProjectId") Long promotionProjectId){
+
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new ProjectHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        promotionProjectService.projectVotes(memberId, promotionProjectId);
+        return ApiResponse.onSuccess(null);
+    }
+
     // 마이페이지 - 내가 쓴 프로젝트 홍보글 모아보기
     @GetMapping("/promotion/mypage")
     @Operation(summary = "마이페이지 내가 쓴 프로젝트 홍보글 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 프로젝트 홍보글 목록을 조회하는 API입니다.")
@@ -185,5 +218,27 @@ public class PromotionProjectRestController {
         List<PromotionProject> promotionProjects = promotionProjectService.getMyPromotionProjects(memberId);
 
         return ApiResponse.onSuccess(PromotionProjectConverter.toMyPromotionProjectsDTO(memberId, promotionProjects));
+    }
+
+    // 마이페이지(퍼스널페이지) - 내가 쓴 프로젝트 홍보글 모아보기
+    @GetMapping("/promotion/personal")
+    @Operation(summary = "퍼스널페이지 내가 쓴 프로젝트 홍보글 모아보기 API",description = "퍼스널페이지에서 내가 쓴 프로젝트 홍보글을 모아보는 API입니다. page는 1부터 시작합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호 (1부터 시작)", required = true)
+    })
+    public ApiResponse<PromotionProjectResponseDTO.PromotionProjectPreviewListDTO> getPersonalPromotionProjectList(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                                                   @RequestParam(name = "page") Integer page){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        Page<PromotionProject> promotionProjectPage = promotionProjectService.getPersonalPromotionProjectList(page - 1, memberId);
+        return ApiResponse.onSuccess(PromotionProjectConverter.promotionProjectPreviewListDTO(promotionProjectPage));
     }
 }

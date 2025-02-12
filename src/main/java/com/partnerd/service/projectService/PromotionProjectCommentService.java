@@ -22,4 +22,7 @@ public interface PromotionProjectCommentService {
 
     // 프로젝트 홍보글 댓글 전체 조회
     List<PromotionProjectCommentResponseDTO.GetPromotionProjectCommentListResultDTO> getPromotionProjectCommentList(Long projectId);
+
+    // 프로젝트 홍보 댓글 좋아요
+    void projectLikes(Long memberId, Long commentId);
 }

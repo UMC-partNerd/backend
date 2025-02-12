@@ -40,6 +40,12 @@ public class S3Service {
             type = String.valueOf(ImageType.BANNER);
         } else if (s3RequestDTO.getType() == 1){
             type = String.valueOf(ImageType.MAIN);
+        } else if (s3RequestDTO.getType() == 3) {
+            type = String.valueOf(ImageType.THUMBNAIL);
+        } else if (s3RequestDTO.getType() == 4) {
+            type = String.valueOf(ImageType.INTRO);
+        } else if (s3RequestDTO.getType() == 5) {
+            type = String.valueOf(ImageType.MYPROFILE);
         } else {
             type = String.valueOf(ImageType.EVENT);
         }
