@@ -2,7 +2,6 @@ package com.partnerd.web.dto.clubDTO;
 
 import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor

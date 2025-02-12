@@ -2,7 +2,6 @@ package com.partnerd.web.dto.clubDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.partnerd.kafka;
+package com.partnerd.service.kafkaService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;

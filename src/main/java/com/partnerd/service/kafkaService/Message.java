@@ -1,4 +1,4 @@
-package com.partnerd.kafka;
+package com.partnerd.service.kafkaService;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

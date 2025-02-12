@@ -1,4 +1,4 @@
-package com.partnerd.repository.collabPostRepository;
+package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.CollabPost;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;

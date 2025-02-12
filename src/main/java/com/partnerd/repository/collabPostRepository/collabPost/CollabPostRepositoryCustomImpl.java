@@ -1,4 +1,4 @@
-package com.partnerd.repository.collabPostRepository;
+package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.*;
 import com.partnerd.domain.enums.ImageType;

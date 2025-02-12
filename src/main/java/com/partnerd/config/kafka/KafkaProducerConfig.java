@@ -2,7 +2,7 @@ package com.partnerd.config.kafka;
 
 
 import com.nimbusds.jose.shaded.gson.JsonSerializer;
-import com.partnerd.kafka.Message;
+import com.partnerd.service.kafkaService.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
