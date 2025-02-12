@@ -8,10 +8,8 @@ import com.partnerd.domain.mapping.ChatRoomMember;
 import com.partnerd.domain.mapping.CollabAsk;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

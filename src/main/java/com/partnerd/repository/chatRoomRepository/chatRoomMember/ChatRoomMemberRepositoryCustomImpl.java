@@ -3,7 +3,6 @@ package com.partnerd.repository.chatRoomRepository.chatRoomMember;
 import com.partnerd.domain.QChatRoom;
 import com.partnerd.domain.QClub;
 import com.partnerd.domain.QCollabPost;
-import com.partnerd.domain.QMember;
 import com.partnerd.domain.enums.ChatRoomType;
 import com.partnerd.domain.mapping.QChatRoomMember;
 import com.partnerd.domain.mapping.QCollabAsk;
