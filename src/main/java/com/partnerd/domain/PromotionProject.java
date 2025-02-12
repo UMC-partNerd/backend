@@ -32,9 +32,6 @@ public class PromotionProject extends BaseEntity {
     @Column(nullable = false)
     private String intro;
 
-    // 프로필 사진
-    private String profile_img_url;
-
     // 프로젝트 설명
     @Column(nullable = false)
     private String description;
