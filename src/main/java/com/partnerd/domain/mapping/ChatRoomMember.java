@@ -25,7 +25,7 @@ public class ChatRoomMember {
     private ChatRoom chatRoom;
 
     public void setChatRoom(ChatRoom chatRoom) {
-        if (chatRoom != null) {
+        if (this.chatRoom != null) {
             this.chatRoom.getChatRoomMembers().remove(this);
         }
         this.chatRoom = chatRoom;
