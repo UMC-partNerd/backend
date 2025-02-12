@@ -19,6 +19,7 @@ public class CollabPostImg {
     private String keyName;
 
     @Column(name = "image_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ImageType imageType;
 
     @ManyToOne
