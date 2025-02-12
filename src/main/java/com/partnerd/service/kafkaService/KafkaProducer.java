@@ -38,7 +38,8 @@ public class KafkaProducer {
         * */
 
         System.out.println("카프카로 메세지 보내기!");
-        kafkaTemplate.send("chat-topic",  String.valueOf(chatDTO.getChatRoomId()), message);
+        System.out.println("[Kafka Producer]: " + message);
+        kafkaTemplate.send("chat-topic", String.valueOf(chatDTO.getChatRoomId()), message);
     }
 
 
