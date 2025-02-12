@@ -1,5 +1,6 @@
 package com.partnerd.web.controller.chatController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.partnerd.service.kafkaService.KafkaProducer;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
