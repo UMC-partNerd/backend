@@ -37,6 +37,7 @@ public class KafkaProducer {
         * Kafka 기본 파티셔너(DefaultPartitioner)가 key.hash() % partition 개수 로 파티션을 배정함
         * */
 
+        System.out.println("카프카로 메세지 보내기!");
         kafkaTemplate.send("chat-topic",  String.valueOf(chatDTO.getChatRoomId()), message);
     }
 

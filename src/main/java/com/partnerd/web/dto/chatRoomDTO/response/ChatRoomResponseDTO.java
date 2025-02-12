@@ -32,10 +32,10 @@ public class ChatRoomResponseDTO {
         private Long chatRoomId;
         private String lastMessage;
         private String lastMessageTime;
-        private String receiverNickname;
-        private String receiverProfileImgKeyname;
         private String myNickname;
         private String myProfileImgKeyname;
+        private String receiverNickname;
+        private String receiverProfileImgKeyname;
 
     }
 
