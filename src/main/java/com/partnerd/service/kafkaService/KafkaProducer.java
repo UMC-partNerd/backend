@@ -16,8 +16,9 @@ public class KafkaProducer {
     private final KafkaTemplate<String, Message> kafkaTemplate;
 
     public void sendMessage(ChatDTO chatDTO) {
+
         // 메시지 객체 생성
-        Message message = Message.builder()
+       Message message = Message.builder()
                 .id(UUID.randomUUID().toString())  // 메시지 ID 자동 생성
                 .chatRoomId(chatDTO.getChatRoomId())
                 .contentType("text")  // 기본 텍스트 타입
@@ -29,7 +30,14 @@ public class KafkaProducer {
                 .readCount(0) // 초기 읽음 카운트 0
                 .build();
 
-        kafkaTemplate.send("chat",  String.valueOf(chatDTO.getChatRoomId()), message);
+       /**
+        *  roomId를 Key로 설정하면 Kafka가 자동으로 동일한 roomId 메시지를 같은 파티션으로 보냄
+        *
+        * ✔ 파티셔닝 전략
+        * Kafka 기본 파티셔너(DefaultPartitioner)가 key.hash() % partition 개수 로 파티션을 배정함
+        * */
+
+        kafkaTemplate.send("chat-topic",  String.valueOf(chatDTO.getChatRoomId()), message);
     }
 
 
