@@ -1,7 +1,6 @@
 package com.partnerd.config.kafka;
 
 
-import com.nimbusds.jose.shaded.gson.JsonSerializer;
 import com.partnerd.service.kafkaService.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -12,6 +11,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import software.amazon.awssdk.utils.ImmutableMap;
 
 import java.util.Map;
@@ -32,9 +32,11 @@ public class KafkaProducerConfig {
     @Bean
     public Map<String, Object> producerConfigurations() {
         return ImmutableMap.<String, Object>builder()
-                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092")
+                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "partnerd-stack_kafka:9092")
                 .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
                 .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
+                .put(ProducerConfig.ACKS_CONFIG, "all") // 모든 복제본이 메시지를 받아야 성공
+                .put(ProducerConfig.RETRIES_CONFIG, 3)  // 전송 실패 시 3번 재시도
                 .build();
     }
 
