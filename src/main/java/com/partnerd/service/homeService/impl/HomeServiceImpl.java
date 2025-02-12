@@ -1,8 +1,7 @@
 package com.partnerd.service.homeService.impl;
 
-import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.repository.clubRepository.ClubRepository;
-import com.partnerd.repository.collabPostRepository.CollabPostRepository;
+import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.service.homeService.HomeService;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

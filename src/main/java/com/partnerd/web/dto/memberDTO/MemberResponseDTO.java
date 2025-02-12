@@ -47,4 +47,14 @@ public class MemberResponseDTO {
         private String occupation_of_interest; // 관심 직군
         private String belong_to_club; // 소속
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MemberForChatRoomDTO {
+        private Long id; // 사용자 ID
+        private String nickName; // 이름
+    }
+
 }

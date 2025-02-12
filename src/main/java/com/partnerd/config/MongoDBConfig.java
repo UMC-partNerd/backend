@@ -1,3 +1,4 @@
+/*
 package com.partnerd.config;
 
 import com.mongodb.client.MongoClient;
@@ -30,3 +31,4 @@ public class MongoDBConfig {
 
 
 }
+*/

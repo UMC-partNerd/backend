@@ -1,6 +1,6 @@
 package com.partnerd.web.controller.chatController;
 
-import com.partnerd.kafka.KafkaProducer;
+import com.partnerd.service.kafkaService.KafkaProducer;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

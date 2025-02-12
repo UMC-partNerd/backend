@@ -1,4 +1,4 @@
-package com.partnerd.repository.collabPostRepository;
+package com.partnerd.repository.collabPostRepository.collabInquiry;
 
 import com.partnerd.domain.CollabInquiry;
 import org.springframework.data.repository.query.Param;

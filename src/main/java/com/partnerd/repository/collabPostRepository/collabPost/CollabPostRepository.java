@@ -1,8 +1,6 @@
-package com.partnerd.repository.collabPostRepository;
+package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.CollabPost;
-import com.partnerd.domain.CollabPostImg;
-import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +19,7 @@ public interface CollabPostRepository extends JpaRepository<CollabPost, Long>, C
             "LEFT JOIN FETCH cp.collabPostImgList "+
             "WHERE cp.id = :id")
     CollabPost findByIdWithCollabPostImg(@Param("id") Long collabPostId);
+
 
   
 }

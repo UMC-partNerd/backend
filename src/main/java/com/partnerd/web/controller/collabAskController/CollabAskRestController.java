@@ -16,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/collabAsk")
+@RequestMapping("/api/collabAsks")
 @RequiredArgsConstructor
 public class CollabAskRestController {
 

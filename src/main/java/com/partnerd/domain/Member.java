@@ -8,9 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -103,6 +101,7 @@ public class Member extends BaseEntity {
     // 보낸 동아리 가입 요청
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true )
     private List<ClubMembershipRequest> sendClubMembershipRequests = new ArrayList<>();
+
 
     @PrePersist
     public void setDefaultValues() {

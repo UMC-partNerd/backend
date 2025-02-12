@@ -22,6 +22,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      */
     boolean existsByNickname(String nickname);
 
+    /**
+     * 컨택트 하고 싶은 사용자의 닉네임으로 해당 사용자 정보 조회
+     *
+     * @param nickname 컨택트 하고 싶은 사용자의 닉네임
+     * @return Optional<Member>
+     */
+    Optional<Member> findByNickname(String nickname);
+
+
 
 
 }
