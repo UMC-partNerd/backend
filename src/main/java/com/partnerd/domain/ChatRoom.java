@@ -24,9 +24,8 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 채팅방 ID
 
-    @OneToOne
-    @JoinColumn(name = "collab_ask_id")
-    @Column(nullable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "collab_ask_id", nullable = true)
     private CollabAsk collabAsk; // 해당 채팅방과 관련된 콜라보 요청 ID
 
     @Enumerated(EnumType.STRING)

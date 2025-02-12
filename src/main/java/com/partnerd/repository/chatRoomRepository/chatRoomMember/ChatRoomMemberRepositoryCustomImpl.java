@@ -2,8 +2,10 @@ package com.partnerd.repository.chatRoomRepository.chatRoomMember;
 
 import com.partnerd.domain.QChatRoom;
 import com.partnerd.domain.QClub;
+import com.partnerd.domain.QClubImage;
 import com.partnerd.domain.QCollabPost;
 import com.partnerd.domain.enums.ChatRoomType;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QChatRoomMember;
 import com.partnerd.domain.mapping.QCollabAsk;
 import com.partnerd.web.dto.chatRoomDTO.response.ChatRoomResponseDTO;
@@ -25,6 +27,7 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
     private final QCollabAsk qCollabAsk = QCollabAsk.collabAsk;
     private final QCollabPost qCollabPost = QCollabPost.collabPost;
     private final QClub qClub = QClub.club;
+    private final QClubImage qClubImage = QClubImage.clubImage;
     private final QChatRoomMember qChatRoomMember = QChatRoomMember.chatRoomMember;
 
 
@@ -40,13 +43,15 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
                         qClub.name,
                         qChatRoom.lastMessage,
                         qChatRoom.lastMessageTime,
-                        qClub.profile
+                        qClubImage.keyName
                         ))
                 .from(qChatRoomMember)
                 .leftJoin(qChatRoomMember.chatRoom, qChatRoom)
                 .leftJoin(qChatRoom.collabAsk, qCollabAsk)
                 .leftJoin(qCollabAsk.collabPost, qCollabPost)
                 .leftJoin(qCollabPost.clubMember.club, qClub)
+                .leftJoin(qClub.clubImgList, qClubImage)
+                    .on(qClubImage.image_type.eq(ImageType.valueOf("MAIN")))
                 .where(qChatRoomMember.member.id.eq(memberId)
                         .and(qChatRoomMember.chatRoom.chatRoomType.eq(type)));
 
