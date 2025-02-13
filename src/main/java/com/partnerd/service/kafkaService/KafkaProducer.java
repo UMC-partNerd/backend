@@ -6,6 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -15,7 +16,10 @@ public class KafkaProducer {
 
     private final KafkaTemplate<String, Message> kafkaTemplate;
 
-    public void sendMessage(ChatDTO chatDTO) {
+    public void sendMessage(ChatDTO.ChatRequestDTO chatDTO) {
+
+        Instant now = Instant.now();
+        Date sendDateTime = Date.from(now);  // ✅ MongoDB에서 ISODate로 변환됨
 
         // 메시지 객체 생성
        Message message = Message.builder()
@@ -23,10 +27,8 @@ public class KafkaProducer {
                 .chatRoomId(chatDTO.getChatRoomId())
                 .contentType("text")  // 기본 텍스트 타입
                 .content(chatDTO.getContent())
-                .senderNickName(chatDTO.getSenderNickName())
-                .senderId(chatDTO.getSenderId())
-                .collabAskId(chatDTO.getCollabAskId())
-                .sendTime(Instant.now().toEpochMilli()) // 현재 시간 (밀리초)
+                .senderNickname(chatDTO.getSenderNickname())
+                .sendDateTime(sendDateTime)
                 .readCount(0) // 초기 읽음 카운트 0
                 .build();
 
