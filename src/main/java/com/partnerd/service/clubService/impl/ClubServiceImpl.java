@@ -17,11 +17,13 @@ import com.partnerd.repository.clubRepository.ClubRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
+import com.partnerd.web.dto.memberDTO.MemberNickNameSearchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -200,9 +202,24 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.findClubDetails(clubId, memberId);
     }
 
+    //멤버 전체조회 (파트너드 등록시 필요)
+    @Override
+    public List<MemberNickNameSearchDTO> searchMembersByNickname(String nickname) {
+        List<Member> members = memberRepository.findByNicknameContaining(nickname);
+
+        if (members.isEmpty()) {
+            throw new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        return members.stream()
+                .map(member -> new MemberNickNameSearchDTO(member.getNickname(), member.getProfile_url()))
+                .collect(Collectors.toList());
+    }
+
     // 파트너드 목록 조회(마이페이지)
     @Override
     public List<Club> getClubsByRole(Long memberId) {
         return clubMemberRepository.findClubsByRole(memberId, List.of(ClubMemberRole.LEADER, ClubMemberRole.OFFICER));
     }
+
 }
