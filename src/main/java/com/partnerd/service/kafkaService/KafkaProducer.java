@@ -6,6 +6,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,8 +20,8 @@ public class KafkaProducer {
 
     public void sendMessage(ChatDTO.ChatRequestDTO chatDTO) {
 
-        Instant now = Instant.now();
-        Date sendDateTime = Date.from(now);  // ✅ MongoDB에서 ISODate로 변환됨
+        Instant now = Instant.now();  // ✅ 현재 UTC 시간
+        LocalDateTime sendDateTime = LocalDateTime.ofInstant(now, ZoneId.of("Asia/Seoul"));  // ✅ KST 변환
 
         // 메시지 객체 생성
        Message message = Message.builder()

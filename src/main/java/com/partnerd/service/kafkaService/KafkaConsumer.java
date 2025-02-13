@@ -28,7 +28,7 @@ public class KafkaConsumer {
                 .contentType(message.getContentType())
                 .content(message.getContent())
                 .senderNickname(message.getSenderNickname())
-                .sendDateTime(message.getSendDateTime())
+                .sendDateTime(message.getSendDateTime()) // ISODate 형식으로 저장됨
                 .readCount(message.getReadCount())
                 .build();
 
