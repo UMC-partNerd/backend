@@ -21,7 +21,7 @@ public class ChatController {
     private final KafkaProducer kafkaProducer;
     private final ChatQueryService chatQueryService;
 
-    @GetMapping("/chat/{chatRoomId}")
+    @GetMapping("/api/chat/{chatRoomId}")
     public ApiResponse<List<ChatDTO.ChatResponseDTO>> getChatList (@PathVariable(name = "chatRoomId") Long chatRoomId) {
         return ApiResponse.onSuccess(chatQueryService.getChatList(chatRoomId));
     }
