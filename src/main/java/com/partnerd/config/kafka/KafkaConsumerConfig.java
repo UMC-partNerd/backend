@@ -1,5 +1,6 @@
 package com.partnerd.config.kafka;
 
+import com.partnerd.service.kafkaService.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -18,19 +19,24 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public ConsumerFactory<String, Message> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "partnerd-stack_kafka:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "chat-group-id");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class); // ✅ JSON 역직렬화 추가
-        return new DefaultKafkaConsumerFactory<>(props);
+
+        JsonDeserializer<Message> deserializer = new JsonDeserializer<>(Message.class);
+        deserializer.addTrustedPackages("com.partnerd.service.kafkaService");
+
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
+
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory =
+    public ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         kafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
         return kafkaListenerContainerFactory;
