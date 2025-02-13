@@ -14,11 +14,11 @@ import java.text.SimpleDateFormat;
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
-
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
 
-    @KafkaListener(topics = "chat-topic", groupId = "chat-group-id")
+    @KafkaListener(topics = "chat-topic", groupId = "chat-group-id",
+            properties = {"spring.json.trusted.packages=com.partnerd.service.kafkaService"})
     public void consumeChatMessage(Message message) {
 
         System.out.println("Received message from Kafka: " + message);
