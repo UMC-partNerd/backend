@@ -9,6 +9,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -28,18 +30,17 @@ public class KafkaConsumer {
                 .contentType(message.getContentType())
                 .content(message.getContent())
                 .senderNickname(message.getSenderNickname())
-                .sendDateTime(message.getSendDateTime()) // ISODate 형식으로 저장됨
+                .sendDateTime(message.getSendDateTime().toInstant(ZoneOffset.UTC)) // ISODate 형식으로 저장됨
                 .readCount(message.getReadCount())
                 .build();
 
 
-        // ✅ "YYYY-MM-DD" 형식의 날짜 저장
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String sendDate = dateFormat.format(message.getSendDateTime());
+        // ✅ 날짜 & 시간 포맷 변환
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        // ✅ "HH:mm" 형식의 시간 저장
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String sendTime = timeFormat.format(message.getSendDateTime());
+        String sendDate = message.getSendDateTime().format(dateFormatter);
+        String sendTime = message.getSendDateTime().format(timeFormatter);
 
         // MongoDB 에 저장
         chatMessageRepository.save(chatMessage);

@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,16 +26,15 @@ public class ChatQueryServiceImpl implements ChatQueryService {
 
         List<ChatDTO.ChatResponseDTO> chatDTOList = chatMessageList.stream()
                 .map(chatMessage -> {
+                    LocalDateTime localDateTime = LocalDateTime.ofInstant(chatMessage.getSendDateTime(), ZoneId.of("Asia/Seoul"));
+                    // ✅ 날짜 & 시간 포맷 변환
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-                    // ✅ "YYYY-MM-DD" 형식의 날짜 저장
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String sendDate = dateFormat.format(chatMessage.getSendDateTime());
+                    String sendDate = localDateTime.format(dateFormatter);
+                    String sendTime = localDateTime.format(timeFormatter);
 
-                    // ✅ "HH:mm" 형식의 시간 저장
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                    String sendTime = timeFormat.format(chatMessage.getSendDateTime());
-
-                    ChatDTO.ChatResponseDTO chatResponseDTO =ChatDTO.ChatResponseDTO.builder()
+                    ChatDTO.ChatResponseDTO chatResponseDTO = ChatDTO.ChatResponseDTO.builder()
                             .chatRoomId(chatMessage.getChatRoomId())
                             .senderNickname(chatMessage.getSenderNickname())
                             .content(chatMessage.getContent())
