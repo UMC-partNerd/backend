@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -24,6 +25,6 @@ public class ChatMessage {
     private String senderNickname;
     private String contentType;
     private String content;
-    private Date sendDateTime;
+    private LocalDateTime sendDateTime;
     private Integer readCount;
 }

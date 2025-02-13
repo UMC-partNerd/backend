@@ -19,7 +19,7 @@ public class ChatQueryServiceImpl implements ChatQueryService {
     @Override
     public List<ChatDTO.ChatResponseDTO> getChatList(Long chatRoomId) {
 
-        List<ChatMessage> chatMessageList = chatMessageRepository.findChatMessagesByChatRoomIdOOrderBySendDateTimeAsc(chatRoomId);
+        List<ChatMessage> chatMessageList = chatMessageRepository.findChatMessagesByChatRoomIdOrderBySendDateTimeAsc(chatRoomId);
 
         List<ChatDTO.ChatResponseDTO> chatDTOList = chatMessageList.stream()
                 .map(chatMessage -> {
