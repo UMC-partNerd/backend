@@ -18,7 +18,7 @@ public class KafkaConsumer {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
 
-    @KafkaListener(topics = "chat-topic", groupId = "chat-group-id", autoStartup = "false")
+    @KafkaListener(topics = "chat-topic", groupId = "chat-group-id")
     public void consumeChatMessage(Message message) {
 
         System.out.println("Received message from Kafka: " + message);
