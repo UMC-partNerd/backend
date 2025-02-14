@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -62,5 +63,18 @@ public class CollabAskRepositoryCustomImpl implements CollabAskRepositoryCustom{
 
         return new PageImpl<>(results, pageable, total);
 
+    }
+
+    @Override
+    public Optional<CollabAsk> findByIdWithSenderAndReceiver(Long id) {
+        JPAQuery<CollabAsk> query = queryFactory
+                .selectFrom(qCollabAsk)
+                .leftJoin(qCollabAsk.sender.member, qMember)
+                .fetchJoin()
+                .leftJoin(qCollabAsk.receiver.member, qMember)
+                .fetchJoin()
+                .where(qCollabAsk.id.eq(id));
+
+        return Optional.ofNullable(query.fetchOne());
     }
 }

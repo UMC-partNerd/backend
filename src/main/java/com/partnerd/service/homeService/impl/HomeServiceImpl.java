@@ -1,19 +1,9 @@
 package com.partnerd.service.homeService.impl;
 
-import com.partnerd.apiPaylaod.ApiResponse;
-import com.partnerd.domain.Club;
-import com.partnerd.domain.ClubImage;
-import com.partnerd.domain.ProjectImage;
-import com.partnerd.domain.PromotionProjectImage;
-import com.partnerd.domain.enums.ImageType;
 import com.partnerd.repository.clubRepository.ClubRepository;
-import com.partnerd.repository.clubRepository.ClubRepositoryCustom;
-import com.partnerd.repository.collabPostRepository.CollabPostRepository;
-import com.partnerd.repository.collabPostRepository.CollabPostRepositoryCustom;
+import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.repository.projectRepository.ProjectRepository;
-import com.partnerd.repository.projectRepository.ProjectRepositoryCustiom;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
-import com.partnerd.repository.projectRepository.PromotionProjectRepositoryCustiom;
 import com.partnerd.service.homeService.HomeService;
 import com.partnerd.web.dto.homeDTO.response.HomeClubDTO;
 import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
@@ -25,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

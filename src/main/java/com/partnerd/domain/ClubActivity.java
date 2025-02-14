@@ -1,7 +1,6 @@
 package com.partnerd.domain;
 
 import com.partnerd.domain.common.BaseEntity;
-import com.partnerd.domain.enums.ActiveType;
 import jakarta.persistence.*;
 import lombok.*;
 

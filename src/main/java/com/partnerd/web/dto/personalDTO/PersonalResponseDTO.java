@@ -34,7 +34,7 @@ public class PersonalResponseDTO {
     public static class ReadPersonalResultDTO {
         Long personalId; // 퍼스널 ID
         String nickname; // 닉네임
-        String profile_url; // 프로필사진
+        String profileKeyName;  // 사용자 프로필 keyName
         String occupation_of_interest; // 관심직군
         String belong_to_club; // 소속
         String intro; // 한줄소개

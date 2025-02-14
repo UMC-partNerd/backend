@@ -6,7 +6,6 @@ import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
 import com.partnerd.converter.clubConverter.ClubConverter;
 import com.partnerd.domain.*;
-import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
@@ -18,17 +17,12 @@ import com.partnerd.repository.clubRepository.ClubRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
+import com.partnerd.web.dto.memberDTO.MemberNickNameSearchDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -194,42 +188,32 @@ public class ClubServiceImpl implements ClubService {
         return ClubConverter.toClubUpdateResponseDTO(existingClub);
     }
 
-
+    //파트너드 목록 조회
     @Override
     public List<ClubDTO> getClubs(Integer page, String sort, Long categoryID){
 
-        Pageable pageable = PageRequest.of(page, 12);
-        Page<Club> clubPage;
+        return clubRepository.findClubsByFilters(page, sort, categoryID);
 
-        if(categoryID != null ){
-            //카테고리별 정렬처리
-            if("latest".equalsIgnoreCase(sort)){
-                clubPage = clubRepository.findByCategoryIdOrderByCreatedAtDesc(categoryID, pageable);
+    }
 
-            }
-            else{
-                clubPage = clubRepository.findByCategoryIdOrderByViewsDesc(categoryID, pageable);
-            }
+    // 파트너드 상세조회 (팀페이지)
+    @Override
+    public ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId) {
+        return clubRepository.findClubDetails(clubId, memberId);
+    }
 
-        } else {
-            //전체 정렬 처리
-            if("latest".equalsIgnoreCase(sort)){
-                clubPage = clubRepository.findAllByOrderByCreatedAtDesc(pageable);
-            }
+    //멤버 전체조회 (파트너드 등록시 필요)
+    @Override
+    public List<MemberNickNameSearchDTO> searchMembersByNickname(String nickname) {
+        List<Member> members = memberRepository.findByNicknameContaining(nickname);
 
-            else{
-                clubPage = clubRepository.findAllByOrderByViewsDesc(pageable);
-            }
+        if (members.isEmpty()) {
+            throw new ClubHandler(ErrorStatus.MEMBER_NOT_FOUND);
         }
 
-        //ClubConverter를 통해 Club을 ClubDTO로 변환시켜서 반환
-        return clubPage.stream()
-                .map(ClubConverter::toClubDTO)
+        return members.stream()
+                .map(member -> new MemberNickNameSearchDTO(member.getNickname(), member.getProfile_url()))
                 .collect(Collectors.toList());
-
-
-
-
     }
 
     // 파트너드 목록 조회(마이페이지)
@@ -237,4 +221,5 @@ public class ClubServiceImpl implements ClubService {
     public List<Club> getClubsByRole(Long memberId) {
         return clubMemberRepository.findClubsByRole(memberId, List.of(ClubMemberRole.LEADER, ClubMemberRole.OFFICER));
     }
+
 }

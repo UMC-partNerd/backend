@@ -28,9 +28,6 @@ public class Club extends BaseEntity{
     @Column(nullable = false)
     private String intro;
 
-    @Column(nullable = true)
-    private String profile; // 프로필 이미지 (null 가능)
-
     //조회수
     @Column(nullable = false)
     private Long views =0L;

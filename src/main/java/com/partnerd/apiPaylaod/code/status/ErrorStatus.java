@@ -54,6 +54,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PROMOTION_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4004", "댓글달 댓글이 없습니다."),
     PROMOTION_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4005", "해당 프로젝트 홍보글의 작성자가 아닙니다."),
     PROMOTION_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4006", "해당 프로젝트 홍보글 댓글의 작성자가 아닙니다."),
+    PROMOTION_PROJECT_ALREADY_VOTE(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4007", "이미 해당 프로젝트 홍보글에 투표를 진행했습니다."),
 
 
     // 프로젝트 모집 관련
@@ -87,6 +88,11 @@ public enum ErrorStatus implements BaseErrorCode {
     COLLAB_ASK_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 요청한 콜라보레이션입니다."),
     COLLAB_ASK_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABASK4003", "작성자는 자신의 글에 요청할 수 없습니다."),
 
+
+    // 채팅 관련
+    CHAT_ROOM_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 생성된 채팅방이 있습니다."),
+    CHAT_ROOM_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABASK4003", "요청을 보낸 사람만 채팅방을 생성할 수 있습니다."),
+
     // 동아리
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),
 
@@ -103,9 +109,10 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_NOT_VALID(HttpStatus.BAD_REQUEST, "CLUBMEMBER4004", "유효하지 않은 클럽 멤버입니다."),
     CLUB_MEMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "CLUBMEMBER4005", "이미 가입된 클럽 멤버입니다."),
     CANNOT_ASSIGN_ROLE_TO_SELF(HttpStatus.BAD_REQUEST, "CLUBMEMBER4006", "리더는 자기 자신에게 리더 권한을 위임할 수 없습니다."),
+    CLUB_MEMBER_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST, "CLUBMEMBER4007", "이미 비활성화된 클럽 멤버입니다."),
 
     // 동아리 가입 요청 관련
-    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리 리더만 가입 요청을 승인/거절할 수 있습니다."),
+    CLUB_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "CLUBMEMBERSHIP4001", "동아리의 리더가 아닙니다."),
     CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
     CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다."),
     CLUB_MEMBERSHIP_ALREADY_APPROVED(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4004", "이미 가입한 동아리입니다."),

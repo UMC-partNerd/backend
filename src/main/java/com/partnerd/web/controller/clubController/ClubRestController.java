@@ -7,6 +7,7 @@ import com.partnerd.converter.clubConverter.ClubConverter;
 import com.partnerd.domain.Club;
 import com.partnerd.service.clubService.ClubService;
 import com.partnerd.web.dto.clubDTO.*;
+import com.partnerd.web.dto.memberDTO.MemberNickNameSearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -105,11 +106,12 @@ public class ClubRestController {
             Integer page,
 
             @RequestParam(defaultValue = "popular")
-            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순)", example = "popular", required = false)
+            @Parameter(description = "정렬 기준 ('popular': 인기순, 'latest': 최신순, 기본은 인기순입니다.)",
+                    example = "popular", required = false)
             String sort,
 
-            @RequestParam(name = "categoryID")
-            @Parameter(description = "카테고리 ID (필터링에 사용)", example = "5", required = true)
+            @RequestParam(name = "categoryID", required = false) //
+            @Parameter(description = "카테고리 ID (필터링에 사용, null이면 전체 조회)", example = "5", required = false)
             Long categoryID
     ){
         // 1. JWT 토큰 추출
@@ -121,6 +123,32 @@ public class ClubRestController {
         List<ClubDTO> clubs = clubService.getClubs(page -1 ,sort,categoryID);
         return ApiResponse.of(SuccessStatus._OK,clubs);
     }
+
+    @GetMapping("/{clubId}")
+    @Operation(summary = "동아리 상세 조회 API", description = "특정 동아리의 상세 정보를 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 동아리입니다.")
+    })
+    @Parameters({
+            @Parameter(name = "clubId", description = "조회할 동아리의 ID, path variable 입니다!")
+    })
+    public ApiResponse<ClubDetailResponseDTO> getClubDetails(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long clubId) {
+
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        ClubDetailResponseDTO response = clubService.findClubDetails(clubId, memberId);
+
+        return ApiResponse.of(SuccessStatus._OK, response);
+    }
+
 
 
     // 파트너드 목록 조회(마이페이지)
@@ -140,5 +168,28 @@ public class ClubRestController {
         List<Club> clubs = clubService.getClubsByRole(memberId);
 
        return ApiResponse.onSuccess(ClubConverter.clubPreviewListDTO(clubs));
+    }
+
+    @GetMapping("/register/members")
+    @Operation(summary = "닉네임 검색 API", description = "입력한 닉네임이 포함된 멤버 목록을 반환하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "일치하는 멤버가 없습니다.")
+    })
+    @Parameters({
+            @Parameter(name = "nickname", description = "검색할 닉네임", example = "홍길동")
+    })
+    public ApiResponse<List<MemberNickNameSearchDTO>> searchMembersByNickname(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam(name = "nickname") String nickname
+    ) {
+        // 1. JWT 토큰 추출 (로그인된 사용자만 접근 가능)
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 2. 서비스 호출
+        List<MemberNickNameSearchDTO> members = clubService.searchMembersByNickname(nickname);
+        return ApiResponse.of(SuccessStatus._OK, members);
     }
 }

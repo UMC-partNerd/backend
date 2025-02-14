@@ -1,8 +1,6 @@
 package com.partnerd.service.s3Service;
 
-import com.partnerd.domain.CollabPostImg;
 import com.partnerd.domain.enums.ImageType;
-import com.partnerd.repository.collabPostRepository.CollabPostImgRepository;
 import com.partnerd.web.dto.s3DTO.S3RequestDTO;
 import com.partnerd.web.dto.s3DTO.S3ResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +44,8 @@ public class S3Service {
             type = String.valueOf(ImageType.THUMBNAIL);
         } else if (s3RequestDTO.getType() == 4) {
             type = String.valueOf(ImageType.INTRO);
+        } else if (s3RequestDTO.getType() == 5) {
+            type = String.valueOf(ImageType.MYPROFILE);
         } else {
             type = String.valueOf(ImageType.EVENT);
         }

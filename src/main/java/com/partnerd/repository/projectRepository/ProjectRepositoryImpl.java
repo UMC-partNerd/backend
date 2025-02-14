@@ -107,8 +107,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustiom{
     public List<Project> findProjectsByMemberId(Long memberId){
         return queryFactory
                 .selectFrom(qProject)
-                .leftJoin(qProject.projectMemberList, qProjectMember).fetchJoin()
-                .where(qProjectMember.member.id.eq(memberId))
+                .where(qProject.member.id.eq(memberId))
                 .distinct()
                 .fetch();
     }

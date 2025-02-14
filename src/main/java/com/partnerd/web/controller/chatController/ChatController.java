@@ -1,26 +1,44 @@
 package com.partnerd.web.controller.chatController;
 
-import com.partnerd.kafka.KafkaProducer;
+import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.service.chatService.ChatQueryService;
+import com.partnerd.service.kafkaService.KafkaProducer;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/chat")
+@Slf4j
 @RequiredArgsConstructor
 public class ChatController {
 
     private final KafkaProducer kafkaProducer;
-    @MessageMapping("/send")
-    public ResponseEntity<String> sendChatMessage(@RequestBody ChatDTO chatDTO) {
+    private final ChatQueryService chatQueryService;
+
+    @GetMapping("/api/chat/{chatRoomId}")
+    public ApiResponse<List<ChatDTO.ChatResponseDTO>> getChatList (@PathVariable(name = "chatRoomId") Long chatRoomId) {
+        return ApiResponse.onSuccess(chatQueryService.getChatList(chatRoomId));
+    }
+
+
+    @MessageMapping("/chat/{chatRoomId}")
+    public void sendChatMessage(@Payload ChatDTO.ChatRequestDTO chatDTO) {
+        System.out.println("kafka 전송 시이이작!");
+        System.out.println(chatDTO);
         // Kafka로 메시지 전송
         kafkaProducer.sendMessage(chatDTO);
-        return ResponseEntity.ok("Message sent to Kafka!");
+    }
+
+    // 입장 메세지 필요시 구현 예정
+    @MessageMapping("/chat/{chatRoomId}/enter")
+    public void enterChatRoom (@RequestBody ChatDTO chatDTO,
+                               SimpMessageHeaderAccessor headerAccessor) {
+
     }
 }

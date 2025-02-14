@@ -1,4 +1,4 @@
-package com.partnerd.repository.collabPostRepository;
+package com.partnerd.repository.collabPostRepository.collabInquiry;
 
 import com.partnerd.domain.CollabInquiry;
 import com.partnerd.domain.QCollabInquiry;

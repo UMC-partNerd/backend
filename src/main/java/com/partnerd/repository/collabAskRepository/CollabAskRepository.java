@@ -13,4 +13,7 @@ public interface CollabAskRepository extends JpaRepository<CollabAsk, Long>, Col
     Optional<CollabAsk> findByIdAndSenderMemberId(@Param("collabAskId") Long collabAskId, @Param("memberId") Long memberId);
 
    CollabAsk findBySender_Member_idAndCollabPost_id(Long memberId, Long collabPostId);
+
+
+
 }
