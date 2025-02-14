@@ -67,12 +67,14 @@ public class CollabAskRepositoryCustomImpl implements CollabAskRepositoryCustom{
 
     @Override
     public Optional<CollabAsk> findByIdWithSenderAndReceiver(Long id) {
+
+        QMember sender = new QMember("sender");  // ✅ 별칭 추가
+        QMember receiver = new QMember("receiver");  // ✅ 별칭 추가
+
         JPAQuery<CollabAsk> query = queryFactory
                 .selectFrom(qCollabAsk)
-                .leftJoin(qCollabAsk.sender.member, qMember)
-                .fetchJoin()
-                .leftJoin(qCollabAsk.receiver.member, qMember)
-                .fetchJoin()
+                .leftJoin(qCollabAsk.sender.member, sender).fetchJoin()
+                .leftJoin(qCollabAsk.receiver.member, receiver).fetchJoin()
                 .where(qCollabAsk.id.eq(id));
 
         return Optional.ofNullable(query.fetchOne());
