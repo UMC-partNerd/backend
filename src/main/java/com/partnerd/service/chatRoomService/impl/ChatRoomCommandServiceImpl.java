@@ -27,15 +27,10 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
     private final MemberRepository memberRepository;
 
     @Override
-    public ChatRoom createCollabChatRoom(Long collabAskId, Long memberId) {
-
-        // 해당 콜리보 요청 조회
-        CollabAsk collabAsk = collabAskRepository.findByIdWithSenderAndReceiver(collabAskId).orElseThrow(() -> {
-            throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_NOT_FOUND);
-        });
+    public ChatRoom createCollabChatRoom(CollabAsk collabAsk, Long memberId) {
 
         // 콜라보 요청에 해당하는 채팅방 여부 확인
-        if (chatRoomRepository.findByCollabAsk(collabAsk) != null) {
+        if (!chatRoomRepository.findByCollabAsk(collabAsk).isEmpty()) {
             throw new CollabAskHandler(ErrorStatus.CHAT_ROOM_ALREADY_EXIST);
         }
 
