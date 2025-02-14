@@ -45,6 +45,7 @@ public class CollabAskResponseDTO {
         private Long senderId;
         private Long receiverId;
         private String colloabPostTitle;
+        private Long chatRoomId;
     }
 
 }
