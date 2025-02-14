@@ -1,7 +1,6 @@
 package com.partnerd.config.websocket;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.session.Session;
@@ -19,12 +18,20 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) {
+
         // 세션 ID 가져오기
         String sessionId = request.getHeaders().getFirst("Session-Id");
 
-        if (sessionId != null && sessionRepository.findById(sessionId) != null) {
-            attributes.put("sessionId", sessionId); // WebSocket 세션에 추가
-            return true;
+        System.out.println(sessionId);
+
+        if (sessionId != null) {
+            Session redisSession = sessionRepository.findById(sessionId); // ✅ Redis에서 세션 조회
+            System.out.println(redisSession);
+            if (redisSession != null) {
+                attributes.put("sessionId", sessionId); // ✅ WebSocket 세션에 저장
+                System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
+                return true;
+            }
         }
         System.out.println("WebSocket 세션 인증 실패");
         return false; // 핸드셰이크 중단
