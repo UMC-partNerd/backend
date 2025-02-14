@@ -87,7 +87,8 @@ public enum ErrorStatus implements BaseErrorCode {
     COLLAB_ASK_NOT_FOUND(HttpStatus.NOT_FOUND, "COLLABASK4001", "해당 콜라보레이션 요청이 없습니다."),
     COLLAB_ASK_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 요청한 콜라보레이션입니다."),
     COLLAB_ASK_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABASK4003", "작성자는 자신의 글에 요청할 수 없습니다."),
-
+    // 트랜잭션 롤백 관련 (콜라보 요청 후 채팅방 생성 실패)
+    COLLAB_ASK_TRANSACTION_ROLLBACK(HttpStatus.INTERNAL_SERVER_ERROR, "COLLABASK5001", "채팅방 생성 실패로 인해 콜라보 요청이 취소되었습니다."),
 
     // 채팅 관련
     CHAT_ROOM_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 생성된 채팅방이 있습니다."),

@@ -7,7 +7,7 @@ import com.partnerd.converter.collabAskConverter.CollabAskConverter;
 import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.service.collabAskService.CollabAskCommandService;
 import com.partnerd.service.collabAskService.CollabAskQueryService;
-import com.partnerd.web.dto.collabDTO.request.CollabAskRequestDTO;
+import com.partnerd.service.collabAskService.CollabAskService;
 import com.partnerd.web.dto.collabDTO.response.CollabAskResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class CollabAskRestController {
 
 
+    private final CollabAskService collabAskService;
     private final CollabAskCommandService collabAskCommandService;
     private final CollabAskQueryService collabAskQueryService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -37,9 +38,7 @@ public class CollabAskRestController {
         String token = authorizationHeader.replace("Bearer ", "");
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
-        CollabAsk collabAsk = collabAskCommandService.addCollabAsk(collabPostId, memberId);
-
-        return ApiResponse.onSuccess(CollabAskConverter.toAddCollabAskResponseDTO(collabAsk));
+        return ApiResponse.onSuccess(collabAskService.createCollabAskAndChatRoom(collabPostId, memberId));
 
     }
 
