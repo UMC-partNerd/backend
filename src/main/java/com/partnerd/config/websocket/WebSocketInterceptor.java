@@ -24,9 +24,14 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
         System.out.println(sessionId);
 
-        if (sessionId != null && sessionRepository.findById(sessionId) != null) {
-            attributes.put("sessionId", sessionId); // WebSocket 세션에 추가
-            return true;
+        if (sessionId != null) {
+            Session redisSession = sessionRepository.findById(sessionId); // ✅ Redis에서 세션 조회
+            System.out.println(redisSession);
+            if (redisSession != null) {
+                attributes.put("sessionId", sessionId); // ✅ WebSocket 세션에 저장
+                System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
+                return true;
+            }
         }
         System.out.println("WebSocket 세션 인증 실패");
         return false; // 핸드셰이크 중단
