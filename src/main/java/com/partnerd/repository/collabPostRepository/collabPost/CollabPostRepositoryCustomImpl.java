@@ -163,6 +163,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
 
         return queryFactory
                 .select(Projections.constructor(HomeCollabPostDTO.class,
+                        collabPost.id,
                         collabPost.title,
                         collabPost.intro,
                         club.name,
