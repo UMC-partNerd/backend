@@ -11,6 +11,7 @@ import com.partnerd.service.collabAskService.CollabAskService;
 import com.partnerd.web.dto.collabDTO.response.CollabAskResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class CollabAskServiceImpl implements CollabAskService {
     private final ChatRoomCommandServiceImpl chatRoomCommandService;
 
     @Override
+    @Transactional
     public CollabAskResponseDTO.addCollabAskResponseDTO createCollabAskAndChatRoom(Long collabPostId, Long memberId) {
 
         try {
@@ -27,7 +29,6 @@ public class CollabAskServiceImpl implements CollabAskService {
             ChatRoom chatRoom = chatRoomCommandService.createCollabChatRoom(collabAsk.getId(), memberId);
 
             return CollabAskConverter.toAddCollabAskResponseDTO(collabAsk, chatRoom);
-
         } catch (Exception e) {
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_TRANSACTION_ROLLBACK);
         }

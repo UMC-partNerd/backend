@@ -15,8 +15,10 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
 
     Optional<ClubMember> findByMember_id(Long memberId);
 
-    @Query("SELECT cm FROM ClubMember cm " +
-            "LEFT JOIN FETCH cm.club c " +
+    @Query("SELECT DISTINCT cm FROM ClubMember cm " +
+            "LEFT JOIN FETCH cm.sendCollabAsks " +
+            "LEFT JOIN FETCH cm.receivedCollabAsks " +
+            "LEFT JOIN FETCH cm.club " +
             "WHERE cm.member.id = :memberId")
     ClubMember findByMemberIdWithClub(Long memberId);
 
