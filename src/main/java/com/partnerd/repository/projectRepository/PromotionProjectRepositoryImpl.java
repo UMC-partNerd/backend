@@ -135,6 +135,7 @@ public class PromotionProjectRepositoryImpl implements PromotionProjectRepositor
 
         return queryFactory
                 .select(Projections.constructor(HomePromotionProjectDTO.class,
+                        promotionProject.id,
                         promotionProjectImage.keyName,
                         promotionProject.title,
                         promotionProject.intro))

@@ -27,6 +27,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
 
         return queryFactory
                 .select(Projections.constructor(HomeClubDTO.class,
+                        club.id,
                         clubImage.keyName,
                         club.name,
                         club.intro,

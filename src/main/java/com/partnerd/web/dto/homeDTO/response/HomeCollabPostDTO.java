@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HomeCollabPostDTO {
+    private Long id;
     private String title;
     private String intro;
     private String clubName;
