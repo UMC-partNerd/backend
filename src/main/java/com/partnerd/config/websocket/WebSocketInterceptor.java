@@ -26,15 +26,26 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
             HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
             HttpSession session = servletRequest.getSession(false);
 
+            System.out.println(session);
+            System.out.println(session.getId());
+
             if (session != null) {
-                String sessionId = session.getId(); // ✅ Redis에 저장된 세션 ID 가져오기
-                attributes.put("sessionId", sessionId); // ✅ WebSocket 세션에 저장
-                System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
-                return true;
+                String sessionId = session.getId(); // ✅ HttpSession에서 세션 ID 가져오기
+                System.out.println("🔍 HttpSession에서 가져온 sessionId: " + sessionId);
+
+                // ✅ Redis에서 해당 세션이 존재하는지 확인
+                Session redisSession = sessionRepository.findById(sessionId);
+                System.out.println("📡 Redis 세션 조회 결과: " + redisSession);
+
+                if (redisSession != null) {
+                    attributes.put("sessionId", sessionId); // ✅ WebSocket 세션에 저장
+                    System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
+                    return true;
+                }
             }
         }
 
-        System.out.println("WebSocket 세션 인증 실패");
+        System.out.println("❌ WebSocket 세션 인증 실패");
         return false; // 핸드셰이크 중단
     }
 
