@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -19,7 +17,8 @@ public class KafkaConsumer {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageRepository chatMessageRepository;
 
-    @KafkaListener(topics = "chat-topic", groupId = "chat-group-id",
+    @KafkaListener(topics = "#{'${spring.kafka.topic.chat}'}",
+            groupId = "#{'${spring.kafka.consumer.group-id}'}",
             properties = {"spring.json.trusted.packages=com.partnerd.service.kafkaService"})
     public void consumeChatMessage(Message message) {
 
