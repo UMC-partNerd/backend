@@ -55,5 +55,7 @@ public class KafkaConsumer {
 
         // ✅ WebSocket을 통해 특정 채팅방으로 메시지 전달
         messagingTemplate.convertAndSend("/subscribe/chat/" + message.getChatRoomId(), chatResponseDTO);
+        System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
+
     }
 }
