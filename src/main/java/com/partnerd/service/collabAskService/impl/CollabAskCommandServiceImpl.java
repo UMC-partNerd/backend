@@ -46,7 +46,7 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
         if(isCheckDuplication != null) {
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_ALREADY_EXIST);
         }
-
+        
         // 보내는 사람 (동아리까지 함께 조회)
         ClubMember sender = clubMemberRepository.findByMemberIdWithClub(memberId);
 
