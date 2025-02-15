@@ -1,5 +1,6 @@
 package com.partnerd.service.chatService.impl;
 
+import com.partnerd.converter.ChatConverter;
 import com.partnerd.domain.chat.ChatMessage;
 import com.partnerd.repository.chatRoomRepository.ChatMessageRepository;
 import com.partnerd.service.chatService.ChatQueryService;
@@ -27,30 +28,7 @@ public class ChatQueryServiceImpl implements ChatQueryService {
         List<ChatMessage> chatMessageList = chatMessageRepository.findChatMessagesByChatRoomIdOrderBySendDateTimeAsc(chatRoomId);
 
         List<ChatDTO.ChatResponseDTO> chatDTOList = chatMessageList.stream()
-                .map(chatMessage -> {
-                    // ✅ MongoDB에서 가져온 UTC 시간
-                    Instant sendDateTime = chatMessage.getSendDateTime();
-
-                    // ✅ 한국 시간(KST)으로 변환
-                    ZonedDateTime zonedDateTime = sendDateTime.atZone(ZoneId.of("Asia/Seoul"));
-
-                    // ✅ 날짜 & 시간 포맷 변환
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-                    String sendDate = zonedDateTime.format(dateFormatter);
-                    String sendTime = zonedDateTime.format(timeFormatter);
-
-                    ChatDTO.ChatResponseDTO chatResponseDTO = ChatDTO.ChatResponseDTO.builder()
-                            .chatRoomId(chatMessage.getChatRoomId())
-                            .senderNickname(chatMessage.getSenderNickname())
-                            .content(chatMessage.getContent())
-                            .contentType(chatMessage.getContentType())
-                            .sendTime(sendTime)
-                            .sendDate(sendDate)
-                            .build();
-                    return chatResponseDTO;
-                }).collect(Collectors.toList());
+                .map(ChatConverter::toChatResponseDTO).collect(Collectors.toList());
 
         return chatDTOList;
     }

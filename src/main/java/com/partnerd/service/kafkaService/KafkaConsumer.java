@@ -1,5 +1,6 @@
 package com.partnerd.service.kafkaService;
 
+import com.partnerd.converter.ChatConverter;
 import com.partnerd.domain.chat.ChatMessage;
 import com.partnerd.repository.chatRoomRepository.ChatMessageRepository;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
@@ -9,8 +10,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -35,29 +34,14 @@ public class KafkaConsumer {
                 .readCount(message.getReadCount())
                 .build();
 
-
-        // ✅ 날짜 & 시간 포맷 변환
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        String sendDate = message.getSendDateTime().format(dateFormatter);
-        String sendTime = message.getSendDateTime().format(timeFormatter);
-
         // MongoDB 에 저장
         chatMessageRepository.save(chatMessage);
 
-        ChatDTO.ChatResponseDTO chatResponseDTO =ChatDTO.ChatResponseDTO.builder()
-                .chatRoomId(message.getChatRoomId())
-                .senderNickname(message.getSenderNickname())
-                .content(message.getContent())
-                .contentType(message.getContentType())
-                .sendTime(sendTime)
-                .sendDate(sendDate)
-                .build();
 
+        ChatDTO.ChatResponseDTO chatResponseDTO = ChatConverter.toChatResponseDTO(chatMessage);
         // ✅ WebSocket을 통해 특정 채팅방으로 메시지 전달
         messagingTemplate.convertAndSend("/subscribe/chat/" + message.getChatRoomId(), chatResponseDTO);
-        System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
 
+        System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
     }
 }
