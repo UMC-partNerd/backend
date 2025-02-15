@@ -25,8 +25,9 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
         if (request instanceof ServletServerHttpRequest) {
             HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
 
-            // ✅ 1. 헤더에서 `Session-Id` 가져오기
-            String sessionId = servletRequest.getHeader("Session-Id");
+            // ✅ 1. Query parameter 로 `Session-Id` 가져오기
+            String sessionId = servletRequest.getParameter("sessionId");
+            System.out.println("🚀 전달된 Session-Id: " + servletRequest.getParameter("sessionId"));
             System.out.println("🔍 WebSocket 요청 - 전달된 Session-Id: " + sessionId);
 
             if (sessionId == null) {
