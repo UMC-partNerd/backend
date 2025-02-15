@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/login/kakao", "/api/auth/token/refresh").permitAll() // 카카오 로그인 허용
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll() // 스웨거 허용
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/chat").permitAll() // 스웨거 허용
                         .requestMatchers("/**").permitAll() // 모든 요청 허용 (테스트 단계)
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
