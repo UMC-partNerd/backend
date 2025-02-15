@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +31,7 @@ public class KafkaConsumer {
                 .contentType(message.getContentType())
                 .content(message.getContent())
                 .senderNickname(message.getSenderNickname())
-                .sendDateTime(message.getSendDateTime().toInstant(ZoneOffset.UTC)) // ISODate 형식으로 저장됨
+                .sendDateTime(Instant.now()) // ISODate 형식으로 저장됨 (UTC)
                 .readCount(message.getReadCount())
                 .build();
 

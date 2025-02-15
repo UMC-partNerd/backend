@@ -28,7 +28,6 @@ public class KafkaProducer {
                 .contentType("text")  // 기본 텍스트 타입
                 .content(chatDTO.getContent())
                 .senderNickname(chatDTO.getSenderNickname())
-                .sendDateTime(sendDateTime)
                 .readCount(0) // 초기 읽음 카운트 0
                 .build();
 

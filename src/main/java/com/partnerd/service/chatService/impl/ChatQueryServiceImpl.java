@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +28,18 @@ public class ChatQueryServiceImpl implements ChatQueryService {
 
         List<ChatDTO.ChatResponseDTO> chatDTOList = chatMessageList.stream()
                 .map(chatMessage -> {
-                    LocalDateTime localDateTime = LocalDateTime.ofInstant(chatMessage.getSendDateTime(), ZoneId.of("Asia/Seoul"));
+                    // ✅ MongoDB에서 가져온 UTC 시간
+                    Instant sendDateTime = chatMessage.getSendDateTime();
+
+                    // ✅ 한국 시간(KST)으로 변환
+                    ZonedDateTime zonedDateTime = sendDateTime.atZone(ZoneId.of("Asia/Seoul"));
+
                     // ✅ 날짜 & 시간 포맷 변환
                     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-                    String sendDate = localDateTime.format(dateFormatter);
-                    String sendTime = localDateTime.format(timeFormatter);
+                    String sendDate = zonedDateTime.format(dateFormatter);
+                    String sendTime = zonedDateTime.format(timeFormatter);
 
                     ChatDTO.ChatResponseDTO chatResponseDTO = ChatDTO.ChatResponseDTO.builder()
                             .chatRoomId(chatMessage.getChatRoomId())
