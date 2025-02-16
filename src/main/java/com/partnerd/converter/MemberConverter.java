@@ -11,6 +11,7 @@ public class MemberConverter {
         return MemberResponseDTO.ReadMemberResultDTO.builder()
                 .profileKeyName(member.getProfile_url())
                 .name(member.getName())
+                .password(member.getPassword())
                 .nickname(member.getNickname())
                 .birth(member.getBirth())
                 .email(member.getEmail())
