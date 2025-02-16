@@ -43,11 +43,6 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
                     System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
                     return true;
                 }
-
-            // ✅ 3. WebSocket 세션에 저장
-            attributes.put("sessionId", sessionId);
-            System.out.println("✅ WebSocket 세션 인증 성공: " + sessionId);
-            return true;
         }
 
 
