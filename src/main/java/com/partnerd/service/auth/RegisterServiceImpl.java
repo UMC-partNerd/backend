@@ -25,7 +25,7 @@ public class RegisterServiceImpl implements RegisterService {
     private final JwtTokenProvider jwtTokenProvider;
 
     // 기본 프로필 이미지 경로
-    private static final String DEFAULT_PROFILE_IMAGE = "myProfileImage/기본프로필.jpg";
+    private static final String DEFAULT_PROFILE_IMAGE = "myProfileImage/basicprofile.jpg";
 
     @Override
     public RegisterResponseDTO registerUser(RegisterRequestDTO request, String token) {
