@@ -7,4 +7,5 @@ public interface CommunityCommandService {
 
     Community addCommunity(Long memberId, CommunityRequestDTO.addRequestCommunityDTO requestDTO);
 
+    Community modifyCommunity(Long memberId, Long communityId, CommunityRequestDTO.addRequestCommunityDTO requestDTO);
 }

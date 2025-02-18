@@ -117,7 +117,11 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
     CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다."),
     CLUB_MEMBERSHIP_ALREADY_APPROVED(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4004", "이미 가입한 동아리입니다."),
-    CLUB_MEMBERSHIP_ALREADY_REQUESTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4005", "이미 가입을 요청한 동아리입니다.");
+    CLUB_MEMBERSHIP_ALREADY_REQUESTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4005", "이미 가입을 요청한 동아리입니다."),
+
+    // 커뮤니티 관련
+    COMMUNITY_NOT_FOUND(HttpStatus.FORBIDDEN, "COMMUNITY4001", "커뮤니티 글이 존재하지 않습니다"),
+    COMMUNITY_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COMMUNITY4003", "커뮤니티 작성자만 수행할 수 있습니다.");
 
 
     private final HttpStatus httpStatus;
