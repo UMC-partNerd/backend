@@ -5,8 +5,10 @@ import com.partnerd.apiPaylaod.exception.handler.CommunityHandler;
 import com.partnerd.domain.Community;
 import com.partnerd.domain.CommunityImage;
 import com.partnerd.domain.Member;
+import com.partnerd.domain.mapping.CommunityLikes;
 import com.partnerd.repository.communityRepository.CommnunityRepository;
 import com.partnerd.repository.communityRepository.CommunityImgRepository;
+import com.partnerd.repository.communityRepository.CommunityLikesRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.communityService.CommunityCommandService;
 import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;
@@ -21,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityCommandServiceImpl implements CommunityCommandService {
 
-    private final CommnunityRepository commnunityRepository;
+    private final CommnunityRepository communityRepository;
     private final CommunityImgRepository communityImgRepository;
+    private final CommunityLikesRepository communityLikesRepository;
     private final MemberRepository memberRepository;
 
     @Override
@@ -49,7 +52,7 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
                         communityImage.setCommunity(community);}));
         }
 
-        return commnunityRepository.save(community);
+        return communityRepository.save(community);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
         List<CommunityImage> ImgToAdd = new ArrayList<>();
 
         // 커뮤니티 글이 존재하는지,해당 글에 작성자인지 확인
-        Community community = commnunityRepository.findByIdWithMemebr(communityId).orElseThrow(() ->
+        Community community = communityRepository.findByIdWithMemebr(communityId).orElseThrow(() ->
             new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
 
         community.validatorAuthor(memberId);
@@ -102,18 +105,47 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
 
         community.updateCommunity(requestDTO.getTitle(), requestDTO.getContent());
 
-        return commnunityRepository.save(community);
+        return communityRepository.save(community);
     }
 
     @Override
+    @Transactional
     public void deleteCommunity(Long memberId, Long communityId) {
-        Community community = commnunityRepository.findById(communityId).orElseThrow(()
+        Community community = communityRepository.findById(communityId).orElseThrow(()
             -> new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
 
         community.validatorAuthor(memberId);
 
-        commnunityRepository.delete(community);
+        communityRepository.delete(community);
     }
 
+    @Override
+    @Transactional
+    public Community communityLikes(Long memberId, Long communityId) {
+
+        CommunityLikes communityLikes = communityLikesRepository.findByCommunity_idAndMember_id(communityId, memberId);
+        Community community = communityRepository.findByIdWithLikes(communityId).orElseThrow(() ->
+                new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
+
+        // 좋아요
+        if(communityLikes == null) {
+            Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                    new CommunityHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+            CommunityLikes addLikes = CommunityLikes.builder()
+                    .member(member)
+                    .build();
+            addLikes.setCommunity(community);
+
+            community.addLikes();
+            communityLikesRepository.save(addLikes);
+        } else { // 좋아요 취소
+            community.removeLikes();
+            communityLikesRepository.delete(communityLikes);
+        }
+
+        return communityRepository.save(community);
+
+    }
 
 }

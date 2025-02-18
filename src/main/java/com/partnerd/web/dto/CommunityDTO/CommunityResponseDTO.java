@@ -16,4 +16,11 @@ public class CommunityResponseDTO {
         List<String> communityImgKeyName;
 
     }
+    @Getter
+    @Builder
+    public static class responseLikesDTO {
+        Long communityId;
+        int likes;
+    }
+
 }

@@ -87,10 +87,31 @@ public class CommunityRestController {
         return ApiResponse.onSuccess(communityId);
     }
 
-    // 커뮤니티 좋아요
 
+
+    // 커뮤니티 좋아요
+    @PatchMapping("/{communityId}/likes")
+    @Operation(summary = "커뮤니티 좋아요/좋아요 취소 API",description = "커뮤니티의 좋아요 개수 증가/감소하는 API입니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CommunityResponseDTO.responseLikesDTO> communityLikes (@RequestHeader("Authorization") String authorizationHeader,
+                                             @PathVariable(name = "communityId") Long communityId) {
+
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new CommunityHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        Community community = communityCommandService.communityLikes(memberId, communityId);
+
+        return ApiResponse.onSuccess(CommunityConverter.toLikesResultDTO(community));
+    }
 
     // 커뮤니티 글 전체 조회
+
 
     // 커뮤니티 인기글 TOP 10 조회
 

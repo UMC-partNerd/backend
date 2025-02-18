@@ -10,4 +10,6 @@ public interface CommunityCommandService {
     Community modifyCommunity(Long memberId, Long communityId, CommunityRequestDTO.addRequestCommunityDTO requestDTO);
 
     void deleteCommunity(Long memberId, Long communityId);
+
+    Community communityLikes(Long memberId, Long communityId);
 }

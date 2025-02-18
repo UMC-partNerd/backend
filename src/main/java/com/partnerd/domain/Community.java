@@ -3,6 +3,7 @@ package com.partnerd.domain;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CommunityHandler;
 import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.mapping.CommunityLikes;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +49,9 @@ public class Community extends BaseEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityImage> communityImageList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityLikes> communityLikesList  = new ArrayList<>();
+
     public void setMember(Member member) {
         if(this.member != null) {
             this.member.getCommunityList().remove(this);
@@ -68,5 +72,12 @@ public class Community extends BaseEntity {
         }
     }
 
+    public void addLikes () {
+        this.likes += 1;
+    }
+
+    public void removeLikes () {
+        this.likes -= 1;
+    }
 
 }
