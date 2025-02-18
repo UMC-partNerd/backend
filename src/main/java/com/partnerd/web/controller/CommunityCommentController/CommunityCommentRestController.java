@@ -143,4 +143,27 @@ public class CommunityCommentRestController {
         return ApiResponse.onSuccess(communityCommentList);
     }
 
+    // 커뮤니티 댓글 좋아요
+    @PatchMapping("/comment/{commentId}/likes")
+    @Operation(summary = "커뮤니티 댓글/대댓글 좋아요/좋아요 취소 API",description = "커뮤니티의 댓글/대댓글 좋아요 개수 증가/감소하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    @Parameters({
+            @Parameter(name = "commentId", description = "커뮤니티 댓글의 ID, path variable 입니다!")
+    })
+    public ApiResponse<Void> geCommunityCommentLikes(@RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
+                                                    @PathVariable(name = "commentId") Long commentId){
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new CommunityCommentHandler(ErrorStatus.TOKEN_EXPIRED);
+
+        // jwt토큰으로 멤버id 뽑기
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtTokenProvider.getClaims(token);
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        communityCommentService.communityCommentLikes(memberId, commentId);
+        return ApiResponse.onSuccess(null);
+    }
 }

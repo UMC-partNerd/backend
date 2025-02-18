@@ -4,6 +4,9 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CommunityCommentHandler;
 import com.partnerd.converter.CommunityCommentConverter;
 import com.partnerd.domain.CommunityComment;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.mapping.CommunityCommentLikes;
+import com.partnerd.repository.communityCommentRepository.CommunityCommentLikesRepository;
 import com.partnerd.repository.communityCommentRepository.CommunityCommentRepository;
 import com.partnerd.repository.communityRepository.CommunityRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -22,6 +25,7 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
     private final CommunityRepository communityRepository;
     private final CommunityCommentRepository communityCommentRepository;
     private final MemberRepository memberRepository;
+    private final CommunityCommentLikesRepository communityCommentLikesRepository;
 
     // 커뮤니티 댓글 작성
     @Override
@@ -134,5 +138,34 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
         return communityCommentList.stream()
                 .map(CommunityCommentConverter::toGetCommunityCommentListResultDTO)
                 .toList();
+    }
+
+    // 커뮤니티 댓글 좋아요
+    @Override
+    public void communityCommentLikes(Long memberId, Long commentId){
+        boolean exists = communityCommentLikesRepository.existsByMemberIdAndCommunityCommentId(memberId, commentId);
+        CommunityComment comment = communityCommentRepository.findById(commentId)
+                .orElseThrow(() -> new CommunityCommentHandler(ErrorStatus.COMMUNITY_COMMENT_NOT_FOUND));
+
+
+        if (exists) {
+            // 좋아요 취소
+            communityCommentLikesRepository.deleteByMemberIdAndCommunityCommentId(memberId, commentId);
+            comment.setLikes(comment.getLikes() - 1);
+        } else {
+            // 좋아요 추가
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new CommunityCommentHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+            CommunityCommentLikes communityLikes = CommunityCommentLikes.builder()
+                    .member(member)
+                    .communityComment(comment)
+                    .build();
+
+            communityCommentLikesRepository.save(communityLikes);
+            comment.setLikes(comment.getLikes() + 1);
+        }
+
+        communityCommentRepository.save(comment);
     }
 }
