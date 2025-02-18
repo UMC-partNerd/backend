@@ -1,8 +1,6 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.projectLikes;
 
 
-import com.partnerd.domain.QMember;
-import com.partnerd.domain.QProjectComment;
 import com.partnerd.domain.mapping.QProjectLikes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

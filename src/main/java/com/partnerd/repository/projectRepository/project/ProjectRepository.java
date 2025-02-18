@@ -1,4 +1,4 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.project;
 
 
 import com.partnerd.domain.Project;

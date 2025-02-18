@@ -1,4 +1,4 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.promotionProjectComment;
 
 import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.domain.QMember;

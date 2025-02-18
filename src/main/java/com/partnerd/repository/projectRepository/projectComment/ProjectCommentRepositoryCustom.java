@@ -1,4 +1,4 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.projectComment;
 
 import com.partnerd.domain.Member;
 import com.partnerd.domain.ProjectComment;

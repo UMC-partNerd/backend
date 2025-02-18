@@ -1,4 +1,4 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.projectLikes;
 
 import com.partnerd.domain.mapping.ProjectLikes;
 import org.springframework.data.jpa.repository.JpaRepository;

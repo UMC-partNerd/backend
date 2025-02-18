@@ -1,4 +1,4 @@
-package com.partnerd.repository.projectRepository;
+package com.partnerd.repository.projectRepository.projectVote;
 
 
 import com.partnerd.domain.mapping.QProjectVote;
