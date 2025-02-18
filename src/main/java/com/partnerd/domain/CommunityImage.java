@@ -18,5 +18,20 @@ public class CommunityImage extends BaseEntity {
 
     // 이미지 url
     @Column(nullable = false)
-    private String image_url;
+    private String keyName;
+
+    @ManyToOne
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    public void setCommunity(Community community) {
+        if(this.community != null) {
+            this.community.getCommunityImageList().remove(this);
+        }
+
+        this.community = community;
+        community.getCommunityImageList().add(this);
+    }
+
+
 }

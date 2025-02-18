@@ -4,6 +4,9 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -26,5 +29,23 @@ public class Community extends BaseEntity {
 
     // 좋아요
     @Column(nullable = false)
-    private String likes;
+    private int likes;
+
+    // 작성자
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityImage> communityImageList = new ArrayList<>();
+
+    public void setMember(Member member) {
+        if(this.member != null) {
+            this.member.getCommunityList().remove(this);
+        }
+
+        this.member = member;
+        member.getCommunityList().add(this);
+    }
+
 }

@@ -1,0 +1,10 @@
+package com.partnerd.service.communityService;
+
+import com.partnerd.domain.Community;
+import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;
+
+public interface CommunityCommandService {
+
+    Community addCommunity(Long memberId, CommunityRequestDTO.addRequestCommunityDTO requestDTO);
+
+}
