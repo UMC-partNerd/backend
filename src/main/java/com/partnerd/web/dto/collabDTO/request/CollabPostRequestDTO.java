@@ -1,6 +1,7 @@
 package com.partnerd.web.dto.collabDTO.request;
 
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.w3c.dom.NameList;
@@ -12,6 +13,7 @@ public class CollabPostRequestDTO {
 
     @Getter
     @Setter
+    @Builder
     public static class RequestCollabPostDTO {
         private String title;
         private String intro;
