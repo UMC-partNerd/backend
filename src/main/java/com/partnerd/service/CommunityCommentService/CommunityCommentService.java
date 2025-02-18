@@ -22,4 +22,7 @@ public interface CommunityCommentService {
 
     // 커뮤니티 댓글 전체 조회
     List<CommunityCommentResponseDTO.GetCommunityCommentListResultDTO> getCommunityCommentList(Long communityId);
+
+    // 커뮤니티 댓글 좋아요
+    void communityCommentLikes(Long memberId, Long commentId);
 }
