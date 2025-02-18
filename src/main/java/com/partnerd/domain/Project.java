@@ -42,7 +42,6 @@ public class Project extends BaseEntity {
     private String current_progress;
 
     // 필요한 역량
-//    @Column(nullable = false)
     private String skill;
 
     // 필요한 파트
