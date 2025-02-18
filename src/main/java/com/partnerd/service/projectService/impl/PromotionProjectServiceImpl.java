@@ -1,4 +1,4 @@
-package com.partnerd.service.projectService;
+package com.partnerd.service.projectService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.PromotionProjectHandler;
@@ -12,6 +12,7 @@ import com.partnerd.repository.projectRepository.projectVote.ProjectVoteReposito
 import com.partnerd.repository.projectRepository.PromotionProjectMemberRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.promotionProject.PromotionProjectRepository;
+import com.partnerd.service.projectService.PromotionProjectService;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.partnerd.service.projectService;
+package com.partnerd.service.projectService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
@@ -10,6 +10,7 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.projectComment.ProjectCommentRepository;
 import com.partnerd.repository.projectRepository.projectLikes.ProjectLikesRepository;
 import com.partnerd.repository.projectRepository.project.ProjectRepository;
+import com.partnerd.service.projectService.ProjectCommentService;
 import com.partnerd.web.dto.projectDTO.ProjectCommentRequestDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCommentResponseDTO;
 import lombok.RequiredArgsConstructor;

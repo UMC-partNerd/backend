@@ -1,4 +1,4 @@
-package com.partnerd.service.projectService;
+package com.partnerd.service.projectService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
@@ -14,6 +14,7 @@ import com.partnerd.repository.projectRepository.ProjectCategoryPreferRepository
 import com.partnerd.repository.projectRepository.ProjectCategoryRepository;
 import com.partnerd.repository.projectRepository.ProjectMemberRepository;
 import com.partnerd.repository.projectRepository.project.ProjectRepository;
+import com.partnerd.service.projectService.ProjectService;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
