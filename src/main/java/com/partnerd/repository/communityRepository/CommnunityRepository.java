@@ -12,4 +12,6 @@ public interface CommnunityRepository extends JpaRepository<Community, Long> {
     @Query("SELECT cm FROM Community cm JOIN FETCH cm.member m WHERE cm.id = :id" )
     Optional<Community> findByIdWithMemebr(@Param("id") Long communityId);
 
+    Optional<Community> findByIdAndMember_id(Long communityId, Long memberId);
+
 }

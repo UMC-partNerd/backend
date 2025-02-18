@@ -1,5 +1,7 @@
 package com.partnerd.domain;
 
+import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.CommunityHandler;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,6 +53,12 @@ public class Community extends BaseEntity {
     public void updateCommunity(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void validatorAuthor(Long memberId) {
+        if (this.getMember().getId() != memberId) {
+            throw new CommunityHandler(ErrorStatus.COMMUNITY_NOT_AUTHOR);
+        }
     }
 
 

@@ -25,12 +25,12 @@ public class CommunityRestController {
 
     // 커뮤니티 글 생성
     @PostMapping
-    @Operation(summary = "커뮤니티 글 생성 API",description = "커뮤니티 글을 생성하는 API입니다.")
+    @Operation(summary = "커뮤니티 글 생성 API", description = "커뮤니티 글을 생성하는 API입니다.")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     public ApiResponse<CommunityResponseDTO.addResponseCommunityDTO> addCollabPost(@RequestHeader("Authorization") String authorizationHeader,
-                                                           @RequestBody CommunityRequestDTO.addRequestCommunityDTO requestDTO) {
+                                                                                   @RequestBody CommunityRequestDTO.addRequestCommunityDTO requestDTO) {
 
         // 토큰 에러 처리
         if (authorizationHeader == null || authorizationHeader.isEmpty())
@@ -47,13 +47,13 @@ public class CommunityRestController {
 
     // 커뮤니티 글 수정
     @PatchMapping("/{communityId}")
-    @Operation(summary = "커뮤니티 글 수정정 API",description = "커뮤니티 글을 수정하는 API입니다.")
+    @Operation(summary = "커뮤니티 글 수정정 API", description = "커뮤니티 글을 수정하는 API입니다.")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
-    public ApiResponse<CommunityResponseDTO.addResponseCommunityDTO> modifyCommunity (@RequestHeader("Authorization") String authorizationHeader,
-                                                              @PathVariable(name = "communityId") Long communityId,
-                                                              @RequestBody CommunityRequestDTO.addRequestCommunityDTO requestDTO) {
+    public ApiResponse<CommunityResponseDTO.addResponseCommunityDTO> modifyCommunity(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                     @PathVariable(name = "communityId") Long communityId,
+                                                                                     @RequestBody CommunityRequestDTO.addRequestCommunityDTO requestDTO) {
         // 토큰 에러 처리
         if (authorizationHeader == null || authorizationHeader.isEmpty())
             throw new CommunityHandler(ErrorStatus.TOKEN_EXPIRED);
@@ -66,5 +66,24 @@ public class CommunityRestController {
         return ApiResponse.onSuccess(CommunityConverter.toCommunityResultDTO(community));
     }
 
+    // 커뮤니티 글 삭제
+    @DeleteMapping("/{communityId}")
+    @Operation(summary = "커뮤니티 글 삭제 API", description = "커뮤니티 글을 삭제하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+    })
+    public ApiResponse<Long> deleteCommunity(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                     @PathVariable(name = "communityId") Long communityId,
+                                                                                     @RequestBody CommunityRequestDTO.addRequestCommunityDTO requestDTO) {
+        // 토큰 에러 처리
+        if (authorizationHeader == null || authorizationHeader.isEmpty())
+            throw new CommunityHandler(ErrorStatus.TOKEN_EXPIRED);
 
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        communityCommandService.deleteCommunity(memberId, communityId);
+
+        return ApiResponse.onSuccess(communityId);
+    }
 }

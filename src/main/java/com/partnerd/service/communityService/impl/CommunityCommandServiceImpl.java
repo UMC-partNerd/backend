@@ -63,10 +63,7 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
         Community community = commnunityRepository.findByIdWithMemebr(communityId).orElseThrow(() ->
             new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
 
-        if (community.getMember().getId() != memberId) {
-            throw new CommunityHandler(ErrorStatus.COMMUNITY_NOT_AUTHOR);
-        }
-
+        community.validatorAuthor(memberId);
 
         // 수정 시 이미지를 모두 지웠을 때, 저장된 이미지가 있으면 모두 삭제.
         if (requestDTO.getCommunityImgKeyName() == null) {
@@ -106,6 +103,16 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
         community.updateCommunity(requestDTO.getTitle(), requestDTO.getContent());
 
         return commnunityRepository.save(community);
+    }
+
+    @Override
+    public void deleteCommunity(Long memberId, Long communityId) {
+        Community community = commnunityRepository.findById(communityId).orElseThrow(()
+            -> new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
+
+        community.validatorAuthor(memberId);
+
+        commnunityRepository.delete(community);
     }
 
 
