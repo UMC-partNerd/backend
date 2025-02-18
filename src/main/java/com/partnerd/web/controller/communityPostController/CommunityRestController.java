@@ -7,6 +7,7 @@ import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.communityConverter.CommunityConverter;
 import com.partnerd.domain.Community;
 import com.partnerd.service.communityService.CommunityCommandService;
+import com.partnerd.service.communityService.CommunityQueryService;
 import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;
 import com.partnerd.web.dto.CommunityDTO.CommunityResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,13 +15,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
-@RequestMapping("/api/community/post")
+@RequestMapping("/api/community")
 @RequiredArgsConstructor
 public class CommunityRestController {
 
     private final CommunityCommandService communityCommandService;
+    private final CommunityQueryService communityQueryService;
     private final JwtTokenProvider jwtTokenProvider;
 
     // 커뮤니티 글 생성
@@ -111,9 +115,25 @@ public class CommunityRestController {
     }
 
     // 커뮤니티 글 전체 조회
+    @GetMapping
+    @Operation(summary = "커뮤니티 글 전체 조회 API",description = "커뮤니티 글 전체 조회 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CommunityResponseDTO.CommunityPreviewListDTO> getAllCommunity (@RequestParam(required = false) Long cursor, // 이전 페이지의 마지막 ID (없으면 첫 페이지)
+                                                        @RequestParam(defaultValue = "30") int size) { // 한 페이지에 가져올 데이터 개수
 
+        return ApiResponse.onSuccess(communityQueryService.getCommunityList(cursor, size));
+    }
 
     // 커뮤니티 인기글 TOP 10 조회
-
+    @GetMapping("/popularity")
+    @Operation(summary = "커뮤니티 인기글 TOP 10 조회 API",description = "커뮤니티 인기글 TOP 10 조회 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<List<CommunityResponseDTO.CommunityTop10PreviewDTO>> getTop10Community () {
+        return ApiResponse.onSuccess(communityQueryService.getCommunityTop10List());
+    }
 
 }

@@ -6,7 +6,7 @@ import com.partnerd.domain.Community;
 import com.partnerd.domain.CommunityImage;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.mapping.CommunityLikes;
-import com.partnerd.repository.communityRepository.CommnunityRepository;
+import com.partnerd.repository.communityRepository.CommunityRepository;
 import com.partnerd.repository.communityRepository.CommunityImgRepository;
 import com.partnerd.repository.communityRepository.CommunityLikesRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityCommandServiceImpl implements CommunityCommandService {
 
-    private final CommnunityRepository communityRepository;
+    private final CommunityRepository communityRepository;
     private final CommunityImgRepository communityImgRepository;
     private final CommunityLikesRepository communityLikesRepository;
     private final MemberRepository memberRepository;
