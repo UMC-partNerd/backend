@@ -18,6 +18,7 @@ public class MemberResponseDTO {
     public static class ReadMemberResultDTO {
         String profileKeyName;           // 프로필 사진 키네임
         String name;                 // 이름
+        String password;          // 비밀번호
         String nickname;             // 닉네임
         Date birth;                // 생년월일
         String email;                // 이메일

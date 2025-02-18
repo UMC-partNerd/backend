@@ -8,10 +8,7 @@ import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -53,13 +50,15 @@ public class ClubMember extends BaseEntity {
     @OneToMany(mappedBy = "clubMember", cascade = CascadeType.ALL)
     private List<CollabPost> collabPostList = new ArrayList<>();
 
+
     // 보낸 콜라보 요청
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true )
-    private List<CollabAsk> sendCollabAsks = new ArrayList<>();
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CollabAsk> sendCollabAsks = new HashSet<>();
 
     // 받은 콜라보 요청
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true )
-    private List<CollabAsk> receivedCollabAsks = new ArrayList<>();
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CollabAsk> receivedCollabAsks = new HashSet<>();
+
 
 
 

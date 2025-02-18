@@ -56,7 +56,7 @@ public class ChatRoomRestController {
     }
 
     // 콜라보 요청 시 chatRoom 생성
-    @PostMapping("/{collabAskId}")
+    @PostMapping("/collab/{collabAskId}")
     @Operation(summary = "콜라보 요청 채팅방 생성 API", description = "콜라보 요청 채팅방을 생성할 수 있는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
@@ -73,7 +73,7 @@ public class ChatRoomRestController {
     }
 
     // 컨택트 시 chatRoom 생성
-    @PostMapping("/{nickname}")
+    @PostMapping("/private/{nickname}")
     @Operation(summary = "컨택트 채팅방 생성 API", description = "컨택트 채팅방을 생성할 수 있는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),

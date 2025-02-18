@@ -10,4 +10,5 @@ public class LoginResponseDTO {
     private Long id; // 사용자 ID
     private String email; // 이메일
     private boolean isNewUser; // 새로운 유저 여부 추가
+    private String sessionId; // 세션 ID
 }

@@ -4,23 +4,43 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
 public class ChatDTO {
 
-    @NotNull
-    private Long chatRoomId;
 
-    @NotNull
-    private String contentType;
+    @Getter
+    @Builder
+    public static class ChatRequestDTO {
 
-    @NotNull
-    private String content;
+        @NotNull
+        private Long chatRoomId;
 
-    private String senderNickName;
+        @NotNull
+        private String contentType;
 
-    private Long senderId;
+        @NotNull
+        private String content;
 
-    @NotNull
-    private Long collabAskId;
+        private String senderNickname;
+    }
+
+    @Getter
+    @Builder
+    public static class ChatResponseDTO {
+
+        @NotNull
+        private Long chatRoomId;
+
+        @NotNull
+        private String contentType;
+
+        @NotNull
+        private String content;
+
+        private String senderNickname;
+        private String sendTime;
+        private String sendDate;
+    }
+
+
+
 }

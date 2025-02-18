@@ -70,6 +70,7 @@ dependencies {
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.5.3.RELEASE'
+	implementation 'org.springframework.session:spring-session-data-redis'    // Redis 기반 세션 관리
 
 	// kafka
 	implementation 'org.springframework.kafka:spring-kafka'

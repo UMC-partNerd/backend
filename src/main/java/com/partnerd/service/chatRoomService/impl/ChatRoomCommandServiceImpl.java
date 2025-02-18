@@ -15,7 +15,6 @@ import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.chatRoomService.ChatRoomCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedHashSet;
 
 @Service
@@ -30,12 +29,12 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
     public ChatRoom createCollabChatRoom(Long collabAskId, Long memberId) {
 
         // 해당 콜리보 요청 조회
-        CollabAsk collabAsk = collabAskRepository.findByIdWithSenderAndReceiver(collabAskId).orElseThrow(() -> {
+       CollabAsk collabAsk = collabAskRepository.findByIdWithSenderAndReceiver(collabAskId).orElseThrow(() ->{
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_NOT_FOUND);
         });
 
         // 콜라보 요청에 해당하는 채팅방 여부 확인
-        if (chatRoomRepository.findByCollabAsk(collabAsk) != null) {
+        if (!chatRoomRepository.findByCollabAsk(collabAsk).isEmpty()) {
             throw new CollabAskHandler(ErrorStatus.CHAT_ROOM_ALREADY_EXIST);
         }
 

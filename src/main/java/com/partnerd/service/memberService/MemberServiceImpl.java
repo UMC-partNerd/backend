@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
-    // 내프로필 수정
+    // 내프로필 조회
     @Override
     public Member readMember(Long memberId) {
         return memberRepository.findById(memberId)

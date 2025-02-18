@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HomeClubDTO {
+    private Long id;
     private String profileImage;
     private String name;
     private String intro;

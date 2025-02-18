@@ -120,6 +120,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         return queryFactory
                 .select(Projections.constructor(HomeProjectDTO.class,
+                        project.id,
                         projectImage.keyName,
                         project.title,
                         project.intro))
