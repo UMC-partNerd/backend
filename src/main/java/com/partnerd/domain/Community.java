@@ -4,6 +4,9 @@ import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Builder
@@ -27,4 +30,8 @@ public class Community extends BaseEntity {
     // 좋아요
     @Column(nullable = false)
     private String likes;
+
+    // 커뮤니티 댓글
+    @OneToMany(mappedBy = "community", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CommunityComment> communityCommentList = new LinkedHashSet<>();
 }
