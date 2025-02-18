@@ -43,5 +43,9 @@ public class ClubRegisterRequestDTO {
 
     @Schema(description = "동아리 활동")
     private ClubActivityDTO activity;
+
+    @Schema(description = "부리더로 등록할 사용자의 소셜 닉네임")
+    private String nickName; // 추가된 필드
 }
+
 
