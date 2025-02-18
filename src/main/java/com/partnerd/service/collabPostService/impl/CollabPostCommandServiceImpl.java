@@ -41,32 +41,26 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     @Transactional
     public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
-        ClubMember clubMember = clubMemberRepository.findByMember_id(memberId).orElseThrow(() -> {
-            throw new CollabPostHandler(ErrorStatus.COLLAB_POST_CLUB_MEMBERSHIP_REQUIRED);
-        });
 
-        // 클럽 멤버의 리더가 아닐 경우 콜라보 글 생성 제한
-        if (!clubMember.getRole().equals(ClubMemberRole.LEADER)) {
+        // 작성자가 클럽 멤버이자 리더진인지 확인
+        ClubMember clubMember = clubMemberRepository.findByMember_idAndRole(memberId, ClubMemberRole.LEADER).orElseThrow(() -> {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHORIZED);
-        }
+        });
 
         CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO, clubMember);
 
         // 카테고리 객체 찾아서 리스트로 만들기
         List<Category> categoryList = categoryRepository.findAllByIdWithCollabPostCategory(requestDTO.getCategoryIds());
 
-        // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성하고 양방향 관계 설정
+        // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성한 뒤
+        // 콜라보 글과 양방향 관계 설정
         List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.
                 toCollabPostCategoryList(categoryList);
         collabPostCategoryList.forEach(collabPostCategory -> { collabPostCategory.setCollabPost(collabPost); });
 
-        // 행사 유형 설정
-        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
-                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
-
-        // ContactMethod 추가
+        // 컨택트 방법 추가 + 양방향 관계 매핑
         if (requestDTO.getContactMethodDTOList() != null) {
-             requestDTO.getContactMethodDTOList().stream()
+            requestDTO.getContactMethodDTOList().stream()
                     .map(contactMethodDTO -> {
                         ContactMethod contactMethod = ContactMethod.builder()
                                 .contactType(contactMethodDTO.getContactType())
@@ -75,6 +69,10 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
                         contactMethod.setCollabPost(collabPost);
                         return contactMethod;});
         }
+
+        // 행사 유형 양방향 관계 매핑
+        collabPost.setEventType(eventTypeRepository.findById(requestDTO.getEventTypeId()).orElseThrow(() ->
+                new EventTypeHandler(ErrorStatus.EVENT_TYPE_NOT_FOUND)));
 
 
         // 이미지 업로드
