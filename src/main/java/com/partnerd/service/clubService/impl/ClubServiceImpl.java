@@ -6,6 +6,7 @@ import com.partnerd.apiPaylaod.exception.handler.ClubHandler;
 import com.partnerd.apiPaylaod.exception.handler.ClubMemberHandler;
 import com.partnerd.converter.clubConverter.ClubConverter;
 import com.partnerd.domain.*;
+import com.partnerd.domain.enums.ActiveType;
 import com.partnerd.domain.enums.ClubMemberRole;
 import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
@@ -22,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,6 +82,24 @@ public class ClubServiceImpl implements ClubService {
                 clubActivity.addActivityImages(dto.getActivity().getActivityImageKeyNames());
             }
         }
+
+        // 🔥 7. 부리더(OFFICER) 등록 (예외처리 없음)
+        Optional.ofNullable(dto.getNickName())
+                .filter(nickname -> !nickname.isEmpty())
+                .ifPresent(nickname -> {
+                    Member officerMember = memberRepository.findByNickname(nickname)
+                            .orElseThrow(() -> new ClubHandler(ErrorStatus.OFFICER_MEMBER_NOT_FOUND));
+
+                    ClubMember clubMember = ClubMember.builder()
+                            .club(club)
+                            .member(officerMember)
+                            .role(ClubMemberRole.OFFICER)
+                            .status(ActiveType.ACTIVE)
+                            .joined_date(new Date())
+                            .build();
+                    club.getClubMembers().add(clubMember);
+                    clubMemberRepository.save(clubMember);  // ✅ ClubMember를 직접 저장
+                });
 
         Club savedClub=clubRepository.save(club);
         return ClubConverter.toClubRegisterResponseDTO(savedClub);

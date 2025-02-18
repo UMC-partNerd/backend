@@ -86,4 +86,13 @@ public class CommunityRestController {
 
         return ApiResponse.onSuccess(communityId);
     }
+
+    // 커뮤니티 좋아요
+
+
+    // 커뮤니티 글 전체 조회
+
+    // 커뮤니티 인기글 TOP 10 조회
+
+
 }

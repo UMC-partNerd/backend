@@ -106,6 +106,11 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true )
     private List<Community> communityList = new ArrayList<>();
 
+    // 커뮤니티 댓글
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityComment> communityCommentList = new ArrayList<>();
+
+
 
     @PrePersist
     public void setDefaultValues() {

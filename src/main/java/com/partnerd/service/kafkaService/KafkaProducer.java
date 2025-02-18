@@ -18,9 +18,6 @@ public class KafkaProducer {
 
     public void sendMessage(ChatDTO.ChatRequestDTO chatDTO) {
 
-        Instant now = Instant.now();  // ✅ 현재 UTC 시간
-        LocalDateTime sendDateTime = LocalDateTime.ofInstant(now, ZoneId.of("Asia/Seoul"));  // ✅ KST 변환
-
         // 메시지 객체 생성
        Message message = Message.builder()
                 .id(UUID.randomUUID().toString())  // 메시지 ID 자동 생성
@@ -28,7 +25,6 @@ public class KafkaProducer {
                 .contentType("text")  // 기본 텍스트 타입
                 .content(chatDTO.getContent())
                 .senderNickname(chatDTO.getSenderNickname())
-                .sendDateTime(sendDateTime)
                 .readCount(0) // 초기 읽음 카운트 0
                 .build();
 

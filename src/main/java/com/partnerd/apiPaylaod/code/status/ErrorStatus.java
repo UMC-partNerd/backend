@@ -37,7 +37,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),
-  
+    // 클럽 관련 에러 코드 (추가)
+    OFFICER_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4002", "부리더로 등록할 사용자를 찾을 수 없습니다."),
+
+
     // 마이페이지 내프로필 관련
     MYPAGE_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자가 없습니다."),
     AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4002", "해당 약관이 없습니다."),
@@ -66,6 +69,14 @@ public enum ErrorStatus implements BaseErrorCode {
     RECRUIT_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4005", "해당 프로젝트 모집글의 작성자가 아닙니다."),
     RECRUIT_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4006", "해당 프로젝트 모집글 댓글의 작성자가 아닙니다."),
 
+    // 커뮤니티 댓글 관련
+    COMMUNITY_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4001", "존재하지 않는 커뮤니티입니다."),
+    COMMUNITY_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4003", "존재하지 않는 댓글입니다."),
+    PARENT_COMMUNITY_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4004", "댓글달 댓글이 없습니다."),
+    COMMUNITY_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COMMUNITY4006", "해당 커뮤니티 댓글의 작성자가 아닙니다."),
+
+    // 커뮤니티 관련
+    COMMUNITY_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COMMUNITY4003", "커뮤니티 작성자만 수행할 수 있습니다."),
 
     // 콜라보레이션 글 관련
     COLLAB_POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "COLLABPOST4000", "필수 항목을 모두 입력해주세요."),
@@ -117,11 +128,8 @@ public enum ErrorStatus implements BaseErrorCode {
     CLUB_MEMBER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4002", "가입 요청 정보가 없습니다."),
     CLUB_MEMBERSHIP_REQUEST_REJECTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4003", "이미 거부된 가입 요청입니다."),
     CLUB_MEMBERSHIP_ALREADY_APPROVED(HttpStatus.NOT_FOUND, "CLUBMEMBERSHIP4004", "이미 가입한 동아리입니다."),
-    CLUB_MEMBERSHIP_ALREADY_REQUESTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4005", "이미 가입을 요청한 동아리입니다."),
+    CLUB_MEMBERSHIP_ALREADY_REQUESTED(HttpStatus.BAD_REQUEST, "CLUBMEMBERSHIP4005", "이미 가입을 요청한 동아리입니다.");
 
-    // 커뮤니티 관련
-    COMMUNITY_NOT_FOUND(HttpStatus.FORBIDDEN, "COMMUNITY4001", "커뮤니티 글이 존재하지 않습니다"),
-    COMMUNITY_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COMMUNITY4003", "커뮤니티 작성자만 수행할 수 있습니다.");
 
 
     private final HttpStatus httpStatus;

@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.OptionalDouble;
+import java.util.Set;
 
 public interface CollabPostImgRepository extends JpaRepository<CollabPostImg, Long> {
 
-    CollabPostImg findByCollabPost_id(Long collabPostId);
+    Set<CollabPostImg> findByCollabPost_id(Long collabPostId);
     CollabPostImg findByImageType(ImageType imageType);
 
 }
