@@ -69,6 +69,12 @@ public enum ErrorStatus implements BaseErrorCode {
     RECRUIT_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4005", "해당 프로젝트 모집글의 작성자가 아닙니다."),
     RECRUIT_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4006", "해당 프로젝트 모집글 댓글의 작성자가 아닙니다."),
 
+    // 커뮤니티 댓글 관련
+    COMMUNITY_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4001", "존재하지 않는 커뮤니티입니다."),
+    COMMUNITY_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4003", "존재하지 않는 댓글입니다."),
+    PARENT_COMMUNITY_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4004", "댓글달 댓글이 없습니다."),
+    COMMUNITY_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "COMMUNITY4006", "해당 커뮤니티 댓글의 작성자가 아닙니다."),
+
 
     // 콜라보레이션 글 관련
     COLLAB_POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "COLLABPOST4000", "필수 항목을 모두 입력해주세요."),
