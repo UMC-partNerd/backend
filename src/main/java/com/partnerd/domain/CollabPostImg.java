@@ -28,7 +28,7 @@ public class CollabPostImg {
 
     public void setCollabPost(CollabPost collabPost) {
         if (this.collabPost != null) {
-            this.collabPost.getContactMethodList().remove(this);
+            this.collabPost.getCollabPostImgList().remove(this);
         }
         this.collabPost = collabPost;
         this.collabPost.getCollabPostImgList().add(this);
