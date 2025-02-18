@@ -37,7 +37,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 (임의로 추가한 것이라서 충돌나면 지워도 무방합니다!)
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "해당 사용자가 없습니다."),
-  
+    // 클럽 관련 에러 코드 (추가)
+    OFFICER_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4002", "부리더로 등록할 사용자를 찾을 수 없습니다."),
+
+
     // 마이페이지 내프로필 관련
     MYPAGE_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4001", "해당 사용자가 없습니다."),
     AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "MYPROFILE4002", "해당 약관이 없습니다."),

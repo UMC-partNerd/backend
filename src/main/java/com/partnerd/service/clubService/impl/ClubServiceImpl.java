@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,6 +80,16 @@ public class ClubServiceImpl implements ClubService {
                 clubActivity.addActivityImages(dto.getActivity().getActivityImageKeyNames());
             }
         }
+
+        // 🔥 7. 부리더(OFFICER) 등록 (예외처리 없음)
+        Optional.ofNullable(dto.getNickName())
+                .filter(nickname -> !nickname.isEmpty())
+                .ifPresent(nickname -> {
+                    Member officerMember = memberRepository.findByNickname(nickname)
+                            .orElseThrow(() -> new ClubHandler(ErrorStatus.OFFICER_MEMBER_NOT_FOUND));
+
+                    club.addMember(officerMember, ClubMemberRole.OFFICER);
+                });
 
         Club savedClub=clubRepository.save(club);
         return ClubConverter.toClubRegisterResponseDTO(savedClub);
