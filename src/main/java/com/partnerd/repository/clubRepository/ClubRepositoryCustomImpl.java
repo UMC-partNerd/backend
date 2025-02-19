@@ -181,7 +181,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .limit(5)
                 .fetch();
 
-        // 6. 콜라보 리스트 조회 (최대 5개, 최신순 정렬)
+        // 6. 콜라보 리스트 조회 (최대 2개, 최신순 정렬)
         List<ClubDetailCollabDTO> collabPosts = queryFactory
                 .select(Projections.constructor(ClubDetailCollabDTO.class,
                         collabPost.title,
@@ -191,7 +191,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
                 .leftJoin(collabPost.clubMember, clubMember)
                 .where(clubMember.club.id.eq(clubId))
                 .orderBy(collabPost.createdAt.desc())
-                .limit(5)
+                .limit(2)
                 .fetch();
 
         // 7. DTO 변환 후 반환
