@@ -32,6 +32,7 @@ public class CollabPostResponseDTO {
         private Date startDate;
         private Date endDate;
         private List<CategoryDTO> categoryDTOList;
+        private String mainImgKeyname;
 
     }
 
