@@ -1,17 +1,21 @@
 package com.partnerd.web.controller.clubController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
+import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.clubConverter.ClubMemberConverter;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.service.clubMemberService.ClubMemberService;
 import com.partnerd.web.dto.clubDTO.*;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/partnerdMember")
@@ -70,5 +74,20 @@ public class ClubMemberRestController {
         ClubMember clubMember = clubMemberService.putChangeMemberActvice(clubId, memberId, leaderId);
 
         return ApiResponse.onSuccess(ClubMemberConverter.changeMemberActviceDTO(clubMember));
+    }
+
+    // 클럽 멤버 조회 API
+    @GetMapping("/members/{clubId}")
+    @Operation(summary = "클럽 멤버 조회 API", description = "특정 클럽에 속한 멤버 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "해당 클럽이 존재하지 않거나, 멤버가 없습니다.")
+    })
+    @Parameters({
+            @Parameter(name = "clubId", description = "조회할 클럽의 ID", example = "1", required = true)
+    })
+    public ApiResponse<List<MemberResponseDTO.ClubMemberDTO>> getClubMembers(@PathVariable Long clubId) {
+        List<MemberResponseDTO.ClubMemberDTO> members = clubMemberService.getClubMembers(clubId);
+        return ApiResponse.of(SuccessStatus._OK, members);
     }
 }

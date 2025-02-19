@@ -35,8 +35,8 @@ spring:
       chat: ${TOPIC_NAME}
   data:
     mongodb:
-      uri: ${MONGODB_URI}
-      database: ${MONGODB_DATABASE}
+      uri: ${MONGODB_URI:mongodb://local}
+      database: ${MONGODB_DATABASE:partnerd}
     redis:
       host: localhost
       port: 6379

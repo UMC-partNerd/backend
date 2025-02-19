@@ -60,4 +60,17 @@ public class MemberResponseDTO {
         private String nickname; // 이름
         private String profileKeyName;  // 프로필 사진
     }
+
+    // 클럽 멤버 조회 결과 DTO
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClubMemberDTO {
+        private String nickname;             // 닉네임
+        private String occupationOfInterest; // 관심 직군
+        private String profileKeyName;       // 프로필 사진 URL
+    }
+
+
 }
