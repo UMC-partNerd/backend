@@ -38,7 +38,7 @@ public class PromotionProjectRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     public ApiResponse<PromotionProjectResponseDTO.CreatePromotionProjectResultDTO> addPromotionProject(
-            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
             @RequestBody @Valid PromotionProjectRequestDTO.CreatePromotionProjectDTO request){
 
         // 토큰 에러 처리
@@ -69,7 +69,7 @@ public class PromotionProjectRestController {
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
     public ApiResponse<PromotionProjectResponseDTO.UpdatePromotionProjectResultDTO> updatePromotionProject(
-            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
             @PathVariable(name = "promotionProjectId") Long promotionProjectId, @RequestBody @Valid PromotionProjectRequestDTO.UpdatePromotionProjectDTO request){
 
         // 토큰 에러 처리
@@ -99,7 +99,7 @@ public class PromotionProjectRestController {
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
     public ApiResponse<Void> deletePromotionProject(
-            @RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+            @RequestHeader(value = "Authorization") @Parameter(hidden = true)  String authorizationHeader,
             @PathVariable(name = "promotionProjectId") Long promotionProjectId){
 
         // 토큰 에러 처리
@@ -162,17 +162,26 @@ public class PromotionProjectRestController {
 
     // 프로젝트 홍보글 상세페이지 조회
     @GetMapping("/promotion/{promotionProjectId}")
-    @Operation(summary = "프로젝트 홍보글 상세페이지 API",description = "모집할 프로젝트를 상세 조회하는 API입니다.")
+    @Operation(summary = "프로젝트 홍보글 상세페이지 API",description = "홍보하는 프로젝트를 상세 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
     @Parameters({
             @Parameter(name = "promotionProjectId", description = "프로젝트 홍보글의 ID, path variable 입니다!")
     })
-    public ApiResponse<PromotionProjectResponseDTO.PromotionProjectDetailDTO> getPromotionProject(@PathVariable(name = "promotionProjectId") Long promotionProjectId){
+    public ApiResponse<PromotionProjectResponseDTO.PromotionProjectDetailDTO> getPromotionProject(@RequestHeader(value = "Authorization", required = false) @Parameter(hidden = true)  String authorizationHeader,
+                                                                                                  @PathVariable(name = "promotionProjectId") Long promotionProjectId){
 
-        PromotionProject promotionProject = promotionProjectService.getPromotionProject(promotionProjectId);
-        return ApiResponse.onSuccess(PromotionProjectConverter.toPromotionProjectDetailDTO(promotionProject));
+        Long memberId = null;
+
+        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
+            // jwt토큰으로 멤버id 뽑기
+            String token = authorizationHeader.substring(7);
+            Claims claims = jwtTokenProvider.getClaims(token);
+            memberId = Long.valueOf(claims.getSubject());
+        }
+
+        return ApiResponse.onSuccess(promotionProjectService.getPromotionProject(memberId, promotionProjectId));
     }
 
 

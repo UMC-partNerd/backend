@@ -85,7 +85,7 @@ public class PromotionProjectConverter {
     }
 
     // 프로젝트 홍보글 상세페이지 조회
-    public static PromotionProjectResponseDTO.PromotionProjectDetailDTO toPromotionProjectDetailDTO(PromotionProject promotionProject) {
+    public static PromotionProjectResponseDTO.PromotionProjectDetailDTO toPromotionProjectDetailDTO(PromotionProject promotionProject, boolean isVoted) {
 
         String thumbnailKeyName = promotionProject.getPromotionProjectImageList().stream()
                 .filter(image -> image.getImageType() == ImageType.THUMBNAIL)
@@ -102,6 +102,7 @@ public class PromotionProjectConverter {
                 .intro(promotionProject.getIntro())
                 .description(promotionProject.getDescription())
                 .vote(promotionProject.getVote())
+                .isVoted(isVoted)
                 .thumbnailKeyName(thumbnailKeyName)
                 .projectImgKeyNameList(projectImgKeyNameList)
                 .contactMethods(promotionProject.getContactMethodList().stream()

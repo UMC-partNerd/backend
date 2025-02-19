@@ -60,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
                 .map(teamMemberId -> memberRepository.findById(teamMemberId)
-                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_MEMBER_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<ProjectMember> projectMemberList = ProjectMemberConverter.toProjectMemberList(memberList);
@@ -143,7 +143,7 @@ public class ProjectServiceImpl implements ProjectService {
         // 팀원 추가
         Set<Member> memberList = request.getProjectMember().stream()
                 .map(teamMemberId -> memberRepository.findById(teamMemberId)
-                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_ID_NOT_FOUND)))
+                        .orElseThrow(() -> new ProjectHandler(ErrorStatus.RECRUIT_PROJECT_MEMBER_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<ProjectMember> newMembers = ProjectMemberConverter.toProjectMemberList(memberList);

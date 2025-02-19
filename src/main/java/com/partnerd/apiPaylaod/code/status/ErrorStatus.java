@@ -58,6 +58,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PROMOTION_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4005", "해당 프로젝트 홍보글의 작성자가 아닙니다."),
     PROMOTION_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4006", "해당 프로젝트 홍보글 댓글의 작성자가 아닙니다."),
     PROMOTION_PROJECT_ALREADY_VOTE(HttpStatus.FORBIDDEN, "PROMOTIONPROJECT4007", "이미 해당 프로젝트 홍보글에 투표를 진행했습니다."),
+    PROMOTION_PROJECT_MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PROMOTIONPROJECT4008", "프로젝트 참여 팀원으로 추가할 멤버의 id가 존재하지 않습니다."),
 
 
     // 프로젝트 모집 관련
@@ -68,6 +69,7 @@ public enum ErrorStatus implements BaseErrorCode {
     RECRUIT_PARENT_PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4004", "댓글달 댓글이 없습니다."),
     RECRUIT_PROJECT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4005", "해당 프로젝트 모집글의 작성자가 아닙니다."),
     RECRUIT_PROJECT_COMMENT_NOT_AUTHOR(HttpStatus.FORBIDDEN, "RECRUITPROJECT4006", "해당 프로젝트 모집글 댓글의 작성자가 아닙니다."),
+    RECRUIT_PROJECT_MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUITPROJECT4007", "프로젝트 참여 팀원으로 추가할 멤버의 id가 존재하지 않습니다."),
 
     // 커뮤니티 댓글 관련
     COMMUNITY_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMUNITY4001", "존재하지 않는 커뮤니티입니다."),
