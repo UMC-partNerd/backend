@@ -4,7 +4,6 @@ import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.NameList;
 
 import java.util.Date;
 import java.util.List;

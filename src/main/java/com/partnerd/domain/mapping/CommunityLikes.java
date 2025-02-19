@@ -1,6 +1,7 @@
-package com.partnerd.domain;
+package com.partnerd.domain.mapping;
 
-import com.partnerd.domain.common.BaseEntity;
+import com.partnerd.domain.Community;
+import com.partnerd.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,28 +10,28 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CommunityImage extends BaseEntity {
+public class CommunityLikes {
 
-    // 커뮤니티 사진 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 이미지 url
-    @Column(nullable = false)
-    private String keyName;
+    // 사용자 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @ManyToOne
+    // 커뮤니티 ID
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
     private Community community;
 
     public void setCommunity(Community community) {
         if(this.community != null) {
-            this.community.getCommunityImageList().remove(this);
+            this.community.getCommunityLikesList().remove(this);
         }
-
         this.community = community;
-        community.getCommunityImageList().add(this);
+        community.getCommunityLikesList().add(this);
     }
 
 
