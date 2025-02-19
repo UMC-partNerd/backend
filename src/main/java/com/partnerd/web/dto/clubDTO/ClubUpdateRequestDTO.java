@@ -35,11 +35,14 @@ public class ClubUpdateRequestDTO {
     private Long categoryId;
 
     @Schema(description = "배너 이미지 keyName (S3 업로드 후 반환된 keyName)")
-    private String bannerKeyName; // 🔥 기존 MultipartFile → keyName으로 변경
+    private String bannerKeyName;
 
     @Schema(description = "메인 이미지 keyName (S3 업로드 후 반환된 keyName)")
-    private String mainKeyName; // 🔥 기존 MultipartFile → keyName으로 변경
+    private String mainKeyName;
 
     @Schema(description = "동아리 활동")
     private ClubActivityDTO activity;
+
+    @Schema(description = "부리더 닉네임 (없으면 부리더 삭제)")
+    private String nickName;
 }
