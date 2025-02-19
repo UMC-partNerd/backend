@@ -36,7 +36,6 @@ public class CollabInquiryCommandServiceImpl implements CollabInquiryCommandServ
                 new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)));
 
         return collabInquiryRepository.save(collabInquiry);
-
     }
 
     @Override

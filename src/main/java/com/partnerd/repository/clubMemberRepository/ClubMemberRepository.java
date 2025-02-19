@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId);
 
-    Optional<ClubMember> findByMember_idAndRole(Long memberId, ClubMemberRole role);
+    List<ClubMember> findByMember_idAndRole(Long memberId, ClubMemberRole role);
 
     @Query("SELECT DISTINCT cm FROM ClubMember cm " +
             "LEFT JOIN FETCH cm.sendCollabAsks " +
