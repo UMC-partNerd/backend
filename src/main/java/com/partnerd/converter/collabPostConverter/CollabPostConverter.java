@@ -2,6 +2,7 @@ package com.partnerd.converter.collabPostConverter;
 
 import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.CollabPostImg;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
@@ -27,12 +28,19 @@ public class CollabPostConverter {
                                 .build();
                         return categoryDTO;
                 }).collect(Collectors.toList());
+        String mainImgKeyname = collabPost.getCollabPostImgList().stream()
+                .filter(img -> img.getImageType() == ImageType.MAIN)
+                .map(CollabPostImg::getKeyName) // 키네임 추출
+                .findFirst() // 첫 번째 결과 가져오기
+                .orElse(null); // 값이 없으면 null
+
 
         return CollabPostResponseDTO.CollabPostPreviewDTO.builder()
                 .collabPostId(collabPost.getId())
                 .title(collabPost.getTitle())
                 .startDate(collabPost.getStartDate())
                 .endDate(collabPost.getEndDate())
+                .mainImgKeyname(mainImgKeyname)
                 .categoryDTOList(categoryDTOS)
                 .build();
     }

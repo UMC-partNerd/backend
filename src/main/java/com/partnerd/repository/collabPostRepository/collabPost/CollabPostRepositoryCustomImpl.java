@@ -71,6 +71,8 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory)
                 .fetchJoin()
                 .leftJoin(qCollabPostCategory.category, qCategory) // Category도 즉시 로딩
+                .fetchJoin()
+                .leftJoin(qCollabPost.collabPostImgList, qCollabPostImg)
                 .fetchJoin();
 
        PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
