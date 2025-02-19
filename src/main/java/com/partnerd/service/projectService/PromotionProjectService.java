@@ -2,6 +2,7 @@ package com.partnerd.service.projectService;
 
 import com.partnerd.domain.PromotionProject;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
+import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface PromotionProjectService {
     Page<PromotionProject> getPromotionProjectSearchList(Integer page, String keyword);
 
     // 프로젝트 홍보글 상세페이지 조회
-    PromotionProject getPromotionProject(Long promotionProjectId);
+    PromotionProjectResponseDTO.PromotionProjectDetailDTO getPromotionProject(Long memberId, Long promotionProjectId);
 
     // 프로젝트 홍보 투표하기
     void projectVotes(Long memberId, Long promotionProjectId);

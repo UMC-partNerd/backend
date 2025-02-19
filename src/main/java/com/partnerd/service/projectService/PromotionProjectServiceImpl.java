@@ -13,6 +13,7 @@ import com.partnerd.repository.projectRepository.PromotionProjectMemberRepositor
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.projectRepository.PromotionProjectRepository;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
+import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         Set<Member> memberList = request.getPromotionProjectMember().stream()
                 .map(teamMemberId -> memberRepository.findById(teamMemberId)
-                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.MEMBER_NOT_FOUND)))
+                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_MEMBER_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<PromotionProjectMember> promotionProjectMemberList = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
@@ -105,7 +106,7 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
         Set<Member> memberList = request.getPromotionProjectMember().stream()
                 .map(teamMemberId -> memberRepository.findById(teamMemberId)
-                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND)))
+                        .orElseThrow(() -> new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_MEMBER_ID_NOT_FOUND)))
                 .collect(Collectors.toSet());
 
         Set<PromotionProjectMember> newMembers = PromotionProjectMemberConverter.toPromotionProjectMemberList(memberList);
@@ -184,13 +185,22 @@ public class PromotionProjectServiceImpl implements PromotionProjectService {
 
     // 프로젝트 모집글 상세페이지 조회
     @Override
-    public PromotionProject getPromotionProject(Long promotionProjectId){
+    public PromotionProjectResponseDTO.PromotionProjectDetailDTO getPromotionProject(Long memberId, Long promotionProjectId){
         PromotionProject promotionProject = promotionProjectRepository.findPromotionProjectDetails(promotionProjectId);
 
         if (promotionProject == null){
             throw new PromotionProjectHandler(ErrorStatus.PROMOTION_PROJECT_ID_NOT_FOUND);
         }
-        return promotionProject;
+
+        
+        // 투표하기(응원하기) 여부
+        boolean isVoted = false;
+
+        if (memberId != null) {
+            isVoted = projectVoteRepository.existsByMemberIdAndPromotionProjectId(memberId, promotionProjectId);
+        }
+
+        return PromotionProjectConverter.toPromotionProjectDetailDTO(promotionProject, isVoted);
     }
 
     // 프로젝트 홍보 투표하기
