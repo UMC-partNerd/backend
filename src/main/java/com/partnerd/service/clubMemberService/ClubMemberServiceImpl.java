@@ -13,12 +13,16 @@ import com.partnerd.repository.clubMemberRepository.ClubMemberRepository;
 import com.partnerd.repository.clubMemberRepository.ClubMemberRepositoryCustom;
 import com.partnerd.repository.clubRepository.ClubRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
+import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -111,6 +115,27 @@ public class ClubMemberServiceImpl implements ClubMemberService {
         clubMember.setStatus(ActiveType.INACTIVE);
 
         return clubMember;
+    }
+
+    //파트너드 멤버 조회 API
+    @Override
+    public List<MemberResponseDTO.ClubMemberDTO> getClubMembers(Long clubId) {
+        List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
+
+        // 클럽 멤버가 없을 경우, 예외 대신 빈 리스트 반환
+        if (clubMembers.isEmpty()) {
+            return Collections.emptyList(); // 빈 리스트 반환
+        }
+
+        return clubMembers.stream()
+                .filter(clubMember -> clubMember.getMember() != null)
+                .map(clubMember -> MemberResponseDTO.ClubMemberDTO.builder()
+                        .nickname(clubMember.getMember().getNickname())
+                        .occupationOfInterest(clubMember.getMember().getOccupation_of_interest())
+                        .profileKeyName(clubMember.getMember().getProfile_url())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 
 }
