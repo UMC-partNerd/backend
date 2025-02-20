@@ -138,7 +138,7 @@ public class PromotionProjectRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO>> getPromotionProjectList(){
+    public ApiResponse<List<PromotionProjectResponseDTO.PromotionProjectPreviewDTO>> getPromotionProjectTop3(){
 
         List<PromotionProject> promotionProjectList = promotionProjectService.getPromotionProjectTop3();
         return ApiResponse.onSuccess(PromotionProjectConverter.projectPreviewDTOList(promotionProjectList));
