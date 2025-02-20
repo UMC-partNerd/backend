@@ -1,6 +1,7 @@
 package com.partnerd.service.chatRoomService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
+import com.partnerd.apiPaylaod.exception.handler.ChatRoomHandler;
 import com.partnerd.apiPaylaod.exception.handler.CollabAskHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.domain.ChatRoom;
@@ -10,6 +11,7 @@ import com.partnerd.domain.enums.ChatRoomType;
 import com.partnerd.domain.mapping.ChatRoomMember;
 import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.repository.chatRoomRepository.chatRoom.ChatRoomRepository;
+import com.partnerd.repository.chatRoomRepository.chatRoomMember.ChatRoomMemberRepository;
 import com.partnerd.repository.collabAskRepository.CollabAskRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.chatRoomService.ChatRoomCommandService;
@@ -22,6 +24,7 @@ import java.util.LinkedHashSet;
 public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final CollabAskRepository collabAskRepository;
     private final MemberRepository memberRepository;
 
@@ -73,6 +76,11 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
 
         Member contactSenderMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 중복 채팅방 생성 불가
+        if (!chatRoomMemberRepository.findBySenderAndReceiver(contactSenderMember.getId(), contactReceiveMember.getId()).isEmpty()) {
+            throw new ChatRoomHandler(ErrorStatus.CHAT_ROOM_ALREADY_EXIST);
+        }
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomType(ChatRoomType.PRIVATE)
