@@ -111,4 +111,9 @@ public class Club extends BaseEntity{
         activity.setClub(this);
     }
 
+    //조회수 추가
+    public void incrementViews() {
+        this.views += 1;
+    }
+
 }
