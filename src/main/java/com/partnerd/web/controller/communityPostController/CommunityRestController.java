@@ -135,5 +135,23 @@ public class CommunityRestController {
     public ApiResponse<List<CommunityResponseDTO.CommunityTop10PreviewDTO>> getTop10Community () {
         return ApiResponse.onSuccess(communityQueryService.getCommunityTop10List());
     }
+    
+    // 마이페이지 - 내가 쓴 커뮤니티 모집글 모아보기
+    @GetMapping("/mypage")
+    @Operation(summary = "마이페이지 내가 쓴 커뮤니티 목록 조회 API",description = "마이페이지의 내가 쓴 글 페이지에서 커뮤니티 목록을 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<CommunityResponseDTO.MypageCommunityPreviewListDTO> getMyCommunities(@RequestHeader("Authorization") String authorizationHeader){
+        // 1. JWT 토큰 추출
+        String token = authorizationHeader.replace("Bearer ", "");
 
+        // 2. 토큰에서 userId 추출
+        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
+
+        // 3. 서비스 호출
+        List<Community> communities = communityQueryService.getMyCommunities(memberId);
+
+        return ApiResponse.onSuccess(CommunityConverter.toMyCommunitiesDTO(memberId, communities));
+    }
 }
