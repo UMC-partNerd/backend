@@ -49,9 +49,6 @@ public class Community extends BaseEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CommunityImage> communityImageList = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CommunityLikes> communityLikesList  = new LinkedHashSet<>();
-
     public void setMember(Member member) {
         if(this.member != null) {
             this.member.getCommunityList().remove(this);

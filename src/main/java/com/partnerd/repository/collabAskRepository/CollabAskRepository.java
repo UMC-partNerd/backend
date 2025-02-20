@@ -12,8 +12,7 @@ public interface CollabAskRepository extends JpaRepository<CollabAsk, Long>, Col
     @Query("SELECT c FROM CollabAsk c WHERE c.id = :collabAskId AND c.sender.member.id = :memberId")
     Optional<CollabAsk> findByIdAndSenderMemberId(@Param("collabAskId") Long collabAskId, @Param("memberId") Long memberId);
 
-   CollabAsk findBySender_Member_idAndCollabPost_id(Long memberId, Long collabPostId);
-
-
+    @Query("SELECT ca FROM CollabAsk ca WHERE ca.sender.member.id = :memberId AND ca.collabPost.id = :collabPostId")
+    CollabAsk findByClubMemberMemberId(@Param("memberId") Long memberId, @Param("collabPostId") Long collabPostId);
 
 }

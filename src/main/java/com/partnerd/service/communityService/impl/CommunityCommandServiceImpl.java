@@ -123,8 +123,8 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
     @Transactional
     public Community communityLikes(Long memberId, Long communityId) {
 
-        CommunityLikes communityLikes = communityLikesRepository.findByCommunity_idAndMember_id(communityId, memberId);
-        Community community = communityRepository.findByIdWithLikes(communityId).orElseThrow(() ->
+        CommunityLikes communityLikes = communityLikesRepository.findByCommunityAndMember(communityId, memberId);
+        Community community = communityRepository.findById(communityId).orElseThrow(() ->
                 new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
 
         // 좋아요
@@ -134,8 +134,8 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
 
             CommunityLikes addLikes = CommunityLikes.builder()
                     .member(member)
+                    .community(community)
                     .build();
-            addLikes.setCommunity(community);
 
             community.addLikes();
             communityLikesRepository.save(addLikes);

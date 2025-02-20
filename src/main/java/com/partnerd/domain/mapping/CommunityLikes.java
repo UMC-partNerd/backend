@@ -26,13 +26,5 @@ public class CommunityLikes {
     @JoinColumn(name = "community_id")
     private Community community;
 
-    public void setCommunity(Community community) {
-        if(this.community != null) {
-            this.community.getCommunityLikesList().remove(this);
-        }
-        this.community = community;
-        community.getCommunityLikesList().add(this);
-    }
-
 
 }
