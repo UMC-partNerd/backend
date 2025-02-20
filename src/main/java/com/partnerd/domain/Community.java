@@ -47,10 +47,10 @@ public class Community extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommunityImage> communityImageList = new ArrayList<>();
+    private Set<CommunityImage> communityImageList = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommunityLikes> communityLikesList  = new ArrayList<>();
+    private Set<CommunityLikes> communityLikesList  = new LinkedHashSet<>();
 
     public void setMember(Member member) {
         if(this.member != null) {
