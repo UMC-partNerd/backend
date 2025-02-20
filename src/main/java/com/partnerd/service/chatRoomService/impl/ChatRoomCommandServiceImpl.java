@@ -28,7 +28,7 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
     @Override
     public ChatRoom createCollabChatRoom(Long collabAskId, Long memberId) {
 
-        // 해당 콜리보 요청 조회
+        // 해당 콜라보 요청 조회
        CollabAsk collabAsk = collabAskRepository.findByIdWithSenderAndReceiver(collabAskId).orElseThrow(() ->{
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_NOT_FOUND);
         });

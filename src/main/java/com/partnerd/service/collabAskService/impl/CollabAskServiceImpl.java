@@ -27,6 +27,7 @@ public class CollabAskServiceImpl implements CollabAskService {
         try {
             CollabAsk collabAsk = collabAskCommandService.addCollabAsk(collabPostId, memberId);
             ChatRoom chatRoom = chatRoomCommandService.createCollabChatRoom(collabAsk.getId(), memberId);
+            collabAsk.setChatRoom(chatRoom);
 
             return CollabAskConverter.toAddCollabAskResponseDTO(collabAsk, chatRoom);
          } catch (CollabAskHandler e) {
