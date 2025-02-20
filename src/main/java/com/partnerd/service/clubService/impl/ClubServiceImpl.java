@@ -158,7 +158,7 @@ public class ClubServiceImpl implements ClubService {
         }
 
         // 5. 배너 및 프로필 이미지 업데이트 (기존 삭제 후 새 리스트 추가)
-        existingClub.getClubImgList().clear(); // 🔥 기존 이미지 모두 삭제
+        existingClub.getClubImgList().clear(); // 기존 이미지 모두 삭제
 
         if (dto.getBannerKeyName() != null) {
             existingClub.getClubImgList().add(
@@ -203,11 +203,37 @@ public class ClubServiceImpl implements ClubService {
             }
         }
 
+        // 8. 부리더(Officer) 업데이트 (추가 / 변경 / 삭제)
+        if (dto.getNickName() == null || dto.getNickName().isEmpty()) {
+            // 부리더 삭제 (닉네임이 없을 경우)
+            Optional<ClubMember> existingOfficer = clubMemberRepository.findByClubIdAndRole(clubId, ClubMemberRole.OFFICER);
+            existingOfficer.ifPresent(clubMemberRepository::delete);
+        } else {
+            // 새로운 부리더 등록
+            Member officerMember = memberRepository.findByNickname(dto.getNickName())
+                    .orElseThrow(() -> new ClubHandler(ErrorStatus.OFFICER_MEMBER_NOT_FOUND));
+
+            // 기존 부리더가 있으면 삭제
+            clubMemberRepository.findByClubIdAndRole(clubId, ClubMemberRole.OFFICER)
+                    .ifPresent(clubMemberRepository::delete);
+
+            ClubMember newOfficer = ClubMember.builder()
+                    .club(existingClub)
+                    .member(officerMember)
+                    .role(ClubMemberRole.OFFICER)
+                    .status(ActiveType.ACTIVE)
+                    .joined_date(new Date())
+                    .build();
+
+            clubMemberRepository.save(newOfficer);
+        }
+
         // 변경 사항 저장
         clubRepository.save(existingClub);
 
         return ClubConverter.toClubUpdateResponseDTO(existingClub);
     }
+
 
     //파트너드 목록 조회
     @Override

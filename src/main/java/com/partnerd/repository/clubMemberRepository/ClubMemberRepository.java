@@ -28,4 +28,7 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
 
     //파트너드 멤버 조회
     List<ClubMember> findByClubId(Long clubId);
+
+    //파트너드 수정 API 특정 클럽에서 특정 역할(부리더)를 가진 멤버 찾기
+    Optional<ClubMember> findByClubIdAndRole(Long clubId, ClubMemberRole role);
 }
