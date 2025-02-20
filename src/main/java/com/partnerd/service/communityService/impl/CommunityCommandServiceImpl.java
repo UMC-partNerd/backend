@@ -6,9 +6,9 @@ import com.partnerd.domain.Community;
 import com.partnerd.domain.CommunityImage;
 import com.partnerd.domain.Member;
 import com.partnerd.domain.mapping.CommunityLikes;
-import com.partnerd.repository.communityRepository.CommunityRepository;
 import com.partnerd.repository.communityRepository.CommunityImgRepository;
 import com.partnerd.repository.communityRepository.CommunityLikesRepository;
+import com.partnerd.repository.communityRepository.CommunityRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.service.communityService.CommunityCommandService;
 import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
                 .title(requestDTO.getTitle())
                 .content(requestDTO.getContent())
                 .likes(0)
-                .communityImageList(new ArrayList<>())
+                .communityImageList(new LinkedHashSet<>())
                 .build();
 
         community.setMember(member);
@@ -65,19 +66,18 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
         // 커뮤니티 글이 존재하는지,해당 글에 작성자인지 확인
         Community community = communityRepository.findByIdWithMemebr(communityId).orElseThrow(() ->
             new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
+        List<CommunityImage> CommunityImgListCopy = new ArrayList<>(community.getCommunityImageList());
 
         community.validatorAuthor(memberId);
 
         // 수정 시 이미지를 모두 지웠을 때, 저장된 이미지가 있으면 모두 삭제.
         if (requestDTO.getCommunityImgKeyName() == null) {
-            if (community.getCommunityImageList() != null) {
-                community.getCommunityImageList().stream()
-                        .forEach(ImgToDelete::add);
+            if (CommunityImgListCopy != null) {
+                ImgToDelete.addAll(community.getCommunityImageList());
             }
         }
-
         // 수정한 이미지들 중 원래 저장된 이미지와 일치하는게 없으면, 삭제할 이미지 리스트에 추가
-        community.getCommunityImageList().forEach(communityImg -> {
+        CommunityImgListCopy.forEach(communityImg -> {
                     if (!requestDTO.getCommunityImgKeyName().contains(communityImg.getKeyName())) {
                         ImgToDelete.add(communityImg);
                     }
@@ -85,7 +85,7 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
 
         // 수정한 이미지들 중 기존에 있던 이미지와 다른 새로운 이미지가 있으면, 저장할 이미지 리스트에 추가
         requestDTO.getCommunityImgKeyName().forEach(communityImageKeyName -> {
-                    boolean exists = community.getCommunityImageList().stream()
+                    boolean exists = CommunityImgListCopy.stream()
                             .anyMatch(communityImage -> communityImage.getKeyName().equals(communityImageKeyName));
 
                     if (!exists) {
@@ -123,8 +123,8 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
     @Transactional
     public Community communityLikes(Long memberId, Long communityId) {
 
-        CommunityLikes communityLikes = communityLikesRepository.findByCommunity_idAndMember_id(communityId, memberId);
-        Community community = communityRepository.findByIdWithLikes(communityId).orElseThrow(() ->
+        CommunityLikes communityLikes = communityLikesRepository.findByCommunityAndMember(communityId, memberId);
+        Community community = communityRepository.findById(communityId).orElseThrow(() ->
                 new CommunityHandler(ErrorStatus.COMMUNITY_NOT_FOUND));
 
         // 좋아요
@@ -134,8 +134,8 @@ public class CommunityCommandServiceImpl implements CommunityCommandService {
 
             CommunityLikes addLikes = CommunityLikes.builder()
                     .member(member)
+                    .community(community)
                     .build();
-            addLikes.setCommunity(community);
 
             community.addLikes();
             communityLikesRepository.save(addLikes);

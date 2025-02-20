@@ -42,7 +42,7 @@ public class CollabAskCommandServiceImpl implements CollabAskCommandService {
         }
 
         // 내가 이미 보낸 요청인지 확인 (중복 요청 방지)
-        CollabAsk isCheckDuplication = collabAskRepository.findBySender_Member_idAndCollabPost_id(memberId, collabPostId);
+        CollabAsk isCheckDuplication = collabAskRepository.findByClubMemberMemberId(memberId, collabPostId);
         if(isCheckDuplication != null) {
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_ALREADY_EXIST);
         }

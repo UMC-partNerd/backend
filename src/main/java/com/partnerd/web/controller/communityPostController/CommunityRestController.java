@@ -51,7 +51,7 @@ public class CommunityRestController {
 
     // 커뮤니티 글 수정
     @PatchMapping("/{communityId}")
-    @Operation(summary = "커뮤니티 글 수정정 API", description = "커뮤니티 글을 수정하는 API입니다.")
+    @Operation(summary = "커뮤니티 글 수정 API", description = "커뮤니티 글을 수정하는 API입니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })

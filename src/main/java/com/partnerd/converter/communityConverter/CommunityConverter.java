@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class CommunityConverter {
 
     public static CommunityResponseDTO.addResponseCommunityDTO toCommunityResultDTO (Community community) {
-
+        
         List<String> communityImgKeyNameList = community.getCommunityImageList().stream()
                 .map(CommunityImage::getKeyName)
                 .collect(Collectors.toList());

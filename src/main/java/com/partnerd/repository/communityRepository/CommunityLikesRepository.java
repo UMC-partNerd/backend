@@ -2,11 +2,13 @@ package com.partnerd.repository.communityRepository;
 
 import com.partnerd.domain.mapping.CommunityLikes;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface CommunityLikesRepository extends JpaRepository<CommunityLikes, Long>, CommunityLikesRepositoryCustom {
 
-   CommunityLikes findByCommunity_idAndMember_id(Long communityId, Long memberId);
+   @Query("SELECT cl FROM CommunityLikes cl WHERE cl.community.id = :communityId AND cl.member.id = :memberId")
+   CommunityLikes findByCommunityAndMember(@Param("communityId") Long communityId, @Param("memberId") Long memberId);
+
 
 }

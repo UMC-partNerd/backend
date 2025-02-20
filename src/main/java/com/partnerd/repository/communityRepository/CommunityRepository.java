@@ -9,9 +9,6 @@ import java.util.Optional;
 
 public interface CommunityRepository extends JpaRepository<Community, Long>, CommunityRepositoryCustom {
 
-    @Query("SELECT cm FROM Community cm JOIN FETCH cm.member m WHERE cm.id = :id" )
+    @Query("SELECT cm FROM Community cm LEFT JOIN FETCH cm.member m WHERE cm.id = :id" )
     Optional<Community> findByIdWithMemebr(@Param("id") Long communityId);
-    @Query("SELECT cm FROM Community cm JOIN FETCH cm.likes m WHERE cm.id = :id" )
-    Optional<Community> findByIdWithLikes(@Param("id") Long communityId);
-
 }
