@@ -35,4 +35,17 @@ public class CollabAskServiceImpl implements CollabAskService {
                 throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_TRANSACTION_ROLLBACK);  // 예상치 못한 예외만 처리
          }
     }
+
+    @Override
+    public void deleteCollabAskAndChatRoom(Long collabAskId, Long memberId) {
+
+        try {
+            collabAskCommandService.deleteCollabAsk(collabAskId, memberId);
+            chatRoomCommandService.removeChatRoom(collabAskId);
+        } catch (CollabAskHandler e) {
+            throw e;  // ✅ `addCollabAsk()`에서 발생한 예외를 그대로 던짐
+        } catch (Exception e) {
+            throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_TRANSACTION_ROLLBACK);  // 예상치 못한 예외만 처리
+        }
+    }
 }

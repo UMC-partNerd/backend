@@ -106,6 +106,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 채팅 관련
     CHAT_ROOM_ALREADY_EXIST(HttpStatus.NOT_FOUND, "COLLABASK4002", "이미 생성된 채팅방이 있습니다."),
     CHAT_ROOM_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "COLLABASK4003", "요청을 보낸 사람만 채팅방을 생성할 수 있습니다."),
+    CHAT_ROOM_NOT_FONUND(HttpStatus.FORBIDDEN, "CHATROOM4003", "요청에 해당하는 채팅방이 존재하지 않습니다."),
 
     // 동아리
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB4001","해당 동아리가 없습니다."),

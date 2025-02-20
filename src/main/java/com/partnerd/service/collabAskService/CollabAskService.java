@@ -4,4 +4,5 @@ import com.partnerd.web.dto.collabDTO.response.CollabAskResponseDTO;
 
 public interface CollabAskService {
     CollabAskResponseDTO.addCollabAskResponseDTO createCollabAskAndChatRoom(Long collabPostId, Long memberId);
+    void deleteCollabAskAndChatRoom(Long collabAskId, Long memberId);
 }
