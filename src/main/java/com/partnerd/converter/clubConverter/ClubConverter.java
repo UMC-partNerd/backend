@@ -60,7 +60,8 @@ public class ClubConverter {
                 club.getId(),
                 profileImage,
                 club.getName(),
-                club.getIntro()
+                club.getIntro(),
+                club.getCategory().getId()
         );
     }
 
