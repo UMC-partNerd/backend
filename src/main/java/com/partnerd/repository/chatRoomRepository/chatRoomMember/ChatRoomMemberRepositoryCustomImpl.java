@@ -1,9 +1,6 @@
 package com.partnerd.repository.chatRoomRepository.chatRoomMember;
 
-import com.partnerd.domain.QChatRoom;
-import com.partnerd.domain.QClub;
-import com.partnerd.domain.QClubImage;
-import com.partnerd.domain.QCollabPost;
+import com.partnerd.domain.*;
 import com.partnerd.domain.enums.ChatRoomType;
 import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QChatRoomMember;
@@ -17,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -104,6 +102,22 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
                 .orderBy(qChatRoom.id.desc()) // 최신순 정렬
                 .limit(pageable.getPageSize()) // 지정된 개수만큼 가져오기
                 .fetch();
+
+    }
+
+    @Override
+    public Optional<ChatRoom> findBySenderAndReceiver(Long senderId, Long receiverId) {
+        QChatRoomMember sender = new QChatRoomMember("sender");
+        QChatRoomMember receiver = new QChatRoomMember("receiver");
+
+        JPAQuery<ChatRoom> query = jpaQuery.select(qChatRoomMember.chatRoom)
+                        .from(sender)
+                .join(sender.chatRoom, qChatRoom)
+                .join(receiver).on(receiver.chatRoom.eq(qChatRoom))
+                .where(sender.member.id.eq(senderId)
+                        .and(receiver.member.id.eq(receiverId)));
+
+        return Optional.ofNullable(query.fetchOne());
 
     }
 
