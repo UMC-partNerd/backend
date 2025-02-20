@@ -54,9 +54,10 @@ public class CollabAskRestController {
         String token = authorizationHeader.replace("Bearer ", "");
         Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
-        collabAskService.deleteCollabAskAndChatRoom(collabAskId, memberId);
+        collabAskCommandService.deleteCollabAsk(collabAskId, memberId);
 
         return ApiResponse.onSuccess(collabAskId);
+
     }
 
 

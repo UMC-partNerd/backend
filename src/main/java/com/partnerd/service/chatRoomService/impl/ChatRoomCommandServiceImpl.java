@@ -1,7 +1,6 @@
 package com.partnerd.service.chatRoomService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
-import com.partnerd.apiPaylaod.exception.handler.ChatRoomHandler;
 import com.partnerd.apiPaylaod.exception.handler.CollabAskHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.domain.ChatRoom;
@@ -29,7 +28,7 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
     @Override
     public ChatRoom createCollabChatRoom(Long collabAskId, Long memberId) {
 
-        // 해당 콜리보 요청 조회
+        // 해당 콜라보 요청 조회
        CollabAsk collabAsk = collabAskRepository.findByIdWithSenderAndReceiver(collabAskId).orElseThrow(() ->{
             throw new CollabAskHandler(ErrorStatus.COLLAB_ASK_NOT_FOUND);
         });
@@ -94,14 +93,6 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
         senderMember.setChatRoom(chatRoom);
 
         return chatRoomRepository.save(chatRoom);
-    }
-
-    @Override
-    public void removeChatRoom(Long collabAskId) {
-        ChatRoom chatRoom = chatRoomRepository.findByCollabAskId(collabAskId).orElseThrow(() ->
-                new ChatRoomHandler(ErrorStatus.CHAT_ROOM_NOT_FONUND));
-
-        chatRoomRepository.delete(chatRoom);
     }
 
 

@@ -1,6 +1,6 @@
 package com.partnerd.domain.mapping;
 
-import com.partnerd.domain.Club;
+import com.partnerd.domain.ChatRoom;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.common.BaseEntity;
 import jakarta.persistence.*;
@@ -39,6 +39,10 @@ public class CollabAsk extends BaseEntity {
     @JoinColumn(name = "collab_post_id")
     private CollabPost collabPost;
 
+    // 연결된 채팅방
+    @OneToOne(mappedBy = "collabAsk", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private ChatRoom chatRoom;
+
 
     public void setSender(ClubMember sender) {
         if (this.sender != null) {
@@ -56,4 +60,10 @@ public class CollabAsk extends BaseEntity {
         this.receiver = receiver;
         receiver.getReceivedCollabAsks().add(this);
     }
+
+    // ChatRoom을 설정하는 메서드 (양방향 관계 유지)
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
 }
