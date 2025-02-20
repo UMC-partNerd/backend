@@ -50,6 +50,7 @@ public class CommunityConverter {
                 .id(community.getId())
                 .title(community.getTitle())
                 .nickName(community.getMember().getNickname())
+                .profileKeyName(community.getMember().getProfile_url())
                 .occupation_of_interest(community.getMember().getOccupation_of_interest())
                 .belong_to_club(community.getMember().getBelong_to_club())
                 .build();
