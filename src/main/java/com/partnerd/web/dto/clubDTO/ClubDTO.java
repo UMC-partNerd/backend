@@ -10,6 +10,7 @@ public class ClubDTO {
     private String profileImage;  //keyname
     private String name;
     private String intro;
+    private Long categoryId;
 
 
 }

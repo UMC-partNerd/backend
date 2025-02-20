@@ -54,17 +54,20 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
     public List<ClubDTO> findClubsByFilters(Integer page, String sort, Long categoryID) {
         QClub club = QClub.club;
         QClubImage clubImage = QClubImage.clubImage;
+        QCategory category = QCategory.category; // ✅ 카테고리 추가
 
         JPAQuery<ClubDTO> query = queryFactory
                 .select(Projections.constructor(ClubDTO.class,
                         club.id,
-                        clubImage.keyName, // null 허용
+                        clubImage.keyName,  // 프로필 이미지 keyname
                         club.name,
-                        club.intro
+                        club.intro,
+                        club.category.id  // ✅ 카테고리 ID 추가
                 ))
                 .from(club)
                 .leftJoin(club.clubImgList, clubImage)
                 .on(clubImage.image_type.eq(ImageType.MAIN)) // MAIN 이미지만 가져오기
+                .leftJoin(club.category, category)  // ✅ 카테고리 조인
                 .where(categoryID != null && categoryID > 0 ? club.category.id.eq(categoryID) : null) // 카테고리 필터
                 .orderBy(
                         "latest".equalsIgnoreCase(sort) ? club.createdAt.desc() : club.views.desc()
@@ -74,6 +77,7 @@ public class ClubRepositoryCustomImpl implements ClubRepositoryCustom {
 
         return query.fetch();
     }
+
 
     @Override
     public ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId) {
