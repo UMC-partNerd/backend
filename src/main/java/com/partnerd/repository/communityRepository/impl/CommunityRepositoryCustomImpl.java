@@ -45,4 +45,14 @@ public class CommunityRepositoryCustomImpl implements CommunityRepositoryCustom 
                 .fetch();
 
     }
+
+    // 마이페이지 - 내가 쓴 커뮤니티 모아보기
+    @Override
+    public List<Community> findCommunitiesByMemberId(Long memberId){
+        return jpaQuery
+                .selectFrom(qCommunity)
+                .where(qCommunity.member.id.eq(memberId))
+                .distinct()
+                .fetch();
+    }
 }

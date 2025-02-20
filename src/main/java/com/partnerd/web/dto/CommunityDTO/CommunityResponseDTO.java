@@ -66,5 +66,27 @@ public class CommunityResponseDTO {
         String belong_to_club;
     }
 
+    
+    // 마이페이지 - 내가 쓴 커뮤니티 모집글 모아보기 (한 칸씩)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCommunityPreviewDTO {
+        private Long communityId;
+        private String title;
+        private String description;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
 
+    // 마이페이지 - 내가 쓴 커뮤니티 모집글 모아보기 (전체 리스트)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageCommunityPreviewListDTO {
+        private Long memberId;
+        List<MypageCommunityPreviewDTO> mypageCommunityPreviewDTOList;
+    }
 }

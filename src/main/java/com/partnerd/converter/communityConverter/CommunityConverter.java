@@ -67,4 +67,23 @@ public class CommunityConverter {
                 .build();
 
     }
+
+    // 마이페이지 - 내가 쓴 커뮤니티 모아보기
+    public static CommunityResponseDTO.MypageCommunityPreviewListDTO toMyCommunitiesDTO(Long memberId, List<Community> communitys){
+        List<CommunityResponseDTO.MypageCommunityPreviewDTO> communityPreviewDTOList = communitys.stream()
+                .map(community -> CommunityResponseDTO.MypageCommunityPreviewDTO.builder()
+                        .communityId(community.getId())
+                        .title(community.getTitle())
+                        .description(community.getContent())
+                        .createdAt(community.getCreatedAt())
+                        .updatedAt(community.getUpdatedAt())
+                        .build()
+                )
+                .toList();
+
+        return CommunityResponseDTO.MypageCommunityPreviewListDTO.builder()
+                .memberId(memberId)
+                .mypageCommunityPreviewDTOList(communityPreviewDTOList)
+                .build();
+    }
 }

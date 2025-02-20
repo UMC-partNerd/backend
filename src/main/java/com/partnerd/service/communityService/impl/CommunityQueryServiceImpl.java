@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,5 +44,12 @@ public class CommunityQueryServiceImpl implements CommunityQueryService {
                 .map(CommunityConverter::communityTop10PreviewDTO).collect(Collectors.toList());
 
         return CommunityTop10PreviewListDTO;
+    }
+    
+    // 마이페이지 - 내가 쓴 커뮤니티 모아보기
+    @Override
+    @Transactional(readOnly=true)
+    public List<Community> getMyCommunities (Long memberId){
+        return communityRepository.findCommunitiesByMemberId(memberId);
     }
 }
