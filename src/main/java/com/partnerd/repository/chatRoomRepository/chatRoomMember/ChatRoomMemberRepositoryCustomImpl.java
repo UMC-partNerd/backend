@@ -110,7 +110,7 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
         QChatRoomMember sender = new QChatRoomMember("sender");
         QChatRoomMember receiver = new QChatRoomMember("receiver");
 
-        JPAQuery<ChatRoom> query = jpaQuery.select(qChatRoomMember.chatRoom)
+        JPAQuery<ChatRoom> query = jpaQuery.select(qChatRoom)
                         .from(sender)
                 .join(sender.chatRoom, qChatRoom)
                 .join(receiver).on(receiver.chatRoom.eq(qChatRoom))
