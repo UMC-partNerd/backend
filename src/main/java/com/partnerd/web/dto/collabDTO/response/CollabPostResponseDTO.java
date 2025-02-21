@@ -95,6 +95,7 @@ public class CollabPostResponseDTO {
         private String nickname;
         private String contents;
         private int likes;
+        private String profileImgKeyname;
 
         public static CollabInquiryDTO fromEntity(CollabInquiry collabInquiry) {
             Long parentId = null;
@@ -106,6 +107,7 @@ public class CollabPostResponseDTO {
                     .nickname(collabInquiry.getMember().getNickname())
                     .contents(collabInquiry.getContents())
                     .likes(collabInquiry.getLikes())
+                    .profileImgKeyname(collabInquiry.getMember().getProfile_url())
                     .parentId(parentId)
                     .build();
         }
