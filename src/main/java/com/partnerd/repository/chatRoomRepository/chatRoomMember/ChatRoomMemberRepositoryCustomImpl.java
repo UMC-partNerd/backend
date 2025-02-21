@@ -110,14 +110,22 @@ public class ChatRoomMemberRepositoryCustomImpl implements ChatRoomMemberReposit
         QChatRoomMember sender = new QChatRoomMember("sender");
         QChatRoomMember receiver = new QChatRoomMember("receiver");
 
-        JPAQuery<ChatRoom> query = jpaQuery.select(qChatRoom)
-                        .from(sender)
+        JPAQuery<ChatRoom> query = jpaQuery.select(qChatRoom).distinct()  // distinct 추가
+                .from(sender)
                 .join(sender.chatRoom, qChatRoom)
                 .join(receiver).on(receiver.chatRoom.eq(qChatRoom))
                 .where(sender.member.id.eq(senderId)
                         .and(receiver.member.id.eq(receiverId)));
+        List<ChatRoom> chatRooms = query.fetch();
 
-        return Optional.ofNullable(query.fetchOne());
+
+        if (chatRooms.isEmpty()) {
+            return Optional.empty();
+        } else if (chatRooms.size() == 1) {
+            return Optional.of(chatRooms.get(0));
+        } else {
+            throw new IllegalStateException("Expected one result but found multiple");
+        }
 
     }
 
