@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatRoomRepositoryCustom {
     Optional<ChatRoom> findByCollabAsk(CollabAsk collabAsk);
-    Optional<ChatRoom> findBySenderAndReceiver(String senderNickname, String receiverNickname);
 }
