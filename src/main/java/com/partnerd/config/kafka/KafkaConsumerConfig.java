@@ -3,6 +3,7 @@ package com.partnerd.config.kafka;
 import com.partnerd.service.kafkaService.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,9 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String GROUP_ID;
 
+    @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
+    private String TRUST_PACKAGE;
+
 
     @Bean
     public ConsumerFactory<String, Message> consumerFactory() {
@@ -36,7 +40,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         // JsonDeserializer 관련 프로퍼티로 설정 (프로퍼티 방식)
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.partnerd.service.kafkaService,java.util,java.lang");
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, Message.class.getName());
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);  // 헤더에서 타입 정보를 사용하지 않음
 
