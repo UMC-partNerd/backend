@@ -12,4 +12,6 @@ public interface CollabPostCommandService {
 
     void deleteCollabPost(Long collabPostId, Long memberId);
 
+    void deleteCollabPostAllById(Long id);
+
 }

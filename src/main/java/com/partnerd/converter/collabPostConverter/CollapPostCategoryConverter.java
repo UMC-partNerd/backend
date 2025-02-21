@@ -1,7 +1,6 @@
 package com.partnerd.converter.collabPostConverter;
 
 import com.partnerd.domain.Category;
-import com.partnerd.domain.CollabPost;
 import com.partnerd.domain.mapping.CollabPostCategory;
 
 import java.util.List;
@@ -15,7 +14,6 @@ public class CollapPostCategoryConverter {
                         CollabPostCategory collabPostCategory = CollabPostCategory.builder()
                                 .category(category)
                                 .build();
-                        collabPostCategory.setCategory(category);
                         return collabPostCategory;
                     }).collect(Collectors.toList());
         return collabPostCategoryList;

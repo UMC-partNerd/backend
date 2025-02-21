@@ -154,4 +154,17 @@ public class CollabPostRestController {
 
         return ApiResponse.onSuccess(CollabPostConverter.toMyCollabPostsDTO(memberId, collabPosts));
     }
+
+    @DeleteMapping("/all")
+    @Operation(summary = "콜라보 글 전체삭제 ",
+            description = "콜라보 글 일정 글 이상 삭제")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+    })
+    public ApiResponse<String> deleteCollabPostAll(@RequestHeader("Authorization") String authorizationHeader,
+                                              @RequestParam(name = "collabPostId") Long collabPostId) {
+
+       collabPostCommandService.deleteCollabPostAllById(collabPostId);
+        return ApiResponse.onSuccess("성공");
+    }
 }
