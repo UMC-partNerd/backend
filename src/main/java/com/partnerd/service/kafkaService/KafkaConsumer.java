@@ -5,6 +5,7 @@ import com.partnerd.domain.chat.ChatMessage;
 import com.partnerd.repository.chatRoomRepository.ChatMessageRepository;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
@@ -19,10 +21,10 @@ public class KafkaConsumer {
     private final ChatMessageRepository chatMessageRepository;
 
     @KafkaListener(topics = "#{'${spring.kafka.topic.chat}'}",
-            groupId = "#{'${spring.kafka.consumer.group-id}'}",
-            properties = {"spring.json.trusted.packages=com.partnerd.service.kafkaService"})
+            groupId = "#{'${spring.kafka.consumer.group-id}'}")
     public void consumeChatMessage(Message message) {
-
+        log.info("Received message from Kafka: {}", message);
+        try {
         System.out.println("Received message from Kafka: " + message);
 
         ChatMessage chatMessage = ChatMessage.builder()
@@ -43,5 +45,9 @@ public class KafkaConsumer {
         messagingTemplate.convertAndSend("/subscribe/chat/" + message.getChatRoomId(), chatResponseDTO);
 
         System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
+        } catch (Exception e) {
+            System.err.println("Error in KafkaListener: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
