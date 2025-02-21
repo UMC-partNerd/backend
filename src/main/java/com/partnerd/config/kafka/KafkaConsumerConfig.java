@@ -29,6 +29,11 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Message> consumerFactory() {
+        JsonDeserializer<Message> deserializer = new JsonDeserializer<>(Message.class);
+        deserializer.setRemoveTypeHeaders(false); // ✅ Kafka 헤더에서 타입 정보 제거 안 함
+        deserializer.addTrustedPackages("*"); // ✅ 모든 패키지 허용
+        deserializer.setUseTypeMapperForKey(false); // ✅ Key는 타입 매핑 필요 없음
+
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
@@ -36,7 +41,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class); // ✅ JSON 역직렬화 추가
 
-        return new DefaultKafkaConsumerFactory<>(props);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
 
     }
 
