@@ -53,12 +53,9 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
         CollabPost collabPost = CollabPostConverter.toCollabPost(requestDTO, clubMember);
 
         // 카테고리 객체 찾아서 리스트로 만들기
-        List<Category> categoryList = categoryRepository.findAllByIdWithCollabPostCategory(requestDTO.getCategoryIds());
-
-        // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성한 뒤
-        // 콜라보 글과 양방향 관계 설정
-        List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.
-                toCollabPostCategoryList(categoryList);
+        List<Category> categoryList = categoryRepository.findAllById(requestDTO.getCategoryIds());
+        // CollabPostCategory 리스트를 컨버터를 통해서 빌더로 만들어 생성하고 양방향 관계 설정
+        List<CollabPostCategory> collabPostCategoryList = CollapPostCategoryConverter.toCollabPostCategoryList(categoryList);
         collabPostCategoryList.forEach(collabPostCategory -> { collabPostCategory.setCollabPost(collabPost); });
 
         // 컨택트 방법 추가 + 양방향 관계 매핑
@@ -248,4 +245,10 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
             collabPostRepository.delete(collabPost);
 
         }
+
+    @Override
+    @Transactional
+    public void deleteCollabPostAllById(Long id) {
+        collabPostRepository.deleteAllPostsById(id);
+    }
 }

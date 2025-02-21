@@ -2,6 +2,7 @@ package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.partnerd.domain.CollabPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,6 +21,9 @@ public interface CollabPostRepository extends JpaRepository<CollabPost, Long>, C
             "WHERE cp.id = :id")
     CollabPost findByIdWithCollabPostImg(@Param("id") Long collabPostId);
 
+    @Modifying
+    @Query(value = "DELETE FROM collab_post WHERE id > :cutoffId", nativeQuery = true)
+    void deleteAllPostsById(@Param("cutoffId") Long cutoffId);
 
-  
+
 }
