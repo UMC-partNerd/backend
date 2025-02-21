@@ -150,6 +150,7 @@ public class CollabPostConverter {
                 .bannerKeyName(bannerKeyName)
                 .mainKeyName(mainKeyName)
                 .eventImgKeyNameList(eventKeyNameList)
+                .profileKeyname(collabPost.getClubMember().getMember().getProfile_url())
                 .build();
     }
 
