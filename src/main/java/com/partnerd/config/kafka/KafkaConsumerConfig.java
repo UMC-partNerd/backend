@@ -29,19 +29,18 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Message> consumerFactory() {
-        JsonDeserializer<Message> deserializer = new JsonDeserializer<>(Message.class);
-        deserializer.setRemoveTypeHeaders(false); // ✅ Kafka 헤더에서 타입 정보 제거 안 함
-        deserializer.addTrustedPackages("*"); // ✅ 모든 패키지 허용
-        deserializer.setUseTypeMapperForKey(false); // ✅ Key는 타입 매핑 필요 없음
-
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        // JsonDeserializer 관련 프로퍼티로 설정 (프로퍼티 방식)
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, Message.class.getName());
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);  // 헤더에서 타입 정보를 사용하지 않음
 
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
-
+        return new DefaultKafkaConsumerFactory<>(props);
     }
 
     @Bean
