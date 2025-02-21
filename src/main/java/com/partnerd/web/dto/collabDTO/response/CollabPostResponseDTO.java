@@ -65,10 +65,10 @@ public class CollabPostResponseDTO {
         private String description;
         private String eventType;
         private String nickname;
-        private ImageDTO imageDTO;
         private List<CategoryDTO> categoryDTOList;
         private List<ContactMethodDTO> contactMethod;
         private List<CollabInquiryDTO> CollabInquiryList;
+        private String profileKeyname;
         private String bannerKeyName;
         private String mainKeyName;
         private List<String> eventImgKeyNameList;
