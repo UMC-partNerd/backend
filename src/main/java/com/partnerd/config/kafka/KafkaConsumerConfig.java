@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
@@ -44,6 +45,10 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         kafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
+        // ✅ 역직렬화 오류가 발생해도 Consumer가 계속 실행되도록 설정
+        kafkaListenerContainerFactory.setCommonErrorHandler(new DefaultErrorHandler((record, exception) -> {
+            System.err.println("Skipping record due to deserialization error: " + record);
+        }));
         return kafkaListenerContainerFactory;
     }
 
