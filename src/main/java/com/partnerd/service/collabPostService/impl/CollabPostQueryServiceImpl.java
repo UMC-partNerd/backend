@@ -5,6 +5,7 @@ import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
+import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,21 +27,23 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
 
     @Override
     @Transactional(readOnly=true)
-    public Page<CollabPost> getCollabPostList(Integer page, String sortBy){
+    public CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPostList(LocalDateTime lastCreatedAt, Date lastEndDate, String sortBy, int size){
 
-        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
+        // 페이징 시
+        // Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
 
-        return collabPostRepository.findAllWithCategories(pageable);
+        //  No offset 페이징
+        return collabPostRepository.findAllWithNoOffset(lastCreatedAt, lastEndDate, sortBy, size);
     }
 
-    @Override
+/*    @Override
     @Transactional(readOnly=true)
     public Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy) {
 
         Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
 
         return collabPostRepository.findAllByCategories(pageable, categories);
-    }
+    }*/
 
     @Override
     @Transactional(readOnly=true)

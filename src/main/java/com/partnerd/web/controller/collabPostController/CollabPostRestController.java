@@ -16,9 +16,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -97,12 +100,15 @@ public class CollabPostRestController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam(name = "page") Integer page,
-                                                                                          @RequestParam(defaultValue = "endDate") String sortBy) {
+    public ApiResponse<CollabPostResponseDTO.PagingResultDTO> getCollaboPostList(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lastCreatedAt,
+                                                                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date lastEndDate,
+                                                                                 @RequestParam(defaultValue = "10") int size,
+                                                                                 @RequestParam(defaultValue = "endDate") String sortBy) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostList(page-1, sortBy);
 
-        return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
+        CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPage = collabPostQueryService.getCollabPostList(lastCreatedAt, lastEndDate,sortBy, size);
+
+        return ApiResponse.onSuccess(collabPostPage);
     }
 
     // 콜라보 글 상세 조회
@@ -120,7 +126,7 @@ public class CollabPostRestController {
     }
 
     // 카테고리 별 콜라보 글 조회
-    @GetMapping("/categories")
+/*    @GetMapping("/categories")
     @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",
             description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다." +
                     "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
@@ -134,7 +140,7 @@ public class CollabPostRestController {
         Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page-1, sortBy);
 
         return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
-    }
+    }*/
 
     // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
     @GetMapping("/mypage")

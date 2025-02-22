@@ -3,6 +3,7 @@ package com.partnerd.web.dto.collabDTO.response;
 import com.partnerd.domain.CollabInquiry;
 import com.partnerd.domain.ContactMethod;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
+import com.partnerd.web.dto.categoryDTO.CollabPostCategoryDTO;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import lombok.*;
 
@@ -21,6 +22,19 @@ public class CollabPostResponseDTO {
         private LocalDateTime createdAt;
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PagingResultDTO<T> {
+        private List<T> data;       //  현재 페이지 데이터 리스트
+        private int listSize;       //  현재 페이지 데이터 개수
+        private long totalElements; //  전체 데이터 개수
+        private int totalPages;     //  전체 페이지 개수
+        private boolean isFirst;    //  첫 페이지 여부
+        private boolean isLast;     //  마지막 페이지 여부
+    }
     @Builder
     @Getter
     @NoArgsConstructor
@@ -31,8 +45,18 @@ public class CollabPostResponseDTO {
         private String title;
         private Date startDate;
         private Date endDate;
-        private List<CategoryDTO> categoryDTOList;
+        @Setter
+        private List<CollabPostCategoryDTO> categoryDTOList;
         private String mainImgKeyname;
+        private LocalDateTime createdAt;
+        @Builder
+        public CollabPostPreviewDTO(Long id, String title, Date startDate, Date endDate, String mainImgKeyname) {
+            this.collabPostId = id;
+            this.title = title;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.mainImgKeyname = mainImgKeyname;
+        }
 
     }
 
@@ -41,7 +65,7 @@ public class CollabPostResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CollabPostPreviewListDTO {
-        List<CollabPostPreviewDTO> collabPostPreviewDTOLList;
+        List<CollabPostPreviewDTO> collabPostPreviewDTOList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;

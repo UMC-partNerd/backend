@@ -7,13 +7,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Optional;
 
 public interface CollabPostRepositoryCustom {
-    Page<CollabPost> findAllWithCategories(Pageable pageable);
-    Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories);
+    Page<CollabPostResponseDTO.CollabPostPreviewDTO> findAllWithCategories(Pageable pageable);
+    CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> findAllWithNoOffset(LocalDateTime lastCreatedAt, Date lastEndDate, String sortBy, int size);
+
+    /*    Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories);*/
     CollabPost findCollabPostDetails(Long collabPostId);
     Optional<CollabPost> findByIdWithMember(Long collabPostId);
 

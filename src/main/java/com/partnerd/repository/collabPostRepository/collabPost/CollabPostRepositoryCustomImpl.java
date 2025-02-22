@@ -4,8 +4,16 @@ import com.partnerd.domain.*;
 import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
+import com.partnerd.web.dto.categoryDTO.CategoryDTO;
+import com.partnerd.web.dto.categoryDTO.CollabPostCategoryDTO;
+import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Builder;
@@ -17,8 +25,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +46,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     private final QCollabPostImg qCollabPostImg = QCollabPostImg.collabPostImg;
 
 
-    private PagingResultDTO applySortingAndPaging(JPAQuery<CollabPost> query, Pageable pageable) {
+    private PagingResultDTO applySortingAndPaging(JPAQuery<CollabPostResponseDTO.CollabPostPreviewDTO> query, Pageable pageable) {
         Sort sort = pageable.getSort();
         for (Sort.Order order : sort) {
             String property = order.getProperty();
@@ -52,7 +61,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                 .from(qCollabPost)
                 .fetchOne();
 
-        List<CollabPost> results = query
+        List<CollabPostResponseDTO.CollabPostPreviewDTO> results = query
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -65,23 +74,139 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     }
 
     @Override
-    public Page<CollabPost> findAllWithCategories(Pageable pageable) {
-        JPAQuery<CollabPost> query = queryFactory
-                .selectFrom(qCollabPost)
-                .leftJoin(qCollabPost.collabPostCategoryList, qCollabPostCategory)
-                .fetchJoin()
-                .leftJoin(qCollabPostCategory.category, qCategory) // Category도 즉시 로딩
-                .fetchJoin()
-                .leftJoin(qCollabPost.collabPostImgList, qCollabPostImg)
-                .fetchJoin();
+    public Page<CollabPostResponseDTO.CollabPostPreviewDTO> findAllWithCategories(Pageable pageable) {
 
-       PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
+        // 서브쿼리 활용하여 `mainImgKeyname` 가져오기
+        QCollabPostImg subQCollabPostImg = new QCollabPostImg("subQCollabPostImg");
+        SubQueryExpression<String> mainImgSubQuery = JPAExpressions
+                .select(subQCollabPostImg.keyName)
+                .from(subQCollabPostImg)
+                .where(subQCollabPostImg.collabPost.id.eq(qCollabPost.id)
+                        .and(subQCollabPostImg.imageType.eq(ImageType.MAIN)))
+                .limit(1);
+
+        JPAQuery<CollabPostResponseDTO.CollabPostPreviewDTO> query = queryFactory
+                .select(Projections.constructor(
+                        CollabPostResponseDTO.CollabPostPreviewDTO.class,
+                        qCollabPost.id,
+                        qCollabPost.title,
+                        qCollabPost.startDate,
+                        qCollabPost.endDate,
+                        mainImgSubQuery
+                )).from(qCollabPost);
+
+        PagingResultDTO pagingResultDTO = applySortingAndPaging(query, pageable);
+        List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts = pagingResultDTO.getResults();
+
+/*        // 각 collabPost의 ID 리스트 추출
+        List<Long> postIds = collabPosts.stream().map(CollabPostResponseDTO.CollabPostPreviewDTO::getCollabPostId).collect(Collectors.toList());
+
+        Map<Long, List<CollabPostCategoryDTO>> categoryMap = queryFactory
+                .select(Projections.constructor(
+                        CollabPostCategoryDTO.class,
+                        qCollabPostCategory.collabPost.id,
+                        qCategory.id,
+                        qCategory.name
+                ))
+                .from(qCollabPostCategory)
+                .join(qCategory).on(qCollabPostCategory.category.id.eq(qCategory.id))
+                .where(qCollabPostCategory.collabPost.id.in(postIds))
+                .fetch()
+                .stream()
+                .collect(Collectors.groupingBy(CollabPostCategoryDTO::getCollabPostId));
+        // DTO에 데이터 매핑
+        collabPosts.forEach(post -> {
+            post.setCategoryDTOList(categoryMap.getOrDefault(post.getCollabPostId(), Collections.emptyList()));
+        });*/
 
         return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
 
-
     @Override
+    public CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> findAllWithNoOffset(LocalDateTime lastCreatedAt, Date lastEndDate, String sortBy, int size) {
+
+        // 첫 페이지 요청이면 전체 데이터 개수 조회
+        long totalElements = (lastCreatedAt == null) ? getTotalElements() : -1;
+        OrderSpecifier<?> orderSpecifier;
+        BooleanExpression paginationCondition;
+
+        if ("endDate".equalsIgnoreCase(sortBy)) {
+            orderSpecifier = qCollabPost.endDate.asc(); // 마감일순 (오름차순)
+            paginationCondition = (lastEndDate != null) ? qCollabPost.endDate.after(lastEndDate) : Expressions.TRUE;
+        } else {
+            orderSpecifier = qCollabPost.createdAt.desc(); // 최신순 (내림차순)
+            paginationCondition = (lastCreatedAt != null) ? qCollabPost.createdAt.lt(lastCreatedAt) : Expressions.TRUE;
+        }
+
+
+        List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts = queryFactory
+                .select(Projections.constructor(
+                        CollabPostResponseDTO.CollabPostPreviewDTO.class,
+                        qCollabPost.id,
+                        qCollabPost.title,
+                        qCollabPost.startDate,
+                        qCollabPost.endDate,
+                        JPAExpressions.select(qCollabPostImg.keyName)
+                                .from(qCollabPostImg)
+                                .where(qCollabPostImg.collabPost.id.eq(qCollabPost.id)
+                                        .and(qCollabPostImg.imageType.eq(ImageType.MAIN)))
+                                .limit(1)
+                ))
+                .from(qCollabPost)
+                .where(paginationCondition) // Keyset Pagination 적용
+                .orderBy(orderSpecifier)
+                .limit(size + 1)  // 마지막 페이지 판별을 위해 `size+1`개 조회
+                .fetch();
+
+        // 콜라보 글 별로 해당하는 카테고리 DTO 찾기.
+        List<Long> postIds = collabPosts.stream().map(CollabPostResponseDTO.CollabPostPreviewDTO::getCollabPostId).collect(Collectors.toList());
+
+        Map<Long, List<CollabPostCategoryDTO>> categoryMap = queryFactory.
+                                select(Projections.constructor(
+                                CollabPostCategoryDTO.class,
+                                qCollabPostCategory.collabPost.id,
+                                qCategory.id,
+                                qCategory.name
+                        ))
+                                .from(qCollabPostCategory)
+                                .join(qCategory).on(qCollabPostCategory.category.id.eq(qCategory.id))
+                                .where(qCollabPostCategory.collabPost.id.in(postIds))
+                                .fetch()
+                                .stream()
+                                .collect(Collectors.groupingBy(CollabPostCategoryDTO::getCollabPostId));
+
+        collabPosts.forEach(post -> {
+            post.setCategoryDTOList(categoryMap.getOrDefault(post.getCollabPostId(), Collections.emptyList()));
+        });
+
+        // 마지막 페이지인지 확인
+        boolean isLast = collabPosts.size() <= size;
+        if (!isLast) {
+            collabPosts.remove(collabPosts.size() - 1); // ✅ 다음 페이지 데이터 제거
+        }
+
+        return CollabPostResponseDTO.PagingResultDTO.<CollabPostResponseDTO.CollabPostPreviewDTO>builder()
+                .data(collabPosts)
+                .listSize(collabPosts.size())
+                .totalElements(totalElements) // ✅ 첫 페이지 요청 시만 totalElements 포함
+                .totalPages((totalElements == -1) ? -1 : (int) Math.ceil((double) totalElements / size)) // totalPages 계산
+                .isFirst(lastCreatedAt == null)
+                .isLast(isLast)
+                .build();
+    }
+
+
+
+        // ✅ 전체 데이터 개수 조회하는 메서드
+    private long getTotalElements() {
+        return queryFactory
+                .select(qCollabPost.count())
+                .from(qCollabPost)
+                .fetchOne();
+    }
+
+
+ /*   @Override
     public Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories) {
 
         JPAQuery<CollabPost> query = queryFactory
@@ -95,7 +220,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
 
         return new PageImpl<>(pagingResultDTO.getResults(), pageable, pagingResultDTO.getTotal());
     }
-
+*/
 
     @Override
     public CollabPost findCollabPostDetails(Long collabPostId) {
@@ -185,7 +310,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
     @Getter
     public static class PagingResultDTO {
         private long total;
-        private List<CollabPost> results;
+        private List<CollabPostResponseDTO.CollabPostPreviewDTO> results;
     }
 
 }
