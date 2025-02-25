@@ -29,8 +29,6 @@ public class ChatController {
 
     @MessageMapping("/chat/{chatRoomId}")
     public void sendChatMessage(@Payload ChatDTO.ChatRequestDTO chatDTO) {
-        System.out.println("kafka 전송 시이이작!");
-        System.out.println(chatDTO);
         // Kafka로 메시지 전송
         kafkaProducer.sendMessage(chatDTO);
     }
