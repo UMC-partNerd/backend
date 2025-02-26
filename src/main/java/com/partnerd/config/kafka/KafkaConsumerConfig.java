@@ -3,7 +3,6 @@ package com.partnerd.config.kafka;
 import com.partnerd.service.kafkaService.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,9 +25,12 @@ public class KafkaConsumerConfig {
 
     @Value("${spring.kafka.consumer.group-id}")
     private String GROUP_ID;
+    @Value("${spring.kafka.consumer.auto-offset-reset}")
+    private String AUTO_OFFSET_RESET;
 
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String TRUST_PACKAGE;
+
 
 
     @Bean
@@ -36,7 +38,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         // JsonDeserializer 관련 프로퍼티로 설정 (프로퍼티 방식)
