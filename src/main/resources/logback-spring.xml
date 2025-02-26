@@ -1,0 +1,10 @@
+<configuration>
+    <logger name="org.apache.kafka" level="INFO"/>
+    <logger name="org.springframework.kafka" level="INFO"/>
+    <logger name="org.springframework.messaging" level="INFO"/>
+    <logger name="org.springframework.web" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
