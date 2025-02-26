@@ -8,16 +8,13 @@ import com.partnerd.converter.collabPostConverter.CollabPostConverter;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
-import com.partnerd.service.s3Service.S3Service;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -94,22 +91,30 @@ public class CollabPostRestController {
 
     // 콜라보 글 전체 조회 (최신순)
     @GetMapping
-    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순) ",
-            description = "콜라보 글 전체 조회 API입니다. page는 1부터 시작합니다." +
-                    "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
+    @Operation(summary = "콜라보 글 전체 조회 API (마감순, 최신순)",
+            description = "콜라보 글 전체 조회 API입니다. pageNum은 1부터 시작합니다." +
+                    "sortBy는 기본값이 endDate(마감순)입니다. createdAt을 입력하면 최신순 정렬이 가능합니다.")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.PagingResultDTO> getCollaboPostList(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lastCreatedAt,
-                                                                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date lastEndDate,
-                                                                                 @RequestParam(defaultValue = "10") int size,
-                                                                                 @RequestParam(defaultValue = "endDate") String sortBy) {
+    public ApiResponse<CollabPostResponseDTO.PagingResultDTO> getCollaboPostList(
+            @RequestParam(defaultValue = "endDate") String sortBy,
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lastCreatedAt,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date lastEndDate,
+            @RequestParam(required = false) Long lastId
+    ) {
+        // DTO로 변환
+        CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO =
+                new CollabPostRequestDTO.RequestNoOffsetPagingDTO(sortBy, size, pageNum, lastCreatedAt, lastEndDate, lastId);
 
-
-        CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPage = collabPostQueryService.getCollabPostList(lastCreatedAt, lastEndDate,sortBy, size);
+        CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPage =
+                collabPostQueryService.getCollabPostList(requestNoOffsetPagingDTO);
 
         return ApiResponse.onSuccess(collabPostPage);
     }
+
 
     // 콜라보 글 상세 조회
     @GetMapping("/{collabPostId}")
