@@ -89,6 +89,7 @@ public class KakaoOAuthServiceImpl implements OAuthService {
                 .id(member.getId())
                 .email(member.getEmail())
                 .isNewUser(isNewUser) // 신규 가입 여부 추가
+                .nickname(member.getNickname())
                 .build();
     }
 
