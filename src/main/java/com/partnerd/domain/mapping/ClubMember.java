@@ -60,7 +60,7 @@ public class ClubMember extends BaseEntity {
     private Set<CollabAsk> receivedCollabAsks = new HashSet<>();
 
 
-
-
-
+    public ClubMember(Long randomClubMemberId) {
+        super();
+    }
 }

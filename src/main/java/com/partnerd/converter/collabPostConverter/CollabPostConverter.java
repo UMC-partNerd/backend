@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class CollabPostConverter {
 
 
-    public static CollabPostResponseDTO.CollabPostPreviewDTO collabPostPreviewDTO(CollabPost collabPost) {
+/*    public static CollabPostResponseDTO.CollabPostPreviewDTO collabPostPreviewDTO(CollabPost collabPost) {
 
         List<CategoryDTO> categoryDTOS =  collabPost.getCollabPostCategoryList().stream()
                 .map(collabPostCategory -> {
@@ -43,14 +43,12 @@ public class CollabPostConverter {
                 .mainImgKeyname(mainImgKeyname)
                 .categoryDTOList(categoryDTOS)
                 .build();
-    }
+    }*/
 
-    public static CollabPostResponseDTO.CollabPostPreviewListDTO collabPostPreviewListDTO(Page<CollabPost> collabPostPage) {
-        List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPreviewDTOList =
-                    collabPostPage.stream().map(CollabPostConverter::collabPostPreviewDTO).collect(Collectors.toList());
+    public static CollabPostResponseDTO.CollabPostPreviewListDTO collabPostPreviewListDTO(Page<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPage) {
 
         return CollabPostResponseDTO.CollabPostPreviewListDTO.builder()
-                .collabPostPreviewDTOLList(collabPostPreviewDTOList)
+                .collabPostPreviewDTOList(collabPostPage.getContent())
                 .listSize(collabPostPage.getSize())
                 .totalPage(collabPostPage.getTotalPages())
                 .totalElements(collabPostPage.getTotalElements())

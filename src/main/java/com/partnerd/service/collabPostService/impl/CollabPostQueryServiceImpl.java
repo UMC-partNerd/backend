@@ -5,6 +5,8 @@ import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.domain.CollabPost;
 import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
+import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
+import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,15 +24,19 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
     private final CollabPostRepository collabPostRepository;
 
 
+    // No offset 페이징 콜라보 글 전체 조회
     @Override
     @Transactional(readOnly=true)
-    public Page<CollabPost> getCollabPostList(Integer page, String sortBy){
+    public CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPostList(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO){
 
-        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
+        // 페이징 시
+        // Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
 
-        return collabPostRepository.findAllWithCategories(pageable);
+        //  No offset 페이징
+        return collabPostRepository.findAllWithNoOffset(requestNoOffsetPagingDTO);
     }
 
+    // 카테고리 별 콜라보 글 조회
     @Override
     @Transactional(readOnly=true)
     public Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy) {
