@@ -32,7 +32,6 @@ public class KafkaConsumerConfig {
     private String TRUST_PACKAGE;
 
 
-
     @Bean
     public ConsumerFactory<String, Message> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
