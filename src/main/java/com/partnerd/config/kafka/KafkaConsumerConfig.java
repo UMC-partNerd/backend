@@ -28,6 +28,9 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String AUTO_OFFSET_RESET;
 
+    @Value("${spring.kafka.consumer.enable-auto-commit}")
+    private boolean ENABLE_AUTO_COMMIT;
+
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String TRUST_PACKAGE;
 
@@ -39,6 +42,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, ENABLE_AUTO_COMMIT);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         // JsonDeserializer 관련 프로퍼티로 설정 (프로퍼티 방식)
