@@ -6,7 +6,9 @@ import com.partnerd.repository.chatRoomRepository.ChatMessageRepository;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,32 +24,36 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "#{'${spring.kafka.topic.chat}'}",
             groupId = "#{'${spring.kafka.consumer.group-id}'}", concurrency = "10")
-    public void consumeChatMessage(Message message) {
-        log.info("Received message from Kafka: {}", message);
-        try {
-        System.out.println("Received message from Kafka: " + message);
+    public void consumeChatMessage(ConsumerRecord<String, Message> record, Acknowledgment acknowledgment) {
+        {
+            Message message = record.value();
+            log.info("📩 Kafka 메시지 수신: {}", message);
+            try {
+                System.out.println("Received message from Kafka: " + message);
 
-        ChatMessage chatMessage = ChatMessage.builder()
-                .chatRoomId(message.getChatRoomId())
-                .contentType(message.getContentType())
-                .content(message.getContent())
-                .senderNickname(message.getSenderNickname())
-                .sendDateTime(Instant.now()) // ISODate 형식으로 저장됨 (UTC)
-                .readCount(message.getReadCount())
-                .build();
+                ChatMessage chatMessage = ChatMessage.builder()
+                        .chatRoomId(message.getChatRoomId())
+                        .contentType(message.getContentType())
+                        .content(message.getContent())
+                        .senderNickname(message.getSenderNickname())
+                        .sendDateTime(Instant.now()) // ISODate 형식으로 저장됨 (UTC)
+                        .readCount(message.getReadCount())
+                        .build();
 
-        // MongoDB 에 저장
-        chatMessageRepository.save(chatMessage);
+                // MongoDB 에 저장
+                chatMessageRepository.save(chatMessage);
 
 
-        ChatDTO.ChatResponseDTO chatResponseDTO = ChatConverter.toChatResponseDTO(chatMessage);
-        // WebSocket을 통해 특정 채팅방으로 메시지 전달
-        messagingTemplate.convertAndSend("/subscribe/chat/" + message.getChatRoomId(), chatResponseDTO);
-
-        System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
-        } catch (Exception e) {
-            System.err.println("Error in KafkaListener: " + e.getMessage());
-            e.printStackTrace();
+                ChatDTO.ChatResponseDTO chatResponseDTO = ChatConverter.toChatResponseDTO(chatMessage);
+                // WebSocket을 통해 특정 채팅방으로 메시지 전달
+                messagingTemplate.convertAndSend("/subscribe/chat/" + message.getChatRoomId(), chatResponseDTO);
+                //  메시지 정상 처리 후 Kafka에 Offset 커밋
+                acknowledgment.acknowledge();
+                System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
+            } catch (Exception e) {
+                System.err.println("Error in KafkaListener: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 }
