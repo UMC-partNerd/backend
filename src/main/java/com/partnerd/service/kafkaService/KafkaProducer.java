@@ -1,6 +1,5 @@
 package com.partnerd.service.kafkaService;
 
-import com.partnerd.web.controller.redis.RedisPublisher;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.RecordMetadata;
