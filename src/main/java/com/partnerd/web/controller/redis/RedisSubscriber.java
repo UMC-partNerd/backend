@@ -26,6 +26,7 @@ public class RedisSubscriber implements MessageListener {
             ChatDTO.ChatResponseDTO chatResponseDTO = objectMapper.readValue(receivedMessage, ChatDTO.ChatResponseDTO.class);
 
             log.info("📩 Redis 메시지 수신: {}", chatResponseDTO);
+            System.out.println("📩 Redis 메시지 수신: {}" + chatResponseDTO);
 
             // ✅ WebSocket을 통해 클라이언트로 전송
             messagingTemplate.convertAndSend("/subscribe/chat/" + chatResponseDTO.getChatRoomId(), chatResponseDTO);

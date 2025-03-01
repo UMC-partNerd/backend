@@ -34,30 +34,29 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
     @Bean
-    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
-                                                        RedisSubscriber redisSubscriber) {
+    public RedisMessageListenerContainer redisContainer(RedisSubscriber redisSubscriber) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
+        container.setConnectionFactory(lettuceConnectionFactory());
         container.addMessageListener(redisSubscriber, new ChannelTopic("chat-room:*"));
         return container;
     }
     @Bean
     @Primary
-    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, String> redisTemplate() {
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory());
         return redisTemplate;
     }
 
     @Bean(name = "notificationRedisTemplate")
-    public RedisTemplate<String, List<Notification>> redisTemplateForNotification(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, List<Notification>> redisTemplateForNotification() {
         RedisTemplate<String, List<Notification>> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         GenericJackson2JsonRedisSerializer listSerializer = new GenericJackson2JsonRedisSerializer();
         redisTemplate.setValueSerializer(listSerializer);
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory());
         return redisTemplate;
     }
 }
