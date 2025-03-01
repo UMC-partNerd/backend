@@ -23,6 +23,7 @@ public class RedisSubscriber implements MessageListener {
         try {
             // ✅ Redis에서 메시지 수신
             String receivedMessage = new String(message.getBody());
+            System.out.println(receivedMessage);
             ChatDTO.ChatResponseDTO chatResponseDTO = objectMapper.readValue(receivedMessage, ChatDTO.ChatResponseDTO.class);
 
             log.info("📩 Redis 메시지 수신: {}", chatResponseDTO);
