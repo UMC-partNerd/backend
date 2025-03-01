@@ -2,12 +2,15 @@ package com.partnerd.service.kafkaService;
 
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +38,22 @@ public class KafkaProducer {
         * Kafka 기본 파티셔너(DefaultPartitioner)가 key.hash() % partition 개수 로 파티션을 배정함
         * */
 
-        System.out.println("카프카로 메세지 보내기!");
-        System.out.println("[Kafka Producer]: " + message);
-        kafkaTemplate.send("chat-topic", String.valueOf(chatDTO.getChatRoomId()), message);
+        System.out.println("🟢 Kafka로 메시지 전송 시도: " + message);
+
+        try {
+            // 동기 방식으로 메시지 전송 (get() 사용)
+            SendResult<String, Message> result = kafkaTemplate.send("chat-topic", String.valueOf(chatDTO.getChatRoomId()), message)
+                    .get(5, TimeUnit.SECONDS); // 최대 5초 대기 (Timeout 설정)
+
+            // 메시지 전송 성공 시 로그 출력
+            RecordMetadata metadata = result.getRecordMetadata();
+            System.out.println("Kafka 메시지 전송 완료: " + message);
+            System.out.println("   └ Partition: " + metadata.partition() + ", Offset: " + metadata.offset());
+
+        } catch (Exception e) {
+            System.err.println(" Kafka 메시지 전송 실패: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
