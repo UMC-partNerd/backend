@@ -21,7 +21,7 @@ public class KafkaConsumer {
     private final ChatMessageRepository chatMessageRepository;
 
     @KafkaListener(topics = "#{'${spring.kafka.topic.chat}'}",
-            groupId = "#{'${spring.kafka.consumer.group-id}'}")
+            groupId = "#{'${spring.kafka.consumer.group-id}'}", concurrency = "10")
     public void consumeChatMessage(Message message) {
         log.info("Received message from Kafka: {}", message);
         try {
