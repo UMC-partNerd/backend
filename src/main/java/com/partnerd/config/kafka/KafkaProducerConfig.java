@@ -39,6 +39,7 @@ public class KafkaProducerConfig {
                 .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
                 .put(ProducerConfig.ACKS_CONFIG, "all") // 모든 복제본이 메시지를 받아야 성공
                 .put(ProducerConfig.RETRIES_CONFIG, 3)  // 전송 실패 시 3번 재시도
+                .put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false)
                 .build();
     }
 
