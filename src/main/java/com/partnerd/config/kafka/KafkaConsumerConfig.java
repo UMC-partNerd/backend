@@ -28,9 +28,6 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String AUTO_OFFSET_RESET;
 
-    @Value("${spring.kafka.consumer.enable-auto-commit}")
-    private boolean ENABLE_AUTO_COMMIT;
-
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String TRUST_PACKAGE;
 
