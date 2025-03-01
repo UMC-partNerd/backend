@@ -16,6 +16,7 @@ public interface CollabPostRepositoryCustom {
     // No offset Paging
     CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> findAllWithNoOffset(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO);
 
+    CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> findAllByCategoriesWithNoOffset (CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO, List<Long> categories);
     Page<CollabPost> findAllByCategories(Pageable pageable, List<Long> categories);
 
     CollabPost findCollabPostDetails(Long collabPostId);

@@ -119,6 +119,52 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         OrderSpecifier<?>[] orderSpecifiers = getOrderSpecifier(sortBy);
         BooleanExpression paginationCondition = getPageCondition(sortBy, lastEndDate, lastCreatedAt, lastId);
 
+        List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts = getCollabPosts(orderSpecifiers, paginationCondition, size);
+        // 콜라보 글 별로 해당하는 카테고리 DTO 찾기.
+        getCategoryListDTO(collabPosts);
+        // 마지막 페이지인지 확인
+        boolean isLast = collabPosts.size() <= size;
+        if (!isLast) {
+            collabPosts.remove(collabPosts.size() - 1); // 다음 페이지 데이터 제거
+        }
+
+        InitialFetchDTO initialFetchDTO = pageNum % 10 == 1 ? initialFetchPage(size, sortBy, lastEndDate, lastCreatedAt, lastId, null) : null;
+        CollabPostResponseDTO.PagingResultDTO toPagingResultDTO = toPagingResultDTO(collabPosts, initialFetchDTO, pageNum, isLast);
+
+        return toPagingResultDTO;
+    }
+
+    @Override
+    public CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> findAllByCategoriesWithNoOffset(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO, List<Long> categories) {
+
+       int pageNum = requestNoOffsetPagingDTO.getPageNum();
+       int size = requestNoOffsetPagingDTO.getSize();
+       String sortBy = requestNoOffsetPagingDTO.getSortBy();
+       Date lastEndDate = requestNoOffsetPagingDTO.getLastEndDate();
+       LocalDateTime lastCreatedAt = requestNoOffsetPagingDTO.getLastCreatedAt();
+       Long lastId = requestNoOffsetPagingDTO.getLastId();
+
+       OrderSpecifier<?>[] orderSpecifiers = getOrderSpecifier(sortBy);
+       BooleanExpression paginationCondition = getPageConditionByCategory(sortBy, lastEndDate, lastCreatedAt, lastId, categories);
+
+
+        List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts = getCollabPosts(orderSpecifiers, paginationCondition, size);
+        // 콜라보 글 별로 해당하는 카테고리 DTO 찾기.
+        getCategoryListDTO(collabPosts);
+        // 마지막 페이지인지 확인
+        boolean isLast = collabPosts.size() <= size;
+        if (!isLast) {
+            collabPosts.remove(collabPosts.size() - 1); // 다음 페이지 데이터 제거
+        }
+
+        InitialFetchDTO initialFetchDTO = pageNum % 10 == 1 ? initialFetchPage(size, sortBy, lastEndDate, lastCreatedAt, lastId, categories) : null;
+
+        CollabPostResponseDTO.PagingResultDTO toPagingResultDTO = toPagingResultDTO(collabPosts, initialFetchDTO, pageNum, isLast);
+        return toPagingResultDTO;
+    }
+
+    private  List<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPosts (OrderSpecifier<?>[] orderSpecifiers, BooleanExpression paginationCondition, int size) {
+
         List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts = queryFactory
                 .select(Projections.constructor(
                         CollabPostResponseDTO.CollabPostPreviewDTO.class,
@@ -133,21 +179,18 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
                                 .limit(1)
                 ))
                 .from(qCollabPost)
-                .where(paginationCondition) // Keyset Pagination 적용
+                .where(paginationCondition)
                 .orderBy(orderSpecifiers)
-                .limit(size + 1)  // 마지막 페이지 판별을 위해 `size+1`개 조회
+                .limit(size + 1)
                 .fetch();
-        // 콜라보 글 별로 해당하는 카테고리 DTO 찾기.
-        getCategoryListDTO(collabPosts);
-        // 마지막 페이지인지 확인
-        boolean isLast = collabPosts.size() <= size;
-        if (!isLast) {
-            collabPosts.remove(collabPosts.size() - 1); // ✅ 다음 페이지 데이터 제거
-        }
 
-        InitialFetchDTO initialFetchDTO = pageNum % 10 == 1 ? initialFetchPage(size, sortBy, lastEndDate, lastCreatedAt, lastId) : null;
+        return collabPosts;
 
-        return CollabPostResponseDTO.PagingResultDTO.<CollabPostResponseDTO.CollabPostPreviewDTO>builder()
+    }
+
+    private CollabPostResponseDTO.PagingResultDTO toPagingResultDTO ( List<CollabPostResponseDTO.CollabPostPreviewDTO> collabPosts,
+                                                                      InitialFetchDTO initialFetchDTO, int pageNum, boolean isLast) {
+       return CollabPostResponseDTO.PagingResultDTO.<CollabPostResponseDTO.CollabPostPreviewDTO>builder()
                 .data(collabPosts)
                 .listSize(collabPosts.size())
                 .hasMorePages(initialFetchDTO != null ? initialFetchDTO.hasMorePages : false)  // 첫페이지 요청시 10페이지 이상의 데이터가 더 있는지 여부
@@ -212,8 +255,21 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         return Expressions.TRUE;
     }
 
+    private  BooleanExpression getPageConditionByCategory (String sortBy, Date lastEndDate, LocalDateTime lastCreatedAt, Long lastId, List<Long> categories) {
+
+        if ("endDate".equalsIgnoreCase(sortBy) && lastEndDate != null && lastId != null) {
+            return qCollabPost.collabPostCategoryList.any().category.id.in(categories)
+                    .and(qCollabPost.id.gt(lastId)).and(qCollabPost.endDate.goe(lastEndDate));
+
+        } else if (lastCreatedAt != null && lastId != null) {
+            return qCollabPost.collabPostCategoryList.any().category.id.in(categories)
+                    .and(qCollabPost.id.gt(lastId)).and(qCollabPost.createdAt.loe(lastCreatedAt));
+        }
+        return qCollabPost.collabPostCategoryList.any().category.id.in(categories);
+    }
+
     // 최대 10 페이지까지의 개수 조회 메서드
-    private InitialFetchDTO initialFetchPage(int size, String sortBy, Date lastEndDate, LocalDateTime lastCreatedAt, Long lastId) {
+    private InitialFetchDTO initialFetchPage(int size, String sortBy, Date lastEndDate, LocalDateTime lastCreatedAt, Long lastId, List<Long> categories) {
 
         int maxInitialPages = 10; // 처음에 표시할 최대 페이지 개수
         int initialFetchSize = size * maxInitialPages; // 10페이지까지 확인할 개수
@@ -234,7 +290,7 @@ public class CollabPostRepositoryCustomImpl implements CollabPostRepositoryCusto
         List<PageReferenceDTO> pageReferences = new ArrayList<>();
 
         for (int i = 0; i < Math.min(pageCheck.size(), initialFetchSize); i += size) {
-            Tuple lastTuple = pageCheck.get(i);
+            Tuple lastTuple = pageCheck.get(i + size - 1);
 
             // `sortBy` 값에 따라 적절한 필드 설정
             PageReferenceDTO pageReference;
