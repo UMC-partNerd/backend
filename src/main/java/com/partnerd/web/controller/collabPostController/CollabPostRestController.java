@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -131,21 +132,29 @@ public class CollabPostRestController {
     }
 
     // 카테고리 별 콜라보 글 조회
-/*    @GetMapping("/categories")
+   @GetMapping("/categories")
     @Operation(summary = "콜라보 글 카테고리 별 조회 API (마감순, 최신순) ",
             description = "콜라보 글 카테고리 별 조회 API입니다. page는 1부터 시작합니다." +
                     "sortBy 는 정렬기준으로 기본값은 endDate(마감순) 입니다. createdAt 을 입력하면 콜라보 글 등록 최신순으로 정렬할 수 있습니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200",description = "OK, 성공"),
     })
-    public ApiResponse<CollabPostResponseDTO.CollabPostPreviewListDTO> getCollaboPostList(@RequestParam("categories") List<Long> categories,
-                                                                                          @RequestParam(name = "page") Integer page,
-                                                                                          @RequestParam(defaultValue = "endDate") String sortBy) {
+    public ApiResponse<CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO>> getCollaboPostList(@RequestParam("categories") List<Long> categories,
+                                                                                          @RequestParam(defaultValue = "endDate") String sortBy,
+                                                                                          @RequestParam(defaultValue = "9") int size,
+                                                                                          @RequestParam(defaultValue = "1") int pageNum,
+                                                                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime lastCreatedAt,
+                                                                                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date lastEndDate,
+                                                                                          @RequestParam(required = false) Long lastId) {
 
-        Page<CollabPost> collabPostPage = collabPostQueryService.getCollabPostListByCategory(categories, page-1, sortBy);
+       // DTO로 변환
+       CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO =
+               new CollabPostRequestDTO.RequestNoOffsetPagingDTO(sortBy, size, pageNum, lastCreatedAt, lastEndDate, lastId);
+       CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> collabPostPage =
+               collabPostQueryService.getCollabPostListByCategory(requestNoOffsetPagingDTO, categories);
 
-        return ApiResponse.onSuccess(CollabPostConverter.collabPostPreviewListDTO(collabPostPage));
-    }*/
+        return ApiResponse.onSuccess(collabPostPage);
+    }
 
     // 마이페이지 - 내가 쓴 콜라보레이션 모아보기
     @GetMapping("/mypage")

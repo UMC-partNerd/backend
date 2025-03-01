@@ -11,7 +11,7 @@ public interface CollabPostQueryService {
 
     CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPostList(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO);
 
-    Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy);
+    CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPostListByCategory(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO, List<Long> categories);
 
     CollabPost getCollabPost(Long collabPostId);
 

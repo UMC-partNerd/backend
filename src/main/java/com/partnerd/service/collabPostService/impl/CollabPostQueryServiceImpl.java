@@ -39,11 +39,13 @@ public class CollabPostQueryServiceImpl implements CollabPostQueryService {
     // 카테고리 별 콜라보 글 조회
     @Override
     @Transactional(readOnly=true)
-    public Page<CollabPost> getCollabPostListByCategory(List<Long> categories, Integer page, String sortBy) {
+    public  CollabPostResponseDTO.PagingResultDTO<CollabPostResponseDTO.CollabPostPreviewDTO> getCollabPostListByCategory(CollabPostRequestDTO.RequestNoOffsetPagingDTO requestNoOffsetPagingDTO,
+                                                                                                                          List<Long> categories) {
+        // 페이징 시
+       // Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
 
-        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc(sortBy)));
-
-        return collabPostRepository.findAllByCategories(pageable, categories);
+        //  No offset 페이징
+        return collabPostRepository.findAllByCategoriesWithNoOffset(requestNoOffsetPagingDTO, categories);
     }
 
     @Override
