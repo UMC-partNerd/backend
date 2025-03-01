@@ -1,14 +1,13 @@
 package com.partnerd.service.kafkaService;
 
+import com.partnerd.web.controller.redis.RedisPublisher;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +17,7 @@ public class KafkaProducer {
 
 
     private final KafkaTemplate<String, Message> kafkaTemplate;
+
 
     public void sendMessage(ChatDTO.ChatRequestDTO chatDTO) {
 
