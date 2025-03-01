@@ -25,9 +25,8 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "#{'${spring.kafka.topic.chat}'}",
             groupId = "#{'${spring.kafka.consumer.group-id}'}", concurrency = "10")
-    public void consumeChatMessage(ConsumerRecord<String, Message> record, Acknowledgment acknowledgment) {
+    public void consumeChatMessage(Message message) {
         {
-            Message message = record.value();
             log.info("📩 Kafka 메시지 수신: {}", message);
             try {
                 System.out.println("Received message from Kafka: " + message);
@@ -52,8 +51,6 @@ public class KafkaConsumer {
                 String jsonMessage = objectMapper.writeValueAsString(message);
                 redisTemplate.convertAndSend("chat-room:" + message.getChatRoomId(), jsonMessage);
 
-                //  메시지 정상 처리 후 Kafka에 Offset 커밋
-                acknowledgment.acknowledge();
                 System.out.println("WebSocket을 통해 특정 채팅방으로 메시지 전달: " + chatResponseDTO);
             } catch (Exception e) {
                 System.err.println("Error in KafkaListener: " + e.getMessage());
