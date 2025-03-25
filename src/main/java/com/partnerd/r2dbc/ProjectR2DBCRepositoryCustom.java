@@ -1,35 +1,38 @@
-package com.partnerd.repository.r2dbc;
+package com.partnerd.r2dbc;
 
 import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class ProjectR2DBCRepositoryCustom {
 
     private final DatabaseClient databaseClient;
 
     public Flux<HomeProjectDTO> findTopProjects(int limit) {
-        String query = """
-                    SELECT p.id, pi.keyName AS keyName, p.title, p.intro
+        String query = String.format("""
+                    SELECT p.id, pi.key_name AS keyName, p.title, p.intro
                     FROM project p
                     LEFT JOIN project_image pi ON pi.project_id = p.id AND pi.image_type = 'THUMBNAIL'
                     ORDER BY p.created_at DESC
-                    LIMIT :limit
-                """;
+                   LIMIT %d
+             """, limit);
 
         return databaseClient.sql(query)
-                .bind("limit", limit)
                 .map((row, meta) -> new HomeProjectDTO(
                         row.get("id", Long.class),
                         row.get("keyName", String.class),
                         row.get("title", String.class),
                         row.get("intro", String.class)
                 ))
-                .all();
+                .all()
+                .doOnError(e -> log.error("Database error during findTopClubs", e))
+                .doFinally(signal -> log.info("Query execution completed: {}", signal));
     }
 
 }

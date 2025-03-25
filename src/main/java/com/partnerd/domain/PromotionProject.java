@@ -21,6 +21,7 @@ public class PromotionProject extends BaseEntity {
 
     // 포로젝트 홍보 ID
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

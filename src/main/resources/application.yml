@@ -4,9 +4,26 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 200         # 최대 커넥션 수
+      minimum-idle: 10               # 최소 유휴 커넥션 수
+      idle-timeout: 30000            # 유휴 커넥션 유지 시간 (밀리초)
+      max-lifetime: 1800000          # 커넥션 최대 수명 (밀리초)
+      connection-timeout: 30000      # 커넥션 대기 시간 (밀리초)
+      pool-name: HikariCP
+
   sql:
     init:
       mode: never
+  r2dbc:
+    url: r2dbc:mysql://partnerddb.creiqyoakhm2.ap-northeast-2.rds.amazonaws.com:3306/partnerd
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    pool:
+      max-size: 50             # 최대 커넥션 수
+      initial-size: 10         # 초기 커넥션 수
+      max-idle-time: 30m  # 커넥션 유지 시간
+      max-wait-time: 5s  # 커넥션 대기 시간
   jpa:
     properties:
       hibernate:
@@ -102,6 +119,11 @@ management:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+    org.springframework.r2dbc: DEBUG
+    root: TRACE
+    org.springframework: TRACE
+    reactor: TRACE
+    io.r2dbc: TRACE
 
 
 

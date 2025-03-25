@@ -22,6 +22,7 @@ public class Project extends BaseEntity {
 
     // 포로젝트ID
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

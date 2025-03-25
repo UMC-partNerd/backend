@@ -25,6 +25,7 @@ public class CollabPost extends BaseEntity {
 
     // 콜라보글ID
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

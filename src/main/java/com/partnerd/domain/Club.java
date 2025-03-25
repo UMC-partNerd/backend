@@ -19,6 +19,7 @@ import java.util.*;
 public class Club extends BaseEntity{
 
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
