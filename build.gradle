@@ -17,7 +17,10 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+
 }
+
+
 
 repositories {
 	mavenCentral()
@@ -84,6 +87,8 @@ dependencies {
 	// Prometheus
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+
 
 	// H2 데이터베이스 (테스트용)
 	runtimeOnly 'com.h2database:h2'

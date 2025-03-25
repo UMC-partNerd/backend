@@ -12,5 +12,12 @@ spring:
     url: r2dbc:h2:mem:///testdb
     username: sa
     password:
-  profiles:
-    active: test
+
+logging:
+  level:
+    root: DEBUG
+    org.hibernate.orm.jdbc.bind: DEBUG
+    org.springframework.r2dbc: DEBUG
+    org.springframework: DEBUG
+    reactor: DEBUG
+    io.r2dbc: DEBUG

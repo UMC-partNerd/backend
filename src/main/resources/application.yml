@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -114,16 +116,14 @@ management:
         enabled: true
 
 
-
-
 logging:
   level:
-    org.hibernate.orm.jdbc.bind: trace
+    root: DEBUG
+    org.hibernate.orm.jdbc.bind: DEBUG
     org.springframework.r2dbc: DEBUG
-    root: TRACE
-    org.springframework: TRACE
-    reactor: TRACE
-    io.r2dbc: TRACE
+    org.springframework: DEBUG
+    reactor: DEBUG
+    io.r2dbc: DEBUG
 
 
 
