@@ -1,8 +1,8 @@
 package com.partnerd.converter.collabPostConverter;
 
-import com.partnerd.mongoRepository.domain.CollabPost;
-import com.partnerd.mongoRepository.domain.CollabPostImg;
-import com.partnerd.mongoRepository.domain.mapping.ClubMember;
+import com.partnerd.domain.CollabPost;
+import com.partnerd.domain.CollabPostImg;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;

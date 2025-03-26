@@ -2,8 +2,8 @@ package com.partnerd.service.notifyService;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
-import com.partnerd.mongoRepository.domain.Member;
-import com.partnerd.mongoRepository.domain.Notification;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.Notification;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.notificationRepository.EmitterRepository;
 import lombok.RequiredArgsConstructor;

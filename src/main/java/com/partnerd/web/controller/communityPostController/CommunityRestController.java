@@ -5,7 +5,7 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CommunityHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.communityConverter.CommunityConverter;
-import com.partnerd.mongoRepository.domain.Community;
+import com.partnerd.domain.Community;
 import com.partnerd.service.communityService.CommunityCommandService;
 import com.partnerd.service.communityService.CommunityQueryService;
 import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;

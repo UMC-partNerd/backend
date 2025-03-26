@@ -1,6 +1,6 @@
 package com.partnerd.converter.collabPostConverter;
 
-import com.partnerd.mongoRepository.domain.EventType;
+import com.partnerd.domain.EventType;
 import com.partnerd.web.dto.eventTypeDTO.EventTypeDTO;
 
 public class EventTypeConverter {

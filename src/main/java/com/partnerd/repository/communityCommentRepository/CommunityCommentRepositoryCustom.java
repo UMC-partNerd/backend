@@ -1,6 +1,6 @@
 package com.partnerd.repository.communityCommentRepository;
 
-import com.partnerd.mongoRepository.domain.CommunityComment;
+import com.partnerd.domain.CommunityComment;
 
 import java.util.List;
 

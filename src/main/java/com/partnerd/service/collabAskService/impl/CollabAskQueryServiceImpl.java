@@ -1,6 +1,6 @@
 package com.partnerd.service.collabAskService.impl;
 
-import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
+import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.repository.collabAskRepository.CollabAskRepository;
 import com.partnerd.service.collabAskService.CollabAskQueryService;
 import lombok.RequiredArgsConstructor;

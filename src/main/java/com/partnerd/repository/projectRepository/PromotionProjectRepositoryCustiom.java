@@ -1,7 +1,7 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.mongoRepository.domain.PromotionProject;
+import com.partnerd.domain.PromotionProject;
 import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

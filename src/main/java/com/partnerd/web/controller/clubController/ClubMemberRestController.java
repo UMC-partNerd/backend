@@ -4,7 +4,7 @@ import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.apiPaylaod.code.status.SuccessStatus;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.clubConverter.ClubMemberConverter;
-import com.partnerd.mongoRepository.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.service.clubMemberService.ClubMemberService;
 import com.partnerd.web.dto.clubDTO.*;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;

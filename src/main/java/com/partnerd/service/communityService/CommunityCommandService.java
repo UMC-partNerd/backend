@@ -1,6 +1,6 @@
 package com.partnerd.service.communityService;
 
-import com.partnerd.mongoRepository.domain.Community;
+import com.partnerd.domain.Community;
 import com.partnerd.web.dto.CommunityDTO.CommunityRequestDTO;
 
 public interface CommunityCommandService {

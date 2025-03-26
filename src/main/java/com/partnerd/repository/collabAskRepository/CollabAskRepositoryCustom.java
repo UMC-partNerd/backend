@@ -1,6 +1,6 @@
 package com.partnerd.repository.collabAskRepository;
 
-import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
+import com.partnerd.domain.mapping.CollabAsk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,6 +1,6 @@
 package com.partnerd.service.clubMemberService;
 
-import com.partnerd.mongoRepository.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 
 import java.util.List;

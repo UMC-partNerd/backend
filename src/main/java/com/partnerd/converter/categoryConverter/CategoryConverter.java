@@ -1,6 +1,6 @@
 package com.partnerd.converter.categoryConverter;
 
-import com.partnerd.mongoRepository.domain.Category;
+import com.partnerd.domain.Category;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 
 public class CategoryConverter {

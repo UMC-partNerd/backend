@@ -2,7 +2,7 @@ package com.partnerd.repository.collabAskRepository;
 
 import com.partnerd.domain.QClub;
 import com.partnerd.domain.QMember;
-import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
+import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabAsk;
 import com.querydsl.jpa.impl.JPAQuery;

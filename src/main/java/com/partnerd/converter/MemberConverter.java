@@ -1,6 +1,6 @@
 package com.partnerd.converter;
 
-import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.domain.Member;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 
 import java.time.LocalDateTime;

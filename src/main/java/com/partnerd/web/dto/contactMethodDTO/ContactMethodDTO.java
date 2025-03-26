@@ -1,7 +1,7 @@
 package com.partnerd.web.dto.contactMethodDTO;
 
 
-import com.partnerd.mongoRepository.domain.ContactMethod;
+import com.partnerd.domain.ContactMethod;
 import lombok.Getter;
 import lombok.Setter;
 

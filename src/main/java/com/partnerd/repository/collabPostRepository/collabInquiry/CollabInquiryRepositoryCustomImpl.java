@@ -1,6 +1,6 @@
 package com.partnerd.repository.collabPostRepository.collabInquiry;
 
-import com.partnerd.mongoRepository.domain.CollabInquiry;
+import com.partnerd.domain.CollabInquiry;
 import com.partnerd.domain.QCollabInquiry;
 import com.partnerd.domain.QCollabPost;
 import com.partnerd.domain.QMember;

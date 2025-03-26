@@ -1,7 +1,7 @@
 package com.partnerd.repository.chatRoomRepository.chatRoomMember;
 
-import com.partnerd.mongoRepository.domain.ChatRoom;
-import com.partnerd.mongoRepository.domain.enums.ChatRoomType;
+import com.partnerd.domain.ChatRoom;
+import com.partnerd.domain.enums.ChatRoomType;
 import com.partnerd.web.dto.chatRoomDTO.response.ChatRoomResponseDTO;
 import org.springframework.data.domain.Pageable;
 

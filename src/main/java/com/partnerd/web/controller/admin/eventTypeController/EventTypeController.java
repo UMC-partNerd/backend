@@ -2,7 +2,7 @@ package com.partnerd.web.controller.admin.eventTypeController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.converter.collabPostConverter.EventTypeConverter;
-import com.partnerd.mongoRepository.domain.EventType;
+import com.partnerd.domain.EventType;
 import com.partnerd.service.eventTypeService.EventTypeService;
 import com.partnerd.web.dto.eventTypeDTO.EventTypeDTO;
 import io.swagger.v3.oas.annotations.Operation;

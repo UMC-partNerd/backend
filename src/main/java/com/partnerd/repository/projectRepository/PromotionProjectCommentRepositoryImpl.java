@@ -1,6 +1,6 @@
 package com.partnerd.repository.projectRepository;
 
-import com.partnerd.mongoRepository.domain.PromotionProjectComment;
+import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.domain.QMember;
 import com.partnerd.domain.QPromotionProjectComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;

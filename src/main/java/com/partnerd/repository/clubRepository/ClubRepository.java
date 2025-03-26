@@ -1,6 +1,6 @@
 package com.partnerd.repository.clubRepository;
 
-import com.partnerd.mongoRepository.domain.Club;
+import com.partnerd.domain.Club;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

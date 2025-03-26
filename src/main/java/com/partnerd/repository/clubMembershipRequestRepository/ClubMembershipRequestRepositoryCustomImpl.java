@@ -1,7 +1,7 @@
 package com.partnerd.repository.clubMembershipRequestRepository;
 
-import com.partnerd.mongoRepository.domain.enums.RequestStatus;
-import com.partnerd.mongoRepository.domain.mapping.ClubMembershipRequest;
+import com.partnerd.domain.enums.RequestStatus;
+import com.partnerd.domain.mapping.ClubMembershipRequest;
 import com.partnerd.domain.mapping.QClubMembershipRequest;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

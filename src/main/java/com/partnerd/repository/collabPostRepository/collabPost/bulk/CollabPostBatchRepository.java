@@ -1,6 +1,6 @@
 package com.partnerd.repository.collabPostRepository.collabPost.bulk;
 
-import com.partnerd.mongoRepository.domain.CollabPost;
+import com.partnerd.domain.CollabPost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;

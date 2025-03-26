@@ -1,6 +1,6 @@
 package com.partnerd.service.token;
 
-import com.partnerd.mongoRepository.domain.RefreshToken;
+import com.partnerd.domain.RefreshToken;
 import com.partnerd.repository.refreshTokenRepository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -1,6 +1,6 @@
 package com.partnerd.converter.projectConverter;
 
-import com.partnerd.mongoRepository.domain.PromotionProjectComment;
+import com.partnerd.domain.PromotionProjectComment;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentResponseDTO;
 

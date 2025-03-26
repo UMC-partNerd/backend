@@ -1,6 +1,6 @@
 package com.partnerd.service.projectService;
 
-import com.partnerd.mongoRepository.domain.PromotionProject;
+import com.partnerd.domain.PromotionProject;
 import com.partnerd.web.dto.projectDTO.PromotionProjectRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectResponseDTO;
 import org.springframework.data.domain.Page;

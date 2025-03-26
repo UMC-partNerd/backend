@@ -1,6 +1,6 @@
 package com.partnerd.service.categoryService;
 
-import com.partnerd.mongoRepository.domain.Category;
+import com.partnerd.domain.Category;
 
 public interface CategoryService {
 

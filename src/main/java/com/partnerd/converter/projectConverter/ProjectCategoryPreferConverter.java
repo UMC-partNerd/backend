@@ -1,7 +1,7 @@
 package com.partnerd.converter.projectConverter;
 
-import com.partnerd.mongoRepository.domain.ProjectCategory;
-import com.partnerd.mongoRepository.domain.mapping.ProjectCategoryPrefer;
+import com.partnerd.domain.ProjectCategory;
+import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 
 import java.util.Set;
 import java.util.stream.Collectors;

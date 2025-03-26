@@ -1,6 +1,6 @@
 package com.partnerd.web.dto.clubDTO;
 
-import com.partnerd.mongoRepository.domain.enums.ActiveType;
+import com.partnerd.domain.enums.ActiveType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
