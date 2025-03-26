@@ -1,6 +1,6 @@
 package com.partnerd.converter;
 
-import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.domain.Member;
 import com.partnerd.web.dto.registerDTO.RegisterRequestDTO;
 import com.partnerd.web.dto.registerDTO.RegisterResponseDTO;
 

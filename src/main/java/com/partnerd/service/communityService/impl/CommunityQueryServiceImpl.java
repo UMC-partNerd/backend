@@ -1,7 +1,7 @@
 package com.partnerd.service.communityService.impl;
 
 import com.partnerd.converter.communityConverter.CommunityConverter;
-import com.partnerd.mongoRepository.domain.Community;
+import com.partnerd.domain.Community;
 import com.partnerd.repository.communityRepository.CommunityRepository;
 import com.partnerd.service.communityService.CommunityQueryService;
 import com.partnerd.web.dto.CommunityDTO.CommunityResponseDTO;

@@ -1,8 +1,8 @@
 package com.partnerd.converter;
 
-import com.partnerd.mongoRepository.domain.Member;
-import com.partnerd.mongoRepository.domain.Personal;
-import com.partnerd.mongoRepository.domain.PersonalLink;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.Personal;
+import com.partnerd.domain.PersonalLink;
 import com.partnerd.web.dto.personalLinkDTO.PersonalLinkResponseDTO;
 import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
 import com.partnerd.web.dto.personalDTO.PersonalResponseDTO;

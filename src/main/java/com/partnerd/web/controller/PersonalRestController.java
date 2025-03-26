@@ -3,7 +3,7 @@ package com.partnerd.web.controller;
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.PersonalConverter;
-import com.partnerd.mongoRepository.domain.Personal;
+import com.partnerd.domain.Personal;
 import com.partnerd.service.personalService.PersonalService;
 import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
 import com.partnerd.web.dto.personalDTO.PersonalResponseDTO;

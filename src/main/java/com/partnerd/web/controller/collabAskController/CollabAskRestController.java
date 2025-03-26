@@ -4,7 +4,7 @@ package com.partnerd.web.controller.collabAskController;
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.collabAskConverter.CollabAskConverter;
-import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
+import com.partnerd.domain.mapping.CollabAsk;
 import com.partnerd.service.collabAskService.CollabAskCommandService;
 import com.partnerd.service.collabAskService.CollabAskQueryService;
 import com.partnerd.service.collabAskService.CollabAskService;

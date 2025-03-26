@@ -1,6 +1,6 @@
 package com.partnerd.web.dto.projectDTO;
 
-import com.partnerd.mongoRepository.domain.mapping.PromotionProjectMember;
+import com.partnerd.domain.mapping.PromotionProjectMember;
 import lombok.Getter;
 import lombok.Setter;
 

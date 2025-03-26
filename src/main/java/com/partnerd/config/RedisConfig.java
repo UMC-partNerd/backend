@@ -1,6 +1,6 @@
 package com.partnerd.config;
 
-import com.partnerd.mongoRepository.domain.Notification;
+import com.partnerd.domain.Notification;
 import com.partnerd.web.controller.redis.RedisSubscriber;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

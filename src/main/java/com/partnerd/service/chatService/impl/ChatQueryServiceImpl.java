@@ -1,7 +1,7 @@
 package com.partnerd.service.chatService.impl;
 
 import com.partnerd.converter.ChatConverter;
-import com.partnerd.mongoRepository.domain.chat.ChatMessage;
+import com.partnerd.mongoRepository.chat.ChatMessage;
 import com.partnerd.mongoRepository.ChatMessageRepository;
 import com.partnerd.service.chatService.ChatQueryService;
 import com.partnerd.web.dto.chatDTO.ChatDTO;

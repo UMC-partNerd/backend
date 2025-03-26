@@ -1,7 +1,7 @@
 package com.partnerd.repository.chatRoomRepository.chatRoom;
 
-import com.partnerd.mongoRepository.domain.ChatRoom;
-import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
+import com.partnerd.domain.ChatRoom;
+import com.partnerd.domain.mapping.CollabAsk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

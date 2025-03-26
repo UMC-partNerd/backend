@@ -1,6 +1,6 @@
 package com.partnerd.repository.collabPostRepository.collabPost;
 
-import com.partnerd.mongoRepository.domain.CollabPost;
+import com.partnerd.domain.CollabPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

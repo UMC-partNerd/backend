@@ -1,7 +1,7 @@
 package com.partnerd.repository.projectRepository;
 
-import com.partnerd.mongoRepository.domain.Project;
-import com.partnerd.mongoRepository.domain.mapping.ProjectCategoryPrefer;
+import com.partnerd.domain.Project;
+import com.partnerd.domain.mapping.ProjectCategoryPrefer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectCategoryPreferRepository extends JpaRepository<ProjectCategoryPrefer, Long> {

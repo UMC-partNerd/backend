@@ -1,6 +1,6 @@
 package com.partnerd.converter;
 
-import com.partnerd.mongoRepository.domain.Agreements;
+import com.partnerd.domain.Agreements;
 import com.partnerd.web.dto.registerDTO.AgreementsDTO;
 
 public class AgreementsConverter {

@@ -1,6 +1,6 @@
 package com.partnerd.web.dto.chatRoomDTO.request;
 
-import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 

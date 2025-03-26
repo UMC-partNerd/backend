@@ -1,11 +1,11 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.mongoRepository.domain.PromotionProject;
+import com.partnerd.domain.PromotionProject;
 import com.partnerd.domain.QContactMethod;
 import com.partnerd.domain.QPromotionProject;
 import com.partnerd.domain.QPromotionProjectImage;
-import com.partnerd.mongoRepository.domain.enums.ImageType;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QPromotionProjectMember;
 import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
 import com.querydsl.core.types.Projections;

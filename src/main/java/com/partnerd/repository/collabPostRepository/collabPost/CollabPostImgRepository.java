@@ -1,7 +1,7 @@
 package com.partnerd.repository.collabPostRepository.collabPost;
 
-import com.partnerd.mongoRepository.domain.CollabPostImg;
-import com.partnerd.mongoRepository.domain.enums.ImageType;
+import com.partnerd.domain.CollabPostImg;
+import com.partnerd.domain.enums.ImageType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

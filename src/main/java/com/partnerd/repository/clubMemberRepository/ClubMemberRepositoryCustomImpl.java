@@ -2,7 +2,7 @@ package com.partnerd.repository.clubMemberRepository;
 
 import com.partnerd.domain.QClub;
 import com.partnerd.domain.QMember;
-import com.partnerd.mongoRepository.domain.mapping.ClubMember;
+import com.partnerd.domain.mapping.ClubMember;
 import com.partnerd.domain.mapping.QClubMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

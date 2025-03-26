@@ -2,7 +2,7 @@ package com.partnerd.web.controller.admin.categoryController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.converter.categoryConverter.CategoryConverter;
-import com.partnerd.mongoRepository.domain.Category;
+import com.partnerd.domain.Category;
 import com.partnerd.service.categoryService.CategoryService;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.partnerd.repository.personalRepository;
 
-import com.partnerd.mongoRepository.domain.Personal;
+import com.partnerd.domain.Personal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

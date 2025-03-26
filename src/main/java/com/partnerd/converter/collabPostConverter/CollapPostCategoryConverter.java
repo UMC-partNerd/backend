@@ -1,7 +1,7 @@
 package com.partnerd.converter.collabPostConverter;
 
-import com.partnerd.mongoRepository.domain.Category;
-import com.partnerd.mongoRepository.domain.mapping.CollabPostCategory;
+import com.partnerd.domain.Category;
+import com.partnerd.domain.mapping.CollabPostCategory;
 
 import java.util.List;
 import java.util.stream.Collectors;

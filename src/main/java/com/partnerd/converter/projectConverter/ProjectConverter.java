@@ -1,10 +1,10 @@
 package com.partnerd.converter.projectConverter;
 
 
-import com.partnerd.mongoRepository.domain.Member;
-import com.partnerd.mongoRepository.domain.Project;
-import com.partnerd.mongoRepository.domain.ProjectImage;
-import com.partnerd.mongoRepository.domain.enums.ImageType;
+import com.partnerd.domain.Member;
+import com.partnerd.domain.Project;
+import com.partnerd.domain.ProjectImage;
+import com.partnerd.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.ProjectCategoryDTO;

@@ -1,7 +1,7 @@
 package com.partnerd.converter.communityConverter;
 
-import com.partnerd.mongoRepository.domain.Community;
-import com.partnerd.mongoRepository.domain.CommunityImage;
+import com.partnerd.domain.Community;
+import com.partnerd.domain.CommunityImage;
 import com.partnerd.web.dto.CommunityDTO.CommunityResponseDTO;
 
 import java.util.List;

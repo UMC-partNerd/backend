@@ -1,6 +1,6 @@
 package com.partnerd.repository.memberRepository;
 
-import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.domain.Member;
 import com.partnerd.domain.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

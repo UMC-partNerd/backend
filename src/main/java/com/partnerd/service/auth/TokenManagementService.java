@@ -3,7 +3,7 @@ package com.partnerd.service.auth;
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.TokenHandler;
 import com.partnerd.config.security.JwtTokenProvider;
-import com.partnerd.mongoRepository.domain.RefreshToken;
+import com.partnerd.domain.RefreshToken;
 import com.partnerd.repository.refreshTokenRepository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

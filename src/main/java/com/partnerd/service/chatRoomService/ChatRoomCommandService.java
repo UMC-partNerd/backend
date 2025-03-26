@@ -1,6 +1,6 @@
 package com.partnerd.service.chatRoomService;
 
-import com.partnerd.mongoRepository.domain.ChatRoom;
+import com.partnerd.domain.ChatRoom;
 
 public interface ChatRoomCommandService {
     ChatRoom createCollabChatRoom(Long collabAskId, Long memberId);

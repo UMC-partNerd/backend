@@ -1,6 +1,6 @@
 package com.partnerd.converter;
 
-import com.partnerd.mongoRepository.domain.chat.ChatMessage;
+import com.partnerd.mongoRepository.chat.ChatMessage;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 
 import java.time.Instant;
