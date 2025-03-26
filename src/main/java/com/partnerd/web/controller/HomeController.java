@@ -1,10 +1,6 @@
 package com.partnerd.web.controller;
 
 import com.partnerd.apiPaylaod.ApiResponse;
-import com.partnerd.domain.Club;
-import com.partnerd.domain.CollabPost;
-import com.partnerd.domain.Project;
-import com.partnerd.domain.PromotionProject;
 import com.partnerd.service.homeService.HomeService;
 import com.partnerd.web.dto.homeDTO.response.*;
 import io.swagger.v3.oas.annotations.Operation;

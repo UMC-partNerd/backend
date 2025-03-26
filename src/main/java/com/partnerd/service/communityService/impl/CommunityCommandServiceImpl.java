@@ -2,10 +2,10 @@ package com.partnerd.service.communityService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CommunityHandler;
-import com.partnerd.domain.Community;
-import com.partnerd.domain.CommunityImage;
-import com.partnerd.domain.Member;
-import com.partnerd.domain.mapping.CommunityLikes;
+import com.partnerd.mongoRepository.domain.Community;
+import com.partnerd.mongoRepository.domain.CommunityImage;
+import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.mongoRepository.domain.mapping.CommunityLikes;
 import com.partnerd.repository.communityRepository.CommunityImgRepository;
 import com.partnerd.repository.communityRepository.CommunityLikesRepository;
 import com.partnerd.repository.communityRepository.CommunityRepository;

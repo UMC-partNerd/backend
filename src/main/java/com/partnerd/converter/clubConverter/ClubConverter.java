@@ -1,10 +1,10 @@
 package com.partnerd.converter.clubConverter;
 
-import com.partnerd.domain.Category;
-import com.partnerd.domain.Club;
-import com.partnerd.domain.ClubActivity;
-import com.partnerd.domain.ClubImage;
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.Category;
+import com.partnerd.mongoRepository.domain.Club;
+import com.partnerd.mongoRepository.domain.ClubActivity;
+import com.partnerd.mongoRepository.domain.ClubImage;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.web.dto.clubDTO.*;
 
 import java.util.ArrayList;

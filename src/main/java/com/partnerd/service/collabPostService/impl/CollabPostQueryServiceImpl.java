@@ -2,16 +2,12 @@ package com.partnerd.service.collabPostService.impl;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
-import com.partnerd.domain.CollabPost;
+import com.partnerd.mongoRepository.domain.CollabPost;
 import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

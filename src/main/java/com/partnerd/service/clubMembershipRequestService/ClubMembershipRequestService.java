@@ -1,6 +1,6 @@
 package com.partnerd.service.clubMembershipRequestService;
 
-import com.partnerd.domain.mapping.ClubMembershipRequest;
+import com.partnerd.mongoRepository.domain.mapping.ClubMembershipRequest;
 import com.partnerd.web.dto.clubDTO.ClubRequestDTO;
 
 import java.util.List;

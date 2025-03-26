@@ -1,8 +1,8 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.domain.Member;
-import com.partnerd.domain.Project;
+import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.mongoRepository.domain.Project;
 import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
 import com.partnerd.web.dto.projectDTO.ProjectRequestDTO;
 import org.springframework.data.domain.Page;

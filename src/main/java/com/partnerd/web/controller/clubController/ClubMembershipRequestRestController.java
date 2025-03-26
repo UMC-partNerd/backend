@@ -3,7 +3,7 @@ package com.partnerd.web.controller.clubController;
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.clubConverter.ClubMembershipRequestConverter;
-import com.partnerd.domain.mapping.ClubMembershipRequest;
+import com.partnerd.mongoRepository.domain.mapping.ClubMembershipRequest;
 import com.partnerd.service.clubMembershipRequestService.ClubMembershipRequestService;
 import com.partnerd.web.dto.clubDTO.*;
 import io.swagger.v3.oas.annotations.Operation;

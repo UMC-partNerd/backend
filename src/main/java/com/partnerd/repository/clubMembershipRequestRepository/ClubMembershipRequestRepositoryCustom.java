@@ -1,6 +1,6 @@
 package com.partnerd.repository.clubMembershipRequestRepository;
 
-import com.partnerd.domain.mapping.ClubMembershipRequest;
+import com.partnerd.mongoRepository.domain.mapping.ClubMembershipRequest;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.partnerd.service.s3Service;
 
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.web.dto.s3DTO.S3RequestDTO;
 import com.partnerd.web.dto.s3DTO.S3ResponseDTO;
 import lombok.RequiredArgsConstructor;

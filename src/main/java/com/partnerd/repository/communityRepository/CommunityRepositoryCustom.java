@@ -1,6 +1,6 @@
 package com.partnerd.repository.communityRepository;
 
-import com.partnerd.domain.Community;
+import com.partnerd.mongoRepository.domain.Community;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

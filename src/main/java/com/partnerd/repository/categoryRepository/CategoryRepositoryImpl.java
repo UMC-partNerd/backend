@@ -1,6 +1,6 @@
 package com.partnerd.repository.categoryRepository;
 
-import com.partnerd.domain.Category;
+import com.partnerd.mongoRepository.domain.Category;
 import com.partnerd.domain.QCategory;
 import com.partnerd.domain.mapping.QCollabPostCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;

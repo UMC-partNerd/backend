@@ -1,6 +1,6 @@
 package com.partnerd.repository.communityRepository.impl;
 
-import com.partnerd.domain.Community;
+import com.partnerd.mongoRepository.domain.Community;
 import com.partnerd.domain.QCommunity;
 import com.partnerd.domain.QMember;
 import com.partnerd.repository.communityRepository.CommunityRepositoryCustom;

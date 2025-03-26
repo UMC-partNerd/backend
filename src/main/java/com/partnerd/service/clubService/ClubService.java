@@ -1,6 +1,6 @@
 package com.partnerd.service.clubService;
 
-import com.partnerd.domain.Club;
+import com.partnerd.mongoRepository.domain.Club;
 import com.partnerd.web.dto.clubDTO.*;
 import com.partnerd.web.dto.memberDTO.MemberNickNameSearchDTO;
 

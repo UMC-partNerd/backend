@@ -1,6 +1,6 @@
 package com.partnerd.service.chatRoomService.impl;
 
-import com.partnerd.domain.enums.ChatRoomType;
+import com.partnerd.mongoRepository.domain.enums.ChatRoomType;
 import com.partnerd.repository.chatRoomRepository.chatRoomMember.ChatRoomMemberRepository;
 import com.partnerd.service.chatRoomService.ChatRoomQueryService;
 import com.partnerd.web.dto.chatRoomDTO.response.ChatRoomResponseDTO;

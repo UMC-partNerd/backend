@@ -2,11 +2,12 @@ package com.partnerd.repository.projectRepository;
 
 
 
-import com.partnerd.domain.Project;
+import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.mongoRepository.domain.Project;
 import com.partnerd.domain.QContactMethod;
 import com.partnerd.domain.QProject;
 import com.partnerd.domain.QProjectImage;
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QProjectCategoryPrefer;
 import com.partnerd.domain.mapping.QProjectMember;
 import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;

@@ -2,10 +2,11 @@ package com.partnerd.repository.collabPostRepository.collabPost;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.partnerd.domain.*;
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.CollabInquiry;
+import com.partnerd.mongoRepository.domain.CollabPost;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QClubMember;
 import com.partnerd.domain.mapping.QCollabPostCategory;
-import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.categoryDTO.CollabPostCategoryDTO;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;

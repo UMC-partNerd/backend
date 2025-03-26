@@ -1,6 +1,6 @@
 package com.partnerd.converter.clubConverter;
 
-import com.partnerd.domain.mapping.ClubMembershipRequest;
+import com.partnerd.mongoRepository.domain.mapping.ClubMembershipRequest;
 import com.partnerd.web.dto.clubDTO.*;
 
 import java.time.LocalDateTime;

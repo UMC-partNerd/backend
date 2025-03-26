@@ -1,6 +1,6 @@
 package com.partnerd.repository.memberRepository;
 
-import com.partnerd.domain.Member;
+import com.partnerd.mongoRepository.domain.Member;
 
 import java.util.List;
 

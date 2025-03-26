@@ -2,7 +2,7 @@ package com.partnerd.web.controller.chatController;
 
 import com.partnerd.apiPaylaod.ApiResponse;
 import com.partnerd.config.security.JwtTokenProvider;
-import com.partnerd.domain.ChatRoom;
+import com.partnerd.mongoRepository.domain.ChatRoom;
 import com.partnerd.service.chatRoomService.ChatRoomCommandService;
 import com.partnerd.service.chatRoomService.ChatRoomQueryService;
 import com.partnerd.web.dto.chatRoomDTO.response.ChatRoomResponseDTO;

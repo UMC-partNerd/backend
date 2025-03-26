@@ -5,16 +5,14 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.collabPostConverter.CollabPostConverter;
-import com.partnerd.domain.CollabPost;
+import com.partnerd.mongoRepository.domain.CollabPost;
 import com.partnerd.service.collabPostService.CollabPostCommandService;
 import com.partnerd.service.collabPostService.CollabPostQueryService;
 import com.partnerd.web.dto.collabDTO.request.CollabPostRequestDTO;
 import com.partnerd.web.dto.collabDTO.response.CollabPostResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 

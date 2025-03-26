@@ -1,9 +1,8 @@
 package com.partnerd.converter.projectConverter;
 
-import com.partnerd.domain.Member;
-import com.partnerd.domain.mapping.PromotionProjectMember;
+import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.mongoRepository.domain.mapping.PromotionProjectMember;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
