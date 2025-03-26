@@ -18,6 +18,7 @@ import java.util.*;
 @AllArgsConstructor
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "project")
 public class Project extends BaseEntity {
 
     // 포로젝트ID
