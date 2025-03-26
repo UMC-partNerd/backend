@@ -42,7 +42,7 @@ public class CollabPostCommandServiceImpl implements CollabPostCommandService {
     public CollabPost addCollabPost(CollabPostRequestDTO.RequestCollabPostDTO requestDTO, Long memberId) {
 
         // 작성자가 클럽 멤버이자 리더진인지 확인
-        List<ClubMember> clubMemberList = clubMemberRepository.findByMember_idAndRole(memberId, ClubMemberRole.LEADER);
+        List<ClubMember> clubMemberList = clubMemberRepository.findByMemberIdAndRole(memberId, ClubMemberRole.LEADER);
         ClubMember clubMember = null;
         if (clubMemberList.size() == 0) {
             throw new CollabPostHandler(ErrorStatus.COLLAB_POST_NOT_AUTHORIZED);

@@ -2,8 +2,10 @@ package com.partnerd.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @Configuration
+@EnableConfigurationProperties
 @RequiredArgsConstructor
 public class MongoDBConfig {
 
@@ -23,6 +26,12 @@ public class MongoDBConfig {
     private String MONGO_URI;
     @Value("${spring.data.mongodb.database}")
     private String MONGO_DB;
+
+    @PostConstruct
+    public void logMongoSettings() {
+        System.out.println("MongoDB URI: " + MONGO_URI);
+        System.out.println("MongoDB Database: " + MONGO_DB);
+    }
 
 
     @Bean
