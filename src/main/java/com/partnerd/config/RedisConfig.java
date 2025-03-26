@@ -2,6 +2,7 @@ package com.partnerd.config;
 
 import com.partnerd.domain.Notification;
 import com.partnerd.web.controller.redis.RedisSubscriber;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -29,6 +30,12 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int port;
+
+    @PostConstruct
+    public void redisSetting() {
+        System.out.println("Redis host: " + host);
+        System.out.println("Redis port: " + port);
+    }
 
     /**
      * ✅ 하나의 LettuceConnectionFactory만 생성하여 공유
