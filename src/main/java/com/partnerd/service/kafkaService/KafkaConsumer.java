@@ -3,7 +3,7 @@ package com.partnerd.service.kafkaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.partnerd.converter.ChatConverter;
 import com.partnerd.domain.chat.ChatMessage;
-import com.partnerd.repository.chatRoomRepository.mongoRepository.ChatMessageRepository;
+import com.partnerd.mongoRepository.ChatMessageRepository;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

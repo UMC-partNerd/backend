@@ -1,4 +1,4 @@
-package com.partnerd.r2dbc;
+package com.partnerd.r2dbcRepository;
 
 import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
 import lombok.RequiredArgsConstructor;
