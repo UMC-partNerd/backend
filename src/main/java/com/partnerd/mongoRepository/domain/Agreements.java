@@ -1,0 +1,54 @@
+package com.partnerd.mongoRepository.domain;
+
+import com.partnerd.mongoRepository.domain.common.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+@Entity
+@Getter
+@Setter
+@Builder
+@DynamicUpdate
+@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class Agreements extends BaseEntity {
+
+    // 약관 ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 나이
+    @Column(nullable = false)
+    private Boolean is_adult;
+    
+    // 약관 동의
+    @Column(nullable = false)
+    private Boolean terms_of_services;
+    
+    // 개인 정보
+    @Column(nullable = false)
+    private Boolean personal_info_usage;
+    
+    // 선택 정보
+    private Boolean optional_info_usage;
+    
+    // 마케팅 활용
+    private Boolean marketing_consent;
+    
+    // 마케팅 알림
+    private Boolean marketing_notify;
+
+    @PrePersist
+    public void setDefaultValues() {
+        if (this.is_adult == null) this.is_adult = false;
+        if (this.terms_of_services == null) this.terms_of_services = false;
+        if (this.personal_info_usage == null) this.personal_info_usage = false;
+        if (this.optional_info_usage == null) this.optional_info_usage = false;
+        if (this.marketing_consent == null) this.marketing_consent = false;
+        if (this.marketing_notify == null) this.marketing_notify = false;
+    }
+}

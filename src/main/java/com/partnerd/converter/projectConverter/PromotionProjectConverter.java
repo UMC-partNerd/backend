@@ -1,8 +1,8 @@
 package com.partnerd.converter.projectConverter;
 
-import com.partnerd.domain.PromotionProject;
-import com.partnerd.domain.PromotionProjectImage;
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.PromotionProject;
+import com.partnerd.mongoRepository.domain.PromotionProjectImage;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectMemberDTO;

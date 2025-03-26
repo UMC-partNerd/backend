@@ -1,6 +1,6 @@
 package com.partnerd.service.eventTypeService.impl;
 
-import com.partnerd.domain.EventType;
+import com.partnerd.mongoRepository.domain.EventType;
 import com.partnerd.repository.collabPostRepository.collabPost.EventTypeRepository;
 import com.partnerd.service.eventTypeService.EventTypeService;
 import lombok.RequiredArgsConstructor;

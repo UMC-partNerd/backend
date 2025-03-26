@@ -2,7 +2,7 @@ package com.partnerd.service.memberService;
 
 import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
-import com.partnerd.domain.Member;
+import com.partnerd.mongoRepository.domain.Member;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.web.dto.memberDTO.MemberRequestDTO;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package com.partnerd.service.collabAskService;
 
-import com.partnerd.domain.mapping.CollabAsk;
-import com.partnerd.web.dto.collabDTO.request.CollabAskRequestDTO;
+import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
 
 public interface CollabAskCommandService {
 

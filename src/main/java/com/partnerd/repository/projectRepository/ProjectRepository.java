@@ -1,7 +1,7 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.domain.Project;
+import com.partnerd.mongoRepository.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

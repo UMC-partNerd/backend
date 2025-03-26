@@ -1,12 +1,11 @@
 package com.partnerd.converter;
 
-import com.partnerd.domain.Member;
+import com.partnerd.mongoRepository.domain.Member;
 import com.partnerd.web.dto.registerDTO.RegisterRequestDTO;
 import com.partnerd.web.dto.registerDTO.RegisterResponseDTO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class AuthMemberConverter {
 

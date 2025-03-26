@@ -1,7 +1,7 @@
 package com.partnerd.converter.collabAskConverter;
 
-import com.partnerd.domain.ChatRoom;
-import com.partnerd.domain.mapping.CollabAsk;
+import com.partnerd.mongoRepository.domain.ChatRoom;
+import com.partnerd.mongoRepository.domain.mapping.CollabAsk;
 import com.partnerd.web.dto.collabDTO.response.CollabAskResponseDTO;
 import org.springframework.data.domain.Page;
 

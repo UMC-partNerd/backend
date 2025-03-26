@@ -1,10 +1,5 @@
 package com.partnerd.service.homeService;
 
-import com.partnerd.apiPaylaod.ApiResponse;
-import com.partnerd.domain.Club;
-import com.partnerd.domain.CollabPost;
-import com.partnerd.domain.Project;
-import com.partnerd.domain.PromotionProject;
 import com.partnerd.web.dto.homeDTO.response.HomeClubDTO;
 import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
 import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
@@ -12,7 +7,6 @@ import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface HomeService {

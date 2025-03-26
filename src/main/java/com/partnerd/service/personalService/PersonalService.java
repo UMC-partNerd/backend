@@ -1,6 +1,6 @@
 package com.partnerd.service.personalService;
 
-import com.partnerd.domain.Personal;
+import com.partnerd.mongoRepository.domain.Personal;
 import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
 
 public interface PersonalService {

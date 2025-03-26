@@ -1,7 +1,7 @@
 package com.partnerd.repository.projectRepository;
 
 
-import com.partnerd.domain.PromotionProjectComment;
+import com.partnerd.mongoRepository.domain.PromotionProjectComment;
 
 import java.util.List;
 

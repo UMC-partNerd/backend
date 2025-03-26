@@ -1,6 +1,6 @@
 package com.partnerd.repository.communityRepository;
 
-import com.partnerd.domain.Community;
+import com.partnerd.mongoRepository.domain.Community;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

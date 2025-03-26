@@ -1,7 +1,6 @@
 package com.partnerd.repository.communityCommentRepository;
 
-import com.partnerd.domain.CommunityComment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.partnerd.mongoRepository.domain.CommunityComment;
 
 import java.util.List;
 

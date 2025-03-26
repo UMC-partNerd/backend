@@ -1,6 +1,6 @@
 package com.partnerd.converter.clubConverter;
 
-import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.mongoRepository.domain.mapping.ClubMember;
 import com.partnerd.web.dto.clubDTO.*;
 
 public class ClubMemberConverter {

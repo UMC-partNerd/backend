@@ -1,6 +1,6 @@
 package com.partnerd.service.memberService;
 
-import com.partnerd.domain.Member;
+import com.partnerd.mongoRepository.domain.Member;
 import com.partnerd.web.dto.memberDTO.MemberRequestDTO;
 
 public interface MemberService {

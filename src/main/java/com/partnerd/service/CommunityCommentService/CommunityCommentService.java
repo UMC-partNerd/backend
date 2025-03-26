@@ -1,6 +1,6 @@
 package com.partnerd.service.CommunityCommentService;
 
-import com.partnerd.domain.CommunityComment;
+import com.partnerd.mongoRepository.domain.CommunityComment;
 import com.partnerd.web.dto.CommunityCommentDTO.CommunityCommentRequestDTO;
 import com.partnerd.web.dto.CommunityCommentDTO.CommunityCommentResponseDTO;
 

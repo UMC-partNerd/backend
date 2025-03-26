@@ -1,11 +1,10 @@
 package com.partnerd.repository.communityCommentRepository;
 
-import com.partnerd.domain.CommunityComment;
+import com.partnerd.mongoRepository.domain.CommunityComment;
 import com.partnerd.domain.QCommunityComment;
 import com.partnerd.domain.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.ProjectHandler;
 import com.partnerd.config.security.JwtTokenProvider;
 import com.partnerd.converter.projectConverter.PromotionProjectCommentConverter;
-import com.partnerd.domain.PromotionProjectComment;
+import com.partnerd.mongoRepository.domain.PromotionProjectComment;
 import com.partnerd.service.projectService.PromotionProjectCommentService;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentRequestDTO;
 import com.partnerd.web.dto.projectDTO.PromotionProjectCommentResponseDTO;

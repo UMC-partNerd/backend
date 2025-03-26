@@ -1,6 +1,5 @@
 package com.partnerd.web.dto.projectDTO;
 
-import com.partnerd.domain.ProjectImage;
 import com.partnerd.web.dto.contactMethodDTO.ContactMethodDTO;
 import com.partnerd.web.dto.memberDTO.MemberResponseDTO;
 import lombok.AllArgsConstructor;

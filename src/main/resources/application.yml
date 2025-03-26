@@ -125,5 +125,11 @@ logging:
     reactor: DEBUG
     io.r2dbc: DEBUG
 
+io:
+  netty:
+    handler:
+      dns:
+        DefaultDnsServerAddressStreamProvider: default
+
 
 

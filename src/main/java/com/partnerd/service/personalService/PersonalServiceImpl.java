@@ -4,9 +4,9 @@ import com.partnerd.apiPaylaod.code.status.ErrorStatus;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.apiPaylaod.exception.handler.PersonalHandler;
 import com.partnerd.converter.PersonalConverter;
-import com.partnerd.domain.Member;
-import com.partnerd.domain.Personal;
-import com.partnerd.domain.PersonalLink;
+import com.partnerd.mongoRepository.domain.Member;
+import com.partnerd.mongoRepository.domain.Personal;
+import com.partnerd.mongoRepository.domain.PersonalLink;
 import com.partnerd.repository.memberRepository.MemberRepository;
 import com.partnerd.repository.personalRepository.PersonalRepository;
 import com.partnerd.web.dto.personalDTO.PersonalRequestDTO;
@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service

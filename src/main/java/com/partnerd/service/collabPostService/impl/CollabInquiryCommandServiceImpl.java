@@ -5,7 +5,7 @@ import com.partnerd.apiPaylaod.exception.handler.CollabInquiryHandler;
 import com.partnerd.apiPaylaod.exception.handler.CollabPostHandler;
 import com.partnerd.apiPaylaod.exception.handler.MemberHandler;
 import com.partnerd.converter.collabPostConverter.CollabInquiryConverter;
-import com.partnerd.domain.CollabInquiry;
+import com.partnerd.mongoRepository.domain.CollabInquiry;
 import com.partnerd.repository.collabPostRepository.collabInquiry.CollabInquiryRepository;
 import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepository;
 import com.partnerd.repository.memberRepository.MemberRepository;

@@ -1,6 +1,6 @@
 package com.partnerd.service.categoryService.impl;
 
-import com.partnerd.domain.Category;
+import com.partnerd.mongoRepository.domain.Category;
 import com.partnerd.repository.categoryRepository.CategoryRepository;
 import com.partnerd.service.categoryService.CategoryService;
 import lombok.RequiredArgsConstructor;

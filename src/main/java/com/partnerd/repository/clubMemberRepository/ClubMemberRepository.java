@@ -1,8 +1,8 @@
 package com.partnerd.repository.clubMemberRepository;
 
-import com.partnerd.domain.Club;
-import com.partnerd.domain.enums.ClubMemberRole;
-import com.partnerd.domain.mapping.ClubMember;
+import com.partnerd.mongoRepository.domain.Club;
+import com.partnerd.mongoRepository.domain.enums.ClubMemberRole;
+import com.partnerd.mongoRepository.domain.mapping.ClubMember;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

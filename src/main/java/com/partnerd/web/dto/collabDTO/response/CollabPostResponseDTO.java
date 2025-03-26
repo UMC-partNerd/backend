@@ -1,7 +1,6 @@
 package com.partnerd.web.dto.collabDTO.response;
 
-import com.partnerd.domain.CollabInquiry;
-import com.partnerd.domain.ContactMethod;
+import com.partnerd.mongoRepository.domain.CollabInquiry;
 import com.partnerd.repository.collabPostRepository.collabPost.CollabPostRepositoryCustomImpl;
 import com.partnerd.web.dto.categoryDTO.CategoryDTO;
 import com.partnerd.web.dto.categoryDTO.CollabPostCategoryDTO;
@@ -11,7 +10,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class CollabPostResponseDTO {
 

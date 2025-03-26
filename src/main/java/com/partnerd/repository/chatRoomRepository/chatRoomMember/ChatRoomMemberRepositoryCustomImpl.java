@@ -1,8 +1,9 @@
 package com.partnerd.repository.chatRoomRepository.chatRoomMember;
 
 import com.partnerd.domain.*;
-import com.partnerd.domain.enums.ChatRoomType;
-import com.partnerd.domain.enums.ImageType;
+import com.partnerd.mongoRepository.domain.ChatRoom;
+import com.partnerd.mongoRepository.domain.enums.ChatRoomType;
+import com.partnerd.mongoRepository.domain.enums.ImageType;
 import com.partnerd.domain.mapping.QChatRoomMember;
 import com.partnerd.domain.mapping.QCollabAsk;
 import com.partnerd.web.dto.chatRoomDTO.response.ChatRoomResponseDTO;

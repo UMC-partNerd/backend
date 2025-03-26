@@ -1,6 +1,6 @@
 package com.partnerd.service.collabPostService;
 
-import com.partnerd.domain.CollabInquiry;
+import com.partnerd.mongoRepository.domain.CollabInquiry;
 import com.partnerd.web.dto.collabDTO.request.CollabInquiryRequestDTO;
 
 public interface CollabInquiryCommandService {
