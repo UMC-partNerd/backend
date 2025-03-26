@@ -15,9 +15,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EntityScan(basePackages = "com.partnerd.domain")
-@EnableJpaRepositories(
-        basePackages = "com.partnerd.repository"  // JPA 레포지토리 경로 명시
-)
 public class JpaConfig {
     @Value("${spring.datasource.url}")
     private String url;
