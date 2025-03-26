@@ -12,13 +12,17 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableMongoRepositories
+@EnableJpaRepositories(basePackages = "com.partnerd.repository")
+@EnableR2dbcRepositories(basePackages = "com.partnerd.r2dbc")
+@EnableMongoRepositories(basePackages = "com.partnerd.repository.chatRoomRepository.mongoRepository")
 @EnableKafka
 @EnableAsync
 public class PartnerdApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PartnerdApplication.class, args);
+		SpringApplication app = new SpringApplication(PartnerdApplication.class);
+		app.setAdditionalProfiles("default"); // 기본 프로파일 명시
+		app.run(args);
 	}
 
 }

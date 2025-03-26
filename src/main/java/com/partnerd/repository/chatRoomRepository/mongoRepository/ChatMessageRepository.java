@@ -1,4 +1,4 @@
-package com.partnerd.repository.chatRoomRepository;
+package com.partnerd.repository.chatRoomRepository.mongoRepository;
 
 import com.partnerd.domain.chat.ChatMessage;
 import org.springframework.data.mongodb.repository.MongoRepository;
