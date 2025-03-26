@@ -12,6 +12,7 @@ import java.util.HashSet;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "project_image")
 public class ProjectImage extends BaseEntity {
 
     // 프로젝트 서비스 소개 사진 ID

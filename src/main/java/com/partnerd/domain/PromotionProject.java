@@ -17,6 +17,7 @@ import java.util.*;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "promotion_project")
 public class PromotionProject extends BaseEntity {
 
     // 포로젝트 홍보 ID

@@ -16,6 +16,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "club_member")
 public class ClubMember extends BaseEntity {
 
     // 동아리 멤버 ID

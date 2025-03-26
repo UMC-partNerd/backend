@@ -21,6 +21,7 @@ import java.util.*;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "collab_post")
 public class CollabPost extends BaseEntity {
 
     // 콜라보글ID
