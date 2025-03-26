@@ -21,6 +21,7 @@ jobs:
         run: |
           cd ./src/main/resources
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          echo "${{ secrets.APPLICATION_PROD_YML }}" > ./application-prod.yml
           echo "${{ secrets.APPLICATION_TEST_YML }}" > ./application-test.yml
         shell: bash
 
