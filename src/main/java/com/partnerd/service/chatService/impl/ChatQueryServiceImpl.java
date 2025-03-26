@@ -2,18 +2,12 @@ package com.partnerd.service.chatService.impl;
 
 import com.partnerd.converter.ChatConverter;
 import com.partnerd.domain.chat.ChatMessage;
-import com.partnerd.repository.chatRoomRepository.ChatMessageRepository;
+import com.partnerd.mongoRepository.ChatMessageRepository;
 import com.partnerd.service.chatService.ChatQueryService;
 import com.partnerd.web.dto.chatDTO.ChatDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,4 +1,4 @@
-package com.partnerd.r2dbc;
+package com.partnerd.r2dbcRepository;
 
 import com.partnerd.domain.Project;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
