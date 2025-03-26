@@ -20,7 +20,7 @@ public class PartnerdApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(PartnerdApplication.class);
-		app.setAdditionalProfiles("default"); // 기본 프로파일 명시
+		app.setAdditionalProfiles("prod");// 프로파일 명시
 		app.run(args);
 	}
 
