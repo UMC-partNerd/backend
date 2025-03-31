@@ -18,6 +18,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "chat_room")
 public class ChatRoom extends BaseEntity {
 
     @Id

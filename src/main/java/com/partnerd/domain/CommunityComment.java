@@ -17,6 +17,7 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "community_comment")
 public class CommunityComment extends BaseEntity {
 
     // 커뮤니티 댓글 ID

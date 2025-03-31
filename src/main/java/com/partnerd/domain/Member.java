@@ -21,6 +21,7 @@ import java.util.*;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "member")
 public class Member extends BaseEntity {
 
     // 사용자ID

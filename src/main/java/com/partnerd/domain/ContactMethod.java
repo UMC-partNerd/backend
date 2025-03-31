@@ -10,6 +10,7 @@ import java.util.HashSet;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "contact_method")
 public class ContactMethod {
 
     @Id

@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "personal_link")
 public class PersonalLink extends BaseEntity {
 
     // 퍼스널 링크 ID

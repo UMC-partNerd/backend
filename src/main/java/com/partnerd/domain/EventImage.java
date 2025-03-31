@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "event_image")
 public class EventImage extends BaseEntity {
 
     // 행사 이미지 ID
