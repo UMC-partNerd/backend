@@ -13,6 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "club_membership_request")
 public class ClubMembershipRequest extends BaseEntity {
 
     // 가입 요청 ID

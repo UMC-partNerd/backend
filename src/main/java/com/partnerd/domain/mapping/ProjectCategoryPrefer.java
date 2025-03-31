@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "project_category_prefer")
 public class ProjectCategoryPrefer extends BaseEntity {
 
     // 선호 프로젝트 카테고리 ID

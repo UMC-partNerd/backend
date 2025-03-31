@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "chat_room_member")
 public class ChatRoomMember {
 
     @Id

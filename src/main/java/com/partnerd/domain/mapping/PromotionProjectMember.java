@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "promotion_project_member")
 public class PromotionProjectMember extends BaseEntity {
 
     // 홍보 프로젝트 팀원 ID
