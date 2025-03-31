@@ -16,6 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "project_vote")
 public class ProjectVote extends BaseEntity {
 
     @Id

@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "community")
 public class Community extends BaseEntity {
 
     // 카테고리 ID

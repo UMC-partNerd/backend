@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "community_image")
 public class CommunityImage extends BaseEntity {
 
     // 커뮤니티 사진 ID

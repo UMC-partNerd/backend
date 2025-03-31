@@ -13,6 +13,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "collab_ask")
 public class CollabAsk extends BaseEntity {
 
     // 콜라보 ID

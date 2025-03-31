@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "event_type")
 public class EventType extends BaseEntity {
 
     // 행사 유형 ID

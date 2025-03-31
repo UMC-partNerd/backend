@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "collab_inquiry")
 public class CollabInquiry extends BaseEntity {
 
     // 콜라보 문의 ID

@@ -13,6 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "club_activity")
 public class ClubActivity extends BaseEntity {
 
     // 활동 ID

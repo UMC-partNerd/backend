@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "project_category")
 public class ProjectCategory extends BaseEntity {
 
     // 포로젝트 역할 ID

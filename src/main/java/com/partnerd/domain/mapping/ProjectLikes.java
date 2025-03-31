@@ -17,6 +17,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "project_likes")
 public class ProjectLikes extends BaseEntity {
 
     @Id

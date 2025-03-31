@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "collab_post_category")
 public class CollabPostCategory {
 
     @Id

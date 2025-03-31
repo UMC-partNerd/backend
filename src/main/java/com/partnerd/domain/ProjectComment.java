@@ -17,6 +17,7 @@ import java.util.List;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "project_comment")
 public class ProjectComment extends BaseEntity {
 
     // 포로젝트 댓글 ID

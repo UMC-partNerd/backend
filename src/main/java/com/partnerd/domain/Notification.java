@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "notification")
 public class Notification extends BaseEntity {
 
     @Id
