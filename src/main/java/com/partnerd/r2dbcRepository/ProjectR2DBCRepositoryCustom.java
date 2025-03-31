@@ -16,7 +16,7 @@ public class ProjectR2DBCRepositoryCustom {
 
     public Flux<HomeProjectDTO> findTopProjects(int limit) {
         String query = String.format("""
-                    SELECT p.id, pi.key_name AS keyName, p.title, p.intro
+                    SELECT p.id, pi.key_name AS profileImage, p.title, p.intro
                     FROM project p
                     LEFT JOIN project_image pi ON pi.project_id = p.id AND pi.image_type = 'THUMBNAIL'
                     ORDER BY p.created_at DESC
@@ -26,7 +26,7 @@ public class ProjectR2DBCRepositoryCustom {
         return databaseClient.sql(query)
                 .map((row, meta) -> new HomeProjectDTO(
                         row.get("id", Long.class),
-                        row.get("keyName", String.class),
+                        row.get("profileImage", String.class),
                         row.get("title", String.class),
                         row.get("intro", String.class)
                 ))

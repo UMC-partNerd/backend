@@ -16,7 +16,7 @@ public class CollabPostR2DBCRepositoryCustom {
 
     public Flux<HomeCollabPostDTO> findTopCollabPosts(int limit) {
         String query = String.format("""
-                    SELECT cp.id, cp.title, cp.intro, c.name AS clubName , ci.key_name AS keyName
+                    SELECT cp.id, cp.title, cp.intro, c.name AS clubName, ci.key_name AS profileImage
                     FROM collab_post  cp
                     LEFT JOIN club_member cm ON cp.club_member_id = cm.id
                     LEFT JOIN club c ON cm.club_id = c.id
@@ -31,7 +31,7 @@ public class CollabPostR2DBCRepositoryCustom {
                         row.get("title", String.class),
                         row.get("intro", String.class),
                         row.get("clubName", String.class),
-                        row.get("keyName", String.class)
+                        row.get("profileImage", String.class)
                 ))
                 .all()
                 .doOnError(e -> log.error("Database error during findTopClubs", e))
