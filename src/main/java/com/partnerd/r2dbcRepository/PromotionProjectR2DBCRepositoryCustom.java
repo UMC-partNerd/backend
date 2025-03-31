@@ -19,7 +19,7 @@ public class PromotionProjectR2DBCRepositoryCustom {
             SELECT pp.id, ppi.key_name AS profileImage, pp.title, pp.intro
             FROM promotion_project pp
             LEFT JOIN promotion_project_image ppi 
-            ON pp.id = ppi.promotion_project_id AND ppi.image_type = 'THUMBNAIL'
+            ON pp.id = ppi.promotion_project_id AND ppi.image_type = 3
             ORDER BY pp.views DESC
             LIMIT %d
             """, limit);

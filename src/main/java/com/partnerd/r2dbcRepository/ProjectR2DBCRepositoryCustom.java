@@ -18,7 +18,7 @@ public class ProjectR2DBCRepositoryCustom {
         String query = String.format("""
                     SELECT p.id, pi.key_name AS profileImage, p.title, p.intro
                     FROM project p
-                    LEFT JOIN project_image pi ON pi.project_id = p.id AND pi.image_type = 'THUMBNAIL'
+                    LEFT JOIN project_image pi ON pi.project_id = p.id AND pi.image_type = 3
                     ORDER BY p.created_at DESC
                    LIMIT %d
              """, limit);
