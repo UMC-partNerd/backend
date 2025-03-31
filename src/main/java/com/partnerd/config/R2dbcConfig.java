@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
+import org.springframework.transaction.ReactiveTransactionManager;
 
 import static io.r2dbc.spi.ConnectionFactoryOptions.*;
 
@@ -50,4 +52,9 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     }
 
 
+    // ✅ R2DBC 트랜잭션 매니저 명시 등록
+    @Bean(name = "connectionFactoryTransactionManager")
+    public ReactiveTransactionManager reactiveTransactionManager(ConnectionFactory connectionFactory) {
+        return new R2dbcTransactionManager(connectionFactory);
+    }
 }
