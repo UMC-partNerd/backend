@@ -14,6 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "agreements")
 public class Agreements extends BaseEntity {
 
     // 약관 ID
