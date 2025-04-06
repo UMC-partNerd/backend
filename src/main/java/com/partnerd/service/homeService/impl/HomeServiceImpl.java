@@ -41,7 +41,7 @@ public class HomeServiceImpl implements HomeService {
     private final PromotionProjectR2DBCRepositoryCustom promotionProjectR2DBCRepositoryCustom;
 
 
-    private ReactiveRedisTemplate<String, Object> redisTemplate;
+    private final ReactiveRedisTemplate<String, Object> redisTemplate;
 
 
     @Async
