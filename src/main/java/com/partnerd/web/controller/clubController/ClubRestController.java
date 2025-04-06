@@ -100,7 +100,6 @@ public class ClubRestController {
     })
 
     public ApiResponse<List<ClubDTO>> getClubs(
-            @RequestHeader("Authorization") String authorizationHeader,
             @RequestParam(name = "page")
             @Parameter(description = "조회할 페이지 번호 (1부터 시작)", example = "1", required = true)
             Integer page,
@@ -114,11 +113,6 @@ public class ClubRestController {
             @Parameter(description = "카테고리 ID (필터링에 사용, null이면 전체 조회)", example = "5", required = false)
             Long categoryID
     ){
-        // 1. JWT 토큰 추출
-        String token = authorizationHeader.replace("Bearer ", "");
-
-        // 2. 토큰에서 userId 추출
-        Long memberId = Long.valueOf(jwtTokenProvider.getClaims(token).getSubject());
 
         List<ClubDTO> clubs = clubService.getClubs(page -1 ,sort,categoryID);
         return ApiResponse.of(SuccessStatus._OK,clubs);

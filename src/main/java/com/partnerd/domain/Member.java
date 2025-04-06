@@ -30,7 +30,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     // 소셜 ID (소셜 로그인 사용자 고유 ID)
-    @Column(nullable = true, unique = true) // 소셜 사용자를 고유하게 식별
+    @Column(name = "social_id", nullable = true, unique = true)
     private String socialId;
 
     // 이름(설명)
