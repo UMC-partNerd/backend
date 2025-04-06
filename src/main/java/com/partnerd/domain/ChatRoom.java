@@ -30,10 +30,10 @@ public class ChatRoom extends BaseEntity {
     private CollabAsk collabAsk; // 해당 채팅방과 관련된 콜라보 요청 ID
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name="chat_room_type", nullable = false)
     private ChatRoomType chatRoomType;
 
-    @Column(nullable = true)
+    @Column(name="closed_at", nullable = true)
     private LocalDateTime closedAt; // 채팅방 종료 일시 (선택적)
 
     // 채팅방의 현재 상태 (OPEN, CLOSED 등)
@@ -41,10 +41,10 @@ public class ChatRoom extends BaseEntity {
     @Column(nullable = false)
     private ChatRoomStatus status;
 
-    @Column(nullable = true)
+    @Column(name="last_message", nullable = true)
     private String lastMessage;
 
-    @Column(nullable = true)
+    @Column(name="last_message_time",nullable = true)
     private String lastMessageTime;
 
     // 중간 테이블을 통해 관리되는 멤버 목록

@@ -46,6 +46,7 @@ public class CollabInquiry extends BaseEntity {
     private int likes = 0;
 
     // 삭제 여부
+    @Column(name = "is_deleted")
     private Integer isDeleted = 0;
 
 

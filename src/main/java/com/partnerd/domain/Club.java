@@ -32,7 +32,7 @@ public class Club extends BaseEntity{
 
     //조회수
     @Column(nullable = false)
-    private Long views =0L;
+    private Long views = 0L;
 
     //컨택트방법
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL,orphanRemoval = true)
