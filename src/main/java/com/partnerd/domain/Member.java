@@ -57,6 +57,7 @@ public class Member extends BaseEntity {
 
     // 소셜 타입
     @Enumerated(EnumType.STRING)
+    @Column(name = "social_type")
     private SocialType socialType;
 
     // 관심 직군
