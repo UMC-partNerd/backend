@@ -14,8 +14,10 @@ import com.partnerd.web.dto.homeDTO.response.HomeCollabPostDTO;
 import com.partnerd.web.dto.homeDTO.response.HomeProjectDTO;
 import com.partnerd.web.dto.homeDTO.response.HomePromotionProjectDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -38,6 +40,8 @@ public class HomeServiceImpl implements HomeService {
     private final ProjectR2DBCRepositoryCustom projectR2DBCRepositoryCustom;
     private final PromotionProjectR2DBCRepositoryCustom promotionProjectR2DBCRepositoryCustom;
 
+
+    private ReactiveRedisTemplate<String, Object> redisTemplate;
 
 
     @Async
@@ -62,27 +66,63 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public Mono<List<HomeCollabPostDTO>> getRecentCollabPostsByAsync() {
-        return collabPostR2DBCRepositoryCustom.findTopCollabPosts(4)
-                .collectList();
+        String cacheKey = "home:recentCollabPosts";
+        return  redisTemplate.opsForValue().get(cacheKey)
+                .map(obj -> (List<HomeCollabPostDTO>) obj) // 타입 명시적 캐스팅
+                .switchIfEmpty(collabPostR2DBCRepositoryCustom.findTopCollabPosts(4).collectList()
+                        .flatMap(collabPosts -> redisTemplate.opsForValue()
+                                .set(cacheKey, collabPosts)
+                                .thenReturn(collabPosts)
+                        )
+                );
     }
 
     @Override
     public Mono<List<HomeClubDTO>> getPopularClubsByAsync() {
-        return clubR2DBCRepositoryCustom.findTopClubs(3)
-                .collectList();
+        String cacheKey = "home:popularClubs";
+        return  redisTemplate.opsForValue().get(cacheKey)
+                .map(obj -> (List<HomeClubDTO>) obj) // 타입 명시적 캐스팅
+                .switchIfEmpty(clubR2DBCRepositoryCustom.findTopClubs(3).collectList()
+                        .flatMap(clubs -> redisTemplate.opsForValue()
+                                .set(cacheKey, clubs)
+                                .thenReturn(clubs)
+                        )
+                );
     }
 
+    /**
+     * 1. 레디스로부터 저장된 키 값 확인
+     * 2. 있으면 리턴
+     * 3. 없으면 안의 로직을 실행.
+     *
+     * */
     @Override
     public Mono<List<HomeProjectDTO>> getRecentProjectsByAsync() {
+        String cacheKey = "home:recentProjects";
 
-        return projectR2DBCRepositoryCustom.findTopProjects(6)
-                .collectList();
+        return redisTemplate.opsForValue().get(cacheKey)
+                .map(obj -> (List<HomeProjectDTO>) obj) // 타입 명시적 캐스팅
+                .switchIfEmpty(
+                        projectR2DBCRepositoryCustom.findTopProjects(6).collectList()
+                                .flatMap(projects -> redisTemplate.opsForValue()
+                                        .set(cacheKey, projects)
+                                        .thenReturn(projects)
+                                )
+                );
     }
 
     @Override
     public Mono<List<HomePromotionProjectDTO>> getPopularPromotionProjectsByAsync() {
-        return promotionProjectR2DBCRepositoryCustom.findTopPromotionProjects(6)
-                .collectList();
+        String cacheKey = "home:promotionProjects";
+        return redisTemplate.opsForValue().get(cacheKey)
+                .map(obj -> (List<HomePromotionProjectDTO>) obj) // 타입 명시적 캐스팅
+                .switchIfEmpty(
+                        promotionProjectR2DBCRepositoryCustom.findTopPromotionProjects(6).collectList()
+                                .flatMap(promotionProjects -> redisTemplate.opsForValue()
+                                        .set(cacheKey, promotionProjects)
+                                        .thenReturn(promotionProjects)
+                                )
+                );
     }
 
 
