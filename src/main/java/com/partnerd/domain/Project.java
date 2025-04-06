@@ -55,6 +55,7 @@ public class Project extends BaseEntity {
     private String part;
 
     // 모집 인원
+    @Column(name = "recruit_num")
     private String recruitNum;
 
     // 개발 기술 스택
@@ -70,11 +71,11 @@ public class Project extends BaseEntity {
     private String design_stack;
 
     // 시작 날짜
-    @Column(nullable = false)
+    @Column(name = "start_date", nullable = false)
     private Date startDate;
 
     // 종료 날짜
-    @Column(nullable = false)
+    @Column(name = "end_date", nullable = false)
     private Date endDate;
     
     // 컨택트 방법

@@ -34,7 +34,7 @@ public class PromotionProjectComment extends BaseEntity {
     private Long likes = 0L;
 
     // 삭제 여부
-    @Column(nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     // 사용자 ID (FK)
