@@ -246,7 +246,19 @@ public class ClubServiceImpl implements ClubService {
     // 파트너드 상세조회 (팀페이지)
     @Override
     public ClubDetailResponseDTO findClubDetails(Long clubId, Long memberId) {
-        return clubRepository.findClubDetails(clubId, memberId);
+
+        // 1. 클럽 상세 정보 조회
+        ClubDetailResponseDTO clubDetail = clubRepository.findClubDetails(clubId, memberId);
+
+        // 2. 존재하지 않으면 예외 발생
+        if (clubDetail == null) {
+            throw new ClubHandler(ErrorStatus.CLUB_NOT_FOUND);
+        }
+
+        // 3. 조회수 증가 (클럽이 존재할 때만 실행)
+        clubRepository.incrementViews(clubId);
+
+        return clubDetail;
     }
 
     //멤버 전체조회 (파트너드 등록시 필요)
